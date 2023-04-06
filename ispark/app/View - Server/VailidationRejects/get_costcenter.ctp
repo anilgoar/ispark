@@ -1,0 +1,2 @@
+<?php //print_r($res); ?>
+<?php	echo $this->Form->input('VailidationRejects.cost_center', array('label'=>false,'class'=>'form-control','options' => $costcenter,'empty' => 'Cost Center','required'=>true)); ?>

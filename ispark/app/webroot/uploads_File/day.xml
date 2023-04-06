@@ -1,0 +1,959 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+
+<Styles>
+ <Style ss:ID="Default" ss:Name="Normal">
+  <Alignment ss:Vertical="Bottom"/>
+  <Borders/>
+  <Font/>
+  <Interior/>
+  <NumberFormat/>
+  <Protection/>
+ </Style>
+ <Style ss:ID="s27">
+  <Font x:Family="Swiss" ss:Color="#0000FF" ss:Bold="1"/>
+ </Style>
+ <Style ss:ID="s21">
+  <NumberFormat ss:Format="yyyy\-mm\-dd"/>
+ </Style>
+ <Style ss:ID="s22">
+  <NumberFormat ss:Format="yyyy\-mm\-dd\ hh:mm:ss"/>
+ </Style>
+ <Style ss:ID="s23">
+  <NumberFormat ss:Format="hh:mm:ss"/>
+ </Style>
+</Styles>
+
+ <Worksheet ss:Name="Sheet1">
+  <ss:Table>
+   <ss:Row>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">id</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">date</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">Particulars</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">VchType</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">VchNo</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">Debit</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">Credit</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">Status</Data></ss:Cell>
+    <ss:Cell  ss:StyleID="s27"><Data ss:Type="String">Importdate</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">8</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">GIRDHAR TRADING COMPANY</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1250</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">100000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:46.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">254</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/12/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">INTEREST-SBI-WORKING CAPITAL</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1496</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">92000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:46.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">447</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/23/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">RMV IT SERVICES PVT LTD. (HYD)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1689</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">29493</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">448</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/23/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">SUPER PRINTS</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1690</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1203</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">449</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/23/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Nirmal Water(RANJANA MAHESHWARI)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1691</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">5850</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">451</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/23/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">AGARWAL SALES CORPORATION</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1693</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2685</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">454</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1696</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">20411</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">455</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1697</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">10844</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">456</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1698</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">9486</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">457</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1699</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">26253</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">458</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1700</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">38788</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">459</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1701</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">28010</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">460</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1702</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">31696</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">462</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">TATA COMMUNICATIONS LTD.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1704</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">35266</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">463</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">TATA COMMUNICATIONS LTD.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1705</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">33062</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">465</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Vodafone South Ltd. (Ahm Leaseline)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1707</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">8625</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">470</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Super CC Incentive Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1712</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">80000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Sales Promotion Incentive</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">481</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">A.K Sethi &amp; Co.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1723</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">15250</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">496</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">TRAVELLING EXP PAYABLE -JPR</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1738</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">8603</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">500</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">WELLCARE MANPOWER SERVICES</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1742</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">25137</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">541</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Shiv Aqua Sales</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1783</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">17225</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">542</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">NEW GENERATION TECHNOLOGY</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1784</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">12430</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">543</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">MAYANK AGENCY</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1785</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">5910</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">544</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Amber Khan</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1786</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">3000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">545</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Saini Electric Works.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1787</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">11760</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">546</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">JAYA ENGINEERING SERVICES</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1788</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">14690</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">547</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">AGARWAL SALES CORPORATION</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1789</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2685</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">548</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">OM ENTERPRISES</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1790</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1438</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">549</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESS ESS INFOMEDIA</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1791</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">8050</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">551</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">SAT International Pvt. Ltd.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1793</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">4025</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">552</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">FAST TRACK AGENCY (KNL)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1794</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">885</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">553</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">PARAS ASSOCIATES</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1795</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">554</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">LUXMI ELECTRICAL STORE</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1796</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">3880</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">555</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/28/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Delhi Water Suppliers</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1797</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">19000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">565</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Surendar Singh Mehra IMP A/C</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1807</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2889</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">567</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ICICI BANK CREDIT CARD No. 4629-8646-5298-5005</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1809</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">14500</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">568</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">AYUSH RAJPUT</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1810</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1700</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">570</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">HI-TECH GENERATOR &amp; ELECTRIC WORKS</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1812</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">4310</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">571</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">OM VINAYAK COURIER</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1813</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1601</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">572</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Aggarwal Trading Co.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1814</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">8450</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">573</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ZAHRA ENTERPRISE</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1815</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">4158</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">574</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Bright Future Academy</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1816</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">10500</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">576</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/29/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">AKSHIT ADVERTISING</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1818</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">18045</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">590</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">BANK INTEREST-CAR LOANS</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">99</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">3901.8</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">591</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Data</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">100</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2700</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">592</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Office Rent</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">101</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">10000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">593</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Office Rent</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">102</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">89370</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">594</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Office Rent</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">103</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">30000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">595</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Computer Hire</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">104</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">13829</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">596</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Voice-Reimbursement</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">105</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">12257</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">597</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Data</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">106</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">8333</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">598</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/1/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">UPS - Hire</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">107</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">26000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">599</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/2/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">SBI LOAN A/C  (34732029378)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">202</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">227903</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">600</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/2/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Suspense A/c</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">203</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">1500</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">601</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/3/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Voice</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">108</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">3099</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">602</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/3/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Voice</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">109</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">3993</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">603</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/3/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Generator  Hire</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">110</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">16000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">604</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/5/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">CAPITAL FIRST LIMITED LOAN-8115054</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">204</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">71018</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">650</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/5/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">BANK INTEREST-TERM LOANS</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">111</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">23286.9</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">651</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/5/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">CAPITAL FIRST-TDS RECEIVEABLE</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">112</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2329</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">652</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/7/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Mas Callnet India (P) Ltd</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">250</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">100000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">654</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/7/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">TDS INTEREST 2017-18</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">252</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2391</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">655</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/7/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">TDS RENT (2017-18)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">253</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">11653</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">657</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/8/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Reliance Mobile Bills</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">255</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">10000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">658</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/8/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Reliance Mobile Bills</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">256</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">4430</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">659</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/8/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Voice</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">113</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">27046</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">660</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/9/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Vodafone Mobile Bills</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">257</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2220</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">661</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/9/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Vodafone Mobile Bills</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">258</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">8051</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">676</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/9/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">UNIQUE ELECTRICALS (G.SET RENT)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">273</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">18080</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">677</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/10/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">IDEA CELLULAR LTD-TELEPHONE BILL</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">274</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">3105</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">679</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/13/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">MAJOR LIFE STYLE PRIVATE LIMITED</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">276</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">368280</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">680</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/13/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">MAJOR LIFE STYLE PRIVATE LIMITED</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">277</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">93839</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">684</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/13/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">VARALIKA COMPU POWER SYSTEMS</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">281</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">29380</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">687</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/15/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Electricity Govt.</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">114</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">12679</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">688</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/16/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Tata Teleservices Ltd. (Phone Bill)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">284</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">31103</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">689</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/16/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Vodafone Spacetel Ltd.(Lease Line)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">285</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">164412</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">690</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/16/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Vodafone Spacetel Ltd.(Lease Line)</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">286</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">9583</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">691</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/16/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">AIRCEL RELATIONSHIP NO.1-19016911061</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">287</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">14296</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">693</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/19/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Company Owned Voice</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Journal</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">115</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">12223</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">694</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/20/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Suspense Debtors</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">289</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">20125</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">697</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">292</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">14923</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">698</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/24/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">ESIC  Payable</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">293</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">13314</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+   <ss:Row>
+    <ss:Cell><Data ss:Type="Number">700</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">6/27/2017</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Suspense A/c</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">Payment</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">295</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String">2000</Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell><Data ss:Type="String"></Data></ss:Cell>
+    <ss:Cell ss:StyleID="s22"><Data ss:Type="DateTime">2017-06-29T19:03:47.000</Data></ss:Cell>
+   </ss:Row>
+  </ss:Table>
+ </Worksheet>
+</Workbook>

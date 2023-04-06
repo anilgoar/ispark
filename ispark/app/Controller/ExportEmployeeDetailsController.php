@@ -1,0 +1,281 @@
+<?php
+class ExportEmployeeDetailsController extends AppController {
+    public $uses = array('Addbranch','Masjclrentry','Masattandance','MasJclrMaster','User','UploadIncentiveBreakup','IncentiveNameMaster');
+        
+    public function beforeFilter(){
+        parent::beforeFilter(); 
+        $this->Auth->allow('index','getcostcenter');
+        if(!$this->Session->check("username")){
+            return $this->redirect(array('controller'=>'users','action' => 'login'));
+        }
+    }
+    
+    public function index(){
+        $this->layout='home';
+        
+        $branchName = $this->Session->read('branch_name');
+        if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
+            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
+            $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
+        }
+        else{
+            $this->set('branchName',array($branchName=>$branchName)); 
+        }
+        
+        if($this->request->is('Post')){
+            
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=ExportEmployeeDetails.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            
+            
+            $branch_name        =   $this->request->data['ExportEmployeeDetails']['branch_name'];
+            $CostCenter         =   $this->request->data['CostCenter'];
+            $EmployeeType       =   $this->request->data['EmployeeType'];
+            $EmployeeStatus     =   $this->request->data['EmployeeStatus'];
+            
+            if($branch_name !="ALL"){$conditoin['BranchName']=$branch_name;}else{unset($conditoin['BranchName']);}
+            if($CostCenter !="ALL"){$conditoin['CostCenter']=$CostCenter;}else{unset($conditoin['CostCenter']);}
+            if($EmployeeType !="ALL"){$conditoin['EmpType']=$EmployeeType;}else{unset($conditoin['EmpType']);}
+            if($EmployeeStatus !="ALL"){$conditoin['Status']=$EmployeeStatus;}else{unset($conditoin['Status']);}
+            
+            if(!empty($conditoin)){
+                $data   =   $this->Masjclrentry->find('all',array('conditions'=>$conditoin));
+            }
+            else{
+               $data   =   $this->Masjclrentry->find('all'); 
+            }
+            
+            //echo "<pre>";
+           // print_r($data);die;
+            
+            
+            echo '<table border="1">';
+            echo '<tr>';
+            echo '<th>EmpCode</th>';
+            echo '<th>BioMetricCode</th>';
+            echo '<th>EmpType</th>';
+            echo '<th>EmpName</th>';
+            echo '<th>F/H Name</th>';
+            echo '<th>F/H Relation</th>';
+            echo '<th>Gender</th>';
+            echo '<th>NomineeName</th>';
+            echo '<th>NomineeRelation</th>';
+            echo '<th>NomineeDob</th>';
+            echo '<th>DOB</th>';
+            echo '<th>DOJ</th>';
+            echo '<th>Desig</th>';
+            echo '<th>Billable</th>';
+            echo '<th>Depart</th>';
+            echo '<th>EmpFor</th>';
+            echo '<th>Profile</th>';
+            echo '<th>Location</th>';
+			 echo '<th>Home Branch</th>';
+            echo '<th>CostCenter</th>';
+            echo '<th>Qualification</th>';
+            echo '<th>QualificationDetails</th>';
+            echo '<th>PassedOutYear</th>';
+            echo '<th>PassedOutState</th>';
+            echo '<th>PassedOutCity</th>';
+            echo '<th>PassedOutPercent</th>';
+            echo '<th>WorkingExperience</th>';
+            echo '<th>ExperienceYear</th>';
+            echo '<th>MaritalStatus</th>';
+            echo '<th>FamilyAnnualIncome</th>';
+            echo '<th>CountOfDependents</th>';
+            echo '<th>ReportingManagerName</th>';
+            echo '<th>ReportingManagerMobileNo</th>';
+            echo '<th>BloodG</th>';
+            echo '<th>PAddress</th>';
+            echo '<th>PCity</th>';
+            echo '<th>PState</th>';
+            echo '<th>PpinCode</th>';
+            echo '<th>TAddress</th>';
+            echo '<th>TCity</th>';
+            echo '<th>TState</th>';
+            echo '<th>TPinCode</th>';
+            echo '<th>PMobNo</th>';
+            echo '<th>PLandLine</th>';
+            echo '<th>TMobNo</th>';
+            echo '<th>TLandLine</th>';
+            echo '<th>EmailId</th>';
+            echo '<th>documentDone</th>';
+            echo '<th>Gross</th>';
+            echo '<th>CTCOffered</th>';
+            echo '<th>NetInHand</th>';
+            echo '<th>AcNo</th>';
+            echo '<th>IFSCCode</th>';
+            echo '<th>AcBank</th>';
+            echo '<th>AcBranch</th>';
+            echo '<th>PassPortNo</th>';
+            echo '<th>dlNo</th>';
+            echo '<th>EpfNo</th>';
+            echo '<th>EpfEleg</th>';
+            echo '<th>EsiNo</th>';
+            echo '<th>EsiEleg</th>';
+            echo '<th>EntryDate</th>';
+            echo '<th>Status</th>';
+            echo '<th>LeftDate</th>';
+            echo '<th>LeftRmks</th>';
+            echo '<th>SourceType</th>';
+            echo '<th>Source</th>';
+            echo '<th>BoxFileNo</th>';
+            echo '<th>AadharID</th>';
+            echo '<th>PanNo</th>';
+			echo '<th>Work Status</th>';
+			echo '<th>Manual Update By</th>';
+			echo '<th>Manual Update Date</th>';
+			
+            echo '</tr>';
+            foreach($data as $row){
+                echo '<tr>';
+                echo '<td>'.$row['Masjclrentry']['EmpCode'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['BioCode'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['EmpType'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['EmpName'].'</td>';
+                
+                
+                if($row['Masjclrentry']['Father'] !=""){
+                    echo '<td>'.$row['Masjclrentry']['Father'].'</td>';
+                }
+                else{
+                    echo '<td>'.$row['Masjclrentry']['Husband'].'</td>';
+                }
+                echo '<td>'.$row['Masjclrentry']['ParentType'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Gendar'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['NomineeName'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['NomineeRelation'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['NomineeDob'].'</td>';
+                echo '<td>'.date('d-M-Y',strtotime($row['Masjclrentry']['DOB'])).'</td>';
+                echo '<td>'.date('d-M-Y',strtotime($row['Masjclrentry']['DOJ'])).'</td>';
+                echo '<td>'.$row['Masjclrentry']['Desgination'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Billable_Status'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Dept'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['EmpLocation'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Profile'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['BranchName'].'</td>';
+				echo '<td>'.$row['Masjclrentry']['Home_Branch'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['CostCenter'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Qualification'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Qualification_Details'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Passed_Out_Year'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Passed_Out_State'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Passed_Out_City'].'</td>';
+                if($row['Masjclrentry']['Passed_Out_Percent'] !=""){
+                echo '<td>'.$row['Masjclrentry']['Passed_Out_Percent'].'%</td>';
+                }
+                else{
+                    echo '<td></td>';
+                }
+                echo '<td>'.$row['Masjclrentry']['Experience'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Experience_Year'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['MaritalStatus'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Family_Annual_Income'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Count_Of_Dependents'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Reporting_Manager_Name'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Reporting_Manager_Mobile_No'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['BloodGruop'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Adrress2'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['City1'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['State1'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['PinCode1'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Adrress1'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['City'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['State'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['PinCode'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Mobile1'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['LandLine1'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Mobile'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['LandLine'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['EmailId'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['documentDone'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Gross'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['CTC'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['NetInhand'].'</td>';
+                
+                if($row['Masjclrentry']['AcValidationStatus'] =="Yes"){
+                    echo "<td>'".$row['Masjclrentry']['AcNo']."</td>";
+                    echo '<td>'.$row['Masjclrentry']['IFSCCode'].'</td>';
+                    echo '<td>'.$row['Masjclrentry']['AcBank'].'</td>';
+                    echo '<td>'.$row['Masjclrentry']['AcBranch'].'</td>';
+                }
+                else{
+                    echo "<td></td><td></td><td></td><td></td>";
+                }
+                
+                echo '<td>'.$row['Masjclrentry']['PassportNo'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['dlNo'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['EPFNo'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['pfelig'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['ESICNo'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['esielig'].'</td>';
+                
+                
+                if($row['Masjclrentry']['EntryDate'] !=""){
+                    echo '<td>'.date('d-M-Y',strtotime($row['Masjclrentry']['EntryDate'])).'</td>';
+                }
+                else{echo '<td></td>';
+                }
+                
+                
+                if($row['Masjclrentry']['Status'] =="0"){
+                    echo '<td>Left</td>';
+                }
+                else if($row['Masjclrentry']['Status'] =="1"){
+                    echo '<td>Active</td>';
+                }
+                else{
+                    echo '<td></td>';
+                }
+                
+                
+                if($row['Masjclrentry']['ResignationDate'] !=""){echo '<td>'.date('d-M-Y',strtotime($row['Masjclrentry']['ResignationDate'])).'</td>';}else{echo '<td></td>';}
+                echo '<td>'.$row['Masjclrentry']['LeftReason'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['SourceType'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['Source'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['BoxFileNo'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['AdharId'].'</td>';
+                echo '<td>'.$row['Masjclrentry']['PanNo'].'</td>';
+				echo '<td>'.$row['Masjclrentry']['work_status'].'</td>';
+				echo '<td>'.$row['Masjclrentry']['manual_update'].'</td>';
+				if($row['Masjclrentry']['manual_update_time'] !=""){echo '<td>'.date('d-M-Y',strtotime($row['Masjclrentry']['manual_update_time'])).'</td>';}else{echo '<td></td>';}
+				
+                echo '</tr>';
+            }
+            echo ' </table>';
+            
+            die;
+        }    
+    }
+	
+    
+    public function getcostcenter(){
+        if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
+            
+            $conditoin=array('Status'=>1);
+            if($_REQUEST['BranchName'] !="ALL"){$conditoin['BranchName']=$_REQUEST['BranchName'];}else{unset($conditoin['BranchName']);}
+            
+            $data = $this->Masjclrentry->find('list',array('fields'=>array('CostCenter','CostCenter'),'conditions'=>$conditoin,'group' =>array('CostCenter')));
+            
+            if(!empty($data)){
+                echo "<option value=''>Select</option>";
+                echo "<option value='ALL'>ALL</option>";
+                foreach ($data as $val){
+                    echo "<option value='$val'>$val</option>";
+                }
+                die;
+            }
+            else{
+                echo "";die;
+            }
+            
+            
+        }
+        
+        
+    }
+    
+    
+}
+?>

@@ -1,0 +1,1 @@
+<?php   echo $this->Form->input('MasJclrMaster.NetInHand', array('label'=>false,'class'=>'form-control','value'=>$TCT,'onKeyPress'=>'return checkNumber(this.value,event)','placeholder'=>'CTC','required'=>true)); ?>

@@ -1,0 +1,33 @@
+<html>
+<head>
+<style>
+.pic1{
+    background-image: url("http://mascallnetnorth.in/ispark/app/webroot/img/pdfimg/P1.jpg"); 
+    background-repeat: no-repeat;
+    width:713px;
+    height:900px;
+    color:white;
+    margin-left:7px; 
+}
+</style>
+</head>
+<body>
+    <div class="pic1" >
+    <div style="margin-left:65%;margin-top:132px;">
+            <p style="width:240px;">Payment Gateway</p>
+            <p><strong>To</strong></p>
+            <p style="width:240px;">anil</p>
+            <p><img src="http://www.mascallnetnorth.in/ispark/app/webroot/prospect_file/19/Chrysanthemum.jpg" style="width:150px;" height="100px;" ></p>
+            <p style="width:240px;">test by it 1test by it 2test by it 3test by it 4test by it 5</p>
+        </div>
+    </div>
+    <div style="margin-left:7px;" >
+        <img src="http://www.mascallnetnorth.in/ispark/app/webroot/img/pdfimg/P2.jpg" >
+        <img src="http://www.mascallnetnorth.in/ispark/app/webroot/img/pdfimg/P3.jpg" >
+        <img src="http://www.mascallnetnorth.in/ispark/app/webroot/img/pdfimg/P4.jpg" >
+        <img src="http://www.mascallnetnorth.in/ispark/app/webroot/img/pdfimg/P5.jpg" >
+        <div>it service cover body</div>
+        <img src="http://www.mascallnetnorth.in/ispark/app/webroot/img/pdfimg/P8.jpg" style=" width:713px;height:900px;" >
+    </div>
+</body>
+</html>

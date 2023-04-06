@@ -1,0 +1,133 @@
+Delhi VPS Deatil : -
+
+IP  : 204.80.88.41
+
+FTP Detail : -
+
+User: root	
+Pass: W0rldm@p#!
+
+DataBase Detail : -
+
+User: root
+Pass: Pr10r1ty#!
+
+--------------------------------------
+
+Mohali VPS Deatil : -
+
+IP : 204.80.88.43
+
+FTP Detail : -
+user  : root
+Password : M@ssc@llN3t
+
+DataBase Detail : -
+user  : root
+Password : security
+
+---------------------------------------
+
+Karnal VPS Deatil :- 
+
+IP  : 204.80.88.42
+
+FTP Detail : -
+
+User: root	
+Pass: W0rldm@p#!
+
+DataBase Detail : -
+
+User: root
+Pass: Pr10r1ty#!
+
+--------------------------------------
+
+Ahemdabad VPS Detail : -
+
+IP : 204.80.88.236
+
+FTP Detail : -
+user  : root
+Password : R0y@l+Pl@y3r!#
+
+DataBase Detail : -
+user  : root
+Password : W0rldm@p
+
+
+Jaipur
+IP : 204.80.91.177
+
+FTP Detail : -
+user  : root
+Password : W0rldC0unt3ry#%!
+
+DataBase Detail : -
+user  : root
+Password : xP@#18Jai
+
+
+938656851412014143850
+http://www.networkinghowtos.com/howto/enable-apache-rewrite-module-on-ubuntu-13-04/
+
+rsync -Lae ssh cloud@115.112.237.167:/var/www/IdeaPVABC/*upload_file_old* /var/www/IdeaPV/
+
+SELECT t1.*,t2.* FROM tbl_capturedata1 t1 LEFT JOIN vw_parameter t2 ON t1.DataId=t2.data_id;
+
+
+01 09 * * * php /var/www/OkhlaP2P/mysql-backup.php
+
+
+520440
+
+
+
+
+// $xml_str = your xml
+// $url = target url
+
+$post_data = array('xml' => $xml_str);
+$stream_options = array(
+    'http' => array(
+        'method'  => 'POST',
+        'header'  => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
+        'content' =>  http_build_query($post_data)));
+
+$context  = stream_context_create($stream_options);
+$response = file_get_contents($url, null, $context);
+
+
+
+SELECT DATE_FORMAT(SMSDateTime,'%M')`Month`,COUNT(*) TotalSMS FROM tbl_Sms_Sender WHERE DATE(SMSDateTime) BETWEEN '2014-06-01' AND '2014-11-30' AND (LENGTH(ReceiveCode)='19' OR LENGTH(ReceiveCode)='39') GROUP BY MONTH(SMSDateTime);
+
+
+SELECT * FROM tbl_Sms_Sender WHERE (LENGTH(ReceiveCode)='19' OR LENGTH(ReceiveCode)='39');
+
+
+
+
+http://localhost/icare/getInformation.php?channel=USSD&action=Subscription&circle=UPE&endDate=2014-12-29&msisdn=9654147234&operator=Vodafone&packName=iClinicService&amount=53&startDate=2014-11-23&userStatus=1&subscriberType=PrePaid&transactionId=16233242413&vendorName=iClinic&contestLevel=&contestName=&language=Hindi&src=USSD;
+
+
+tep		Transaction Acknowledgment
+Thank you. Your payment has been successfully received with the following details. Please quote your transaction reference number for any queries relating to this request. 
+
+Vodafone mobile no.	:   9911362206
+Transaction ID	:   156294307
+Transaction date	:   13-05-2015 10:45:51
+Payment information
+Paid amount (Rs)	:   658.0
+Print	Download
+
+
+SELECT COUNT(*) BaseCount ,SUM(CASE WHEN SEGMENT='COCP' THEN 1 ELSE 0 END) CocpBase,SUM(CASE WHEN SEGMENT='Consumer' THEN 1 ELSE 0 END) ConsumerBase
+,SUM(CASE WHEN SEGMENT='IOIP' THEN 1 ELSE 0 END) IoipBase,SUM(3_month_avg) TotalRev,SUM(CASE WHEN SEGMENT='COCP' THEN 3_month_avg ELSE 0 END) CocpRev,SUM(CASE WHEN SEGMENT='Consumer' THEN 3_month_avg ELSE 0 END) ConsumerRev
+,SUM(CASE WHEN SEGMENT='IOIP' THEN 3_month_avg ELSE 0 END) IoipRev FROM premium_base WHERE TYPE='Premium';
+
+
+rsync -Lae ssh root@115.112.237.167:/var/www/IdeaPVABC/*upload_file_old* /var/www/IdeaPV/
+
+
+2211599352

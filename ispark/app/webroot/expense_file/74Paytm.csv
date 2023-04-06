@@ -1,0 +1,10 @@
+UserName,CustomerPhone,AltNo,FatherName,Branch,City,RaBlock,RaArea,RaLandmark,RaCity,ApointmentDate,ApointmentTime,Remarks,VendorName
+Raaz,9719032044,125485545,T s,HO,ALWAR,Vaisali,Davar,Dabar,Noida,15-04-2014,12:30,Revisit,Anil
+Anil,9560764600,125485546,A G,HO,ALWAR,Vaisali,Davar,Dabar,Noida,15-04-2015,13:30,Revisit,Anil
+Rahul,7830265054,125485547,RS,HO,ALWAR,Vaisali,Davar,Dabar,Noida,15-04-2016,14:30,Revisit,Anil
+KAT,9720295054,125485548,Father OF KAT,HO,ALWAR,Vaisali,Davar,Dabar,Noida,15-04-2017,15:30,Revisit,Anil
+Chandu,9917589006,125485549,Name,HO,ALWAR,Vaisali,Davar,Dabar,Noida,15-04-2018,16:30,Revisit,Anil
+Sundar,8791026087,254814888,D S,Noida,ALWAR,New Ashok Nagar,Davar,WineSHop,Delhi,15-04-2017,17:30,Okk Done,Chandu
+Rajesh,8954357654,021548778,H S,Noida,ALWAR,New Ashok Nagar,Davar,WineSHop,Delhi,15-04-2018,4:15:00,Okk Done,Chandu
+Snajay,9634330440,254854888,G S,Gr Noida,ALWAR,New Ashok Nagar,Davar,Parichock,Delhi,15-04-2017,4:15,Okk Done,Chandu
+Deepak,9811805800,154545646,C S,Gr Noida,ALWAR,new Ashok Nagar,Davar,Parichock,Delhi,15-04-2017,5:15,Okk Done,Chandu
