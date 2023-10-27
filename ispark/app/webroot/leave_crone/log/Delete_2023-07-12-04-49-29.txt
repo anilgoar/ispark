@@ -1,0 +1,65 @@
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 30495480
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-2600
+                         Account Name:        prateeks
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x6108a5c8
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13242
+                         Account Name:        MAS52250
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52250, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13242,
+                     S-1-5-21-2373504117-2689643630-3100359099-2600...}
+InstanceId         : 4726
+TimeGenerated      : 7/12/2023 4:45:59 PM
+TimeWritten        : 7/12/2023 4:45:59 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 30495443
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-2600
+                         Account Name:        prateeks
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x6108a5c8
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-12230
+                         Account Name:        MAS51656
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS51656, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-12230,
+                     S-1-5-21-2373504117-2689643630-3100359099-2600...}
+InstanceId         : 4726
+TimeGenerated      : 7/12/2023 4:45:45 PM
+TimeWritten        : 7/12/2023 4:45:45 PM
+UserName           :
+Site               :
+Container          :
+

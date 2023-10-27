@@ -160,7 +160,7 @@ function checkHd(chkall,chkhd){
                                     $TcurMonth = date('M');
                                     if($TcurMonth=='Jan')
                                     {?>
-                                        <option value="Dec-<?php echo $curYear-1; ?>">Dec</option>
+                                        <option value="Dec-<?php echo $curYear-1; ?>">Dec-<?php echo $curYear-1;?></option>
                                     <?php }
                             ?>
                             <option value="Jan-<?php echo $curYear; ?>">Jan</option>

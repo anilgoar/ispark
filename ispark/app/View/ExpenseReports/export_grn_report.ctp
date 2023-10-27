@@ -1,11 +1,13 @@
+<?php ?>
                 <table border="1">
                     <thead>
                         <tr>
                             <th>Vch No</th>
                             <th>Date</th>
+                            <th>Effective Date</th>
                             <th>Details</th>
-                            <th>Amount</th>
-                            <th>DebitCredit</th>
+                            <th>Debit Amount</th>
+                            <th>Credit Amount</th>
                             <th>Cost Category</th>
                             <th>Cost Centre</th>
                             <th>Narration for Each Entry</th>
@@ -46,18 +48,18 @@
                                         $newDate = implode('-',$dater);
                                         
                                         echo "<td>".$exp['0']['Dates']."</td>";
-                                        
+                                        echo "<td>".$exp['0']['bill_date1']."</td>";
                                         
                                         
                                         echo "<td>".$exp['subhead']['SubHeadingDesc']."</td>";
                                         echo "<td>".round($exp['0']['Amount'],2)."</td>";
-                                        echo "<td>D</td>";
+                                        echo "<td></td>";//for debit
                                         echo "<td>".$exp['bm']['tally_branch']."</td>";
                                         echo "<td>";
                                         echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                         echo "</td>";
                                         echo "<td>".$exp['eep']['NarrationEach']."</td>";
-                                        echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no']."</td>";
+                                        echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No.:'.$exp['em']['bill_no'].' , Bill Date.:'.$exp['em']['bill_date']."</td>";
                                         echo "<td>JrnlP</td>";
                                         echo "</tr>";
                                         ///////// Entry For SubHead End //////////////////
@@ -75,30 +77,32 @@
                                                 echo "<tr>";
                                                 echo "<td>".$exp['em']['bill_no'].'/'.$exp['em']['GrnNo']."</td>";
                                                 echo "<td>".$exp['0']['Dates']."</td>";
+                                                echo "<td>".$exp['0']['bill_date1']."</td>";
                                                 echo "<td>Input CGST @".($exp['eep']['Rate']/2)."%(".$exp['0']['state'].")"."</td>";
                                                 echo "<td>".round($exp['0']['Tax']/2,2)."</td>";
-                                                echo "<td>D</td>";
+                                                echo "<td></td>";//for debit D
                                                 echo "<td>".$exp['bm']['tally_branch']."</td>";
                                                 echo "<td>";
                                                 echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                                 echo "</td>";
                                                 echo "<td>".$exp['eep']['NarrationEach']."</td>";
-                                                echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no']."</td>";
+                                                echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no'].' , Bill Date.:'.$exp['em']['bill_date']."</td>";
                                                 echo "<td>JrnlP</td>";
                                                 echo "</tr>";
                                                 
                                                 echo "<tr>";
                                                 echo "<td>".$exp['em']['bill_no'].'/'.$exp['em']['GrnNo']."</td>";
                                                 echo "<td>".$exp['0']['Dates']."</td>";
+                                                echo "<td>".$exp['0']['bill_date1']."</td>";
                                                 echo "<td>Input SGST @".($exp['eep']['Rate']/2)."%(".$exp['0']['state'].")"."</td>";
                                                 echo "<td>".round($exp['0']['Tax']/2,2)."</td>";
-                                                echo "<td>D</td>";
+                                                echo "<td></td>"; //for debit D
                                                 echo "<td>".$exp['bm']['tally_branch']."</td>";
                                                 echo "<td>";
                                                 echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                                 echo "</td>";
                                                 echo "<td>".$exp['eep']['NarrationEach']."</td>";
-                                                echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no']."</td>";
+                                                echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No.:'.$exp['em']['bill_no'].' , Bill Date.:'.$exp['em']['bill_date']."</td>";
                                                 echo "<td>JrnlP</td>";
                                                 echo "</tr>";
                                                 
@@ -110,15 +114,16 @@
                                                 echo "<tr>";
                                                 echo "<td>".$exp['em']['bill_no'].'/'.$exp['em']['GrnNo']."</td>";
                                                 echo "<td>".$exp['0']['Dates']."</td>";
+                                                echo "<td>".$exp['0']['bill_date1']."</td>";
                                                 echo "<td>Input IGST @".($exp['eep']['Rate'])."%(".$exp['0']['state'].")"."</td>";
                                                 echo "<td>".round($exp['0']['Tax'],2)."</td>";
-                                                echo "<td>D</td>";
+                                                echo "<td></td>"; //for debit D
                                                 echo "<td>".$exp['bm']['tally_branch']."</td>";
                                                 echo "<td>";
                                                 echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                                 echo "</td>";
                                                 echo "<td>".$exp['eep']['NarrationEach']."</td>";
-                                                echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no']."</td>";
+                                                echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No.:'.$exp['em']['bill_no'].' , Bill Date.:'.$exp['em']['bill_date']."</td>";
                                                 echo "<td>JrnlP</td>";
                                                 echo "</tr>";
                                                 $diff += round($exp['0']['Tax'],2);
@@ -130,10 +135,12 @@
                                         echo "<tr>";
                                         echo "<td>".$exp['em']['bill_no'].'/'.$exp['em']['GrnNo']."</td>";
                                         echo "<td>".$exp['0']['Dates']."</td>";
+                                        echo "<td>".$exp['0']['bill_date1']."</td>";
                                         echo "<td>".$exp['vm']['TallyHead']."</td>";
-                                        if($exp['vm']['TDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='1')
+                                        echo "<td></td>"; //for credit C
+                                        if($exp['vm']['TDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='Yes')
                                         {
-                                            if($exp['subhead']['SubHeadTDSEnabled']=='1' && ($exp['vm']['TDSChange']=='No' || empty($exp['vm']['TDSChange'])))
+                                            if(($exp['subhead']['SubHeadTDSEnabled']=='Yes' || $exp['subhead']['SubHeadTDSEnabled']=='1') )
                                             {
                                                 $tdsAmount = round(($exp['td']['TDS']*$exp['0']['Amount'])/100,2);
                                             }
@@ -152,29 +159,31 @@
                                         {
                                             echo "<td>".round($exp['0']['Total'],2)."</td>";
                                         }    
-                                        echo "<td>C</td>";
+                                        
                                         echo "<td>".$exp['bm']['tally_branch']."</td>";
                                         echo "<td>".$exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1."</td>";
                                         echo "<td>".$exp['eep']['NarrationEach']."</td>";
-                                        echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no']."</td>";
+                                        echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No.:'.$exp['em']['bill_no'].' , Bill Date.:'.$exp['em']['bill_date']."</td>";
                                         echo "<td>JrnlP</td>";
                                         echo "</tr>";
                                     
-                                    if($exp['vm']['TDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='1' )
+                                    if($exp['vm']['TDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='Yes')
                                     {
                                         echo "<tr>";
                                         echo "<td>".$exp['em']['bill_no'].'/'.$exp['em']['GrnNo']."</td>";
                                         echo "<td>".$exp['0']['Dates']."</td>";
+                                        echo "<td>".$exp['0']['bill_date1']."</td>";
                                         if(!empty($exp['td']['description']))
                                         echo "<td>".$exp['td']['description']."</td>";
                                         else
                                         echo "<td>".$exp['td2']['description']."</td>";    
+                                        echo "<td></td>"; //for credit C
                                         echo "<td>".round($tdsAmount,2)."</td>";
-                                        echo "<td>C</td>";
+                                        //echo "<td>C</td>"; 
                                         echo "<td>".$exp['bm']['tally_branch']."</td>";
                                         echo "<td>".$exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1."</td>";
                                         echo "<td>".$exp['eep']['NarrationEach']."</td>";
-                                        echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No'.$exp['em']['bill_no']."</td>";
+                                        echo "<td>".$exp['em']['Narration'].' GRN NO.: '.$exp['em']['GrnNo'].', Bill No.:'.$exp['em']['bill_no'].' , Bill Date.:'.$exp['em']['bill_date']."</td>";
                                         echo "<td>JrnlP</td>";
                                         echo "</tr>";
                                         //$diff -= $tdsAmount;
@@ -186,15 +195,18 @@
                                         echo "<tr>";
                                         echo "<td>".$exp['em']['bill_no'].'/'.$exp['em']['GrnNo']."</td>";
                                         echo "<td>".$exp['0']['Dates']."</td>";
+                                        echo "<td>".$exp['0']['bill_date1']."</td>";
                                         echo "<td>Short/Excess Written off</td>";
-                                        echo "<td>".round(abs($diff),2)."</td>";
+                                        
                                         if($diff>0)
                                         {
-                                            echo "<td>C</td>";
+                                            echo "<td></td>";
+                                            echo "<td>".round(abs($diff),2)."</td>";
                                         }
                                         else
                                         {
-                                            echo "<td>D</td>";
+                                            echo "<td>".round(abs($diff),2)."</td>";
+                                            echo "<td></td>";
                                         }
                                         
                                         echo "<td>".$exp['bm']['tally_branch']."</td>";

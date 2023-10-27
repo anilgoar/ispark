@@ -37,7 +37,7 @@
                     <label class="col-sm-2 control-label"><b style="font-size:14px">Finance Year</b></label>	
                     <div class="col-sm-2">
                         <?php	echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control',
-                        'options'=>$financeYearArr,'required'=>true)); ?>
+                        'options'=>$financeYearArr,'value'=>$FinanceYearLogin,'required'=>true)); ?>
                     </div>
                 </div>
                 <div class="form-group">

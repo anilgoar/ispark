@@ -32,7 +32,52 @@
 				<div class="no-move"></div>
 			</div>
 			<div class="box-content no-padding">
-                            <h4 style="color:green"><?php echo $this->Session->flash(); ?> </h4>
+                            
+                            
+                            <div class="form-group has-success has-feedback">
+                 <?php echo $this->Form->create('Gms',array('class'=>'form-horizontal')); ?>   
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Branch</label>
+                        <div class="col-sm-3">
+
+                        <?php	
+                            echo $this->Form->input('branch_name', array('label'=>false,'class'=>'form-control','options' => $branch_master,'empty' => 'Select Branch','required'=>true));
+                        ?>
+                        </div>
+                        <label class="col-sm-1 control-label">Year</label>
+                        <div class="col-sm-3">
+                                <?php	
+                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => (array('All'=>'All') +$financeYearArr),'empty' => 'Select Year','value'=>$FinanceYearLogin,'required'=>true));
+                                ?>
+                        </div>
+                        <label class="col-sm-1 control-label">Month</label>
+                        <div class="col-sm-3">
+                                <?php	$month = array('All'=>'All','Jan'=>'Jan','Feb'=>'Feb','Mar'=>'Mar','Apr'=>'Apr','May'=>'May','Jun'=>'Jun','Jul'=>'Jul','Aug'=>'Aug','Sep'=>'Sep','Oct'=>'Oct','Nov'=>'Nov','Dec'=>'Dec');
+                                    echo $this->Form->input('FinanceMonth', array('label'=>false,'class'=>'form-control','options' => $month,'empty' => 'Month','required'=>true));
+                                ?>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label">&nbsp;</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">&nbsp;</label>
+                        <div class="col-sm-1">
+                           <button type="submit" class="btn btn-primary btn-label-left" >Show</button>
+                        </div>
+                        
+                        <div class="col-sm-1">
+                           <a href="/ispark/Menuisps/sub?AX=NjA=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a>  
+                        </div>
+                    </div>
+                    
+                   <?php echo $this->Form->end(); ?> 
+                    </div>
+                            
+                            
+                            
                             <table class="table  table-bordered table-hover table-heading no-border-bottom responstable" id="table_id">
 				<?php $case=array('primary',''); $i=0; ?>
 					<thead>

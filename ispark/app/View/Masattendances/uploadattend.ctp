@@ -1,4 +1,24 @@
-<?php //echo $_SERVER['HTTP_REFERER'];  ?>
+<?php 
+echo $this->Html->css('jquery-ui');
+echo $this->Html->script('jquery-ui');
+?>
+<script language="javascript">
+    $(function () {
+        var currentDate = new Date();
+    $("#finance_year").datepicker1({
+        changeMonth: true,
+        changeYear: true,
+        'dateTimeFormat':'yyyy-mm-dd',
+        maxDate: currentDate
+    });
+});
+$(function () {
+    $("#ToDate").datepicker1({
+        changeMonth: true,
+        changeYear: true
+    });
+});
+</script>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
 	<a href="#" class="show-sidebar">
@@ -29,7 +49,7 @@
 		<div class="form-group has-info has-feedback">
                     <label class="col-sm-2 control-label">Select Date</label>
                     <div class="col-sm-3">
-                        <?php echo $this->Form->input('AttandDate',array('label' => false,'options'=>$AttandDate,'class'=>'form-control','id'=>'finance_year')); ?>
+                        <?php echo $this->Form->input('AttandDate',array('label' => false,'empty'=>'Select','class'=>'form-control','id'=>'finance_year')); ?>
                     </div>
                 </div>
                 

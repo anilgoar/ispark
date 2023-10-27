@@ -19,7 +19,7 @@
             <div class="box-header">
                 <div class="box-name">
                     
-                    <span>P&L Process Wise Report</span>
+                    <span>P&L Revenue Report</span>
 		</div>
 		<div class="box-icons">
                     <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -43,11 +43,11 @@
                         <label class="col-sm-1 control-label">Year</label>
                         <div class="col-sm-3">
                                 <?php	
-                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => array_merge(array('All'=>'All'),$financeYearArr),'empty' => 'Select Year','required'=>true));
+                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => array_merge(array('All'=>'All'),$financeYearArr),'empty' => 'Select Year','value'=>$FinanceYearLogin,'required'=>true));
                                 ?>
                         </div>
-                        <label class="col-sm-1 control-label">Month</label>
-                        <div class="col-sm-3">
+                        <label class="col-sm-2 control-label">Pertaining Month</label>
+                        <div class="col-sm-2">
                                 <?php	$month = array('All'=>'All','Jan'=>'Jan','Feb'=>'Feb','Mar'=>'Mar','Apr'=>'Apr','May'=>'May','Jun'=>'Jun','Jul'=>'Jul','Aug'=>'Aug','Sep'=>'Sep','Oct'=>'Oct','Nov'=>'Nov','Dec'=>'Dec');
                                     echo $this->Form->input('FinanceMonth', array('label'=>false,'class'=>'form-control','options' => $month,'empty' => 'Select Month','required'=>true));
                                 ?>
@@ -59,9 +59,11 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">&nbsp;</label>
                         
-                        <div class="col-sm-1">
+                        <div class="col-sm-2">
                            <button class="btn btn-info btn-label-left" onClick="return revenue_pnal_validate('Export');">Export</button>
+                        <a href="/ispark/Menuisps/sub?AX=MTM1" class="btn btn-primary">Back</a>
                         </div>
+                        
                     </div>
                     
                    <?php echo $this->Form->end(); ?> 

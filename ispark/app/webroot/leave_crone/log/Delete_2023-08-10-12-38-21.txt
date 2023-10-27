@@ -1,0 +1,454 @@
+Windows PowerShell
+Copyright (C) 2014 Microsoft Corporation. All rights reserved.
+
+PS C:\Windows\system32> Get-EventLog -LogName Security | Where-Object {$_.EventID -eq 4726} | Select-Object -Property *
+
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569845
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-15069
+                         Account Name:        MAS53311
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53311, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-15069,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:32:18 PM
+TimeWritten        : 8/10/2023 12:32:18 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569801
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14964
+                         Account Name:        MAS53161
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53161, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14964,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:32:04 PM
+TimeWritten        : 8/10/2023 12:32:04 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569785
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14946
+                         Account Name:        MAS53141
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53141, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14946,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:31:51 PM
+TimeWritten        : 8/10/2023 12:31:51 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569743
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14789
+                         Account Name:        MAS52982
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52982, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14789,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:31:38 PM
+TimeWritten        : 8/10/2023 12:31:38 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569717
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14781
+                         Account Name:        MAS52974
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52974, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14781,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:31:27 PM
+TimeWritten        : 8/10/2023 12:31:27 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569678
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14708
+                         Account Name:        MAS52902
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52902, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14708,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:31:14 PM
+TimeWritten        : 8/10/2023 12:31:14 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569627
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14706
+                         Account Name:        MAS52900
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52900, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14706,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:31:00 PM
+TimeWritten        : 8/10/2023 12:31:00 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569571
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13458
+                         Account Name:        MAS52626
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52626, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13458,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:30:47 PM
+TimeWritten        : 8/10/2023 12:30:47 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569532
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13737
+                         Account Name:        MAS52518
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52518, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13737,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:30:34 PM
+TimeWritten        : 8/10/2023 12:30:34 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569480
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13717
+                         Account Name:        MAS52482
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52482, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13717,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:30:22 PM
+TimeWritten        : 8/10/2023 12:30:22 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569442
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13343
+                         Account Name:        MAS52452
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52452, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13343,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:30:08 PM
+TimeWritten        : 8/10/2023 12:30:08 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569423
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13308
+                         Account Name:        MAS52368
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52368, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13308,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:29:56 PM
+TimeWritten        : 8/10/2023 12:29:56 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569391
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-13305
+                         Account Name:        MAS52365
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS52365, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-13305,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:29:43 PM
+TimeWritten        : 8/10/2023 12:29:43 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4726
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 35569347
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was deleted.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-10155
+                         Account Name:        ranjeetit
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0xd9165030
+
+                     Target Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-11113
+                         Account Name:        MAS51086
+                         Account Domain:        MAS-NOIDA
+
+                     Additional Information:
+                         Privileges    -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS51086, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-11113,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4726
+TimeGenerated      : 8/10/2023 12:29:28 PM
+TimeWritten        : 8/10/2023 12:29:28 PM
+UserName           :
+Site               :
+Container          :
+

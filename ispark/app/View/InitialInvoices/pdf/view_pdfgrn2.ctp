@@ -556,7 +556,7 @@ td#t07
 	</tr>
 	<tr>
 		<td>
-			Tel.	:	011-61105550<br>
+			<!-- Tel.	:	011-61105550<br> -->
 			E-mail	:	care@teammas.in<br>
 			Web :		teammas.in
 		</td>

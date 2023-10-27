@@ -26,11 +26,22 @@ echo $this->Html->script('newDatePicker/jquery-ui');
 <div class="row">
 	<div class="col-xs-12">
 		<div class="box">
-                    <input type="button" onclick="tableToExcel('testTable', 'W3C Example Table')" class="btn btn-success" value="Export to Excel">
-                    <?php if($page!=1) { ?>
-                    <input type="button" onclick="gotonext('<?php echo ($page-1); ?>')" class="btn btn-primary" value="Previous">
-                    <?php } ?>
-                    <input type="button" onclick="gotonext('<?php echo ($page+1); ?>')" class="btn btn-primary" value="Next">
+            <form method="get">
+            <label class="col-sm-1 control-label">Year</label>
+            <div class="col-sm-3">
+            <?php	
+                echo $this->Form->input('FinanceYear', array('label'=>false,'id'=>'FinanceYear','class'=>'form-control','options' => array_merge(array('All'=>'All'),$financeYearArr),'empty' => 'Select Year','value'=>$FinanceYear,'required'=>true));
+            ?>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Search">    
+            <input type="button" onclick="tableToExcel('testTable', 'W3C Example Table')" class="btn btn-success" value="Export to Excel">
+            </form>
+            <?php if($page!=1) { ?>
+            <input type="button" onclick="gotonext('<?php echo ($page-1); ?>')" class="btn btn-primary" value="Previous">
+            <?php } ?>
+            <input type="button" onclick="gotonext('<?php echo ($page+1); ?>')" class="btn btn-primary" value="Next">
+            <a href="/ispark/Menuisps/sub?AX=NjA=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
+
 			<div class="box-header">
                             
 				<div class="box-name">
@@ -291,7 +302,8 @@ function save_record1(id)
 
 function gotonext(page)
 {
-    window.location.href="payment_processing?page="+page;
+    var FinanceYear=$("#FinanceYear").val();
+    window.location.href="payment_processing?page="+page+'&FinanceYear='+FinanceYear;
 }
 
 var tableToExcel = (function() {

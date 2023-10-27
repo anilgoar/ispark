@@ -1,7 +1,8 @@
 <?php
 class SalaryHeadsController extends AppController 
 {
-    public $uses = array('SalaryHead','Addbranch','CostCenterMaster','CostCenterTransferFrom','CostCenterTransferFromFinal','CostCenterTransferTo','CostCenterTransferToFinal','SalaryUpload');
+    public $uses = array('SalaryHead','Addbranch','CostCenterMaster','CostCenterTransferFrom','CostCenterTransferFromFinal',
+        'CostCenterTransferTo','CostCenterTransferToFinal','SalaryUpload','BillMaster');
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -51,6 +52,7 @@ class SalaryHeadsController extends AppController
     public function proportionate_cost_distribution() 
     {
         $this->set('branch',$this->Addbranch->find("list",array("conditions"=>"Active='1'",'fields'=>array('id','branch_name')))) ;
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'order'=>array('id'=>'desc'),'limit'=>3)));
         $userid = $this->Session->read("userid");
 $this->layout="home";
         if ($this->request->is('post')) 
@@ -119,7 +121,8 @@ $this->layout="home";
             $SalaryUpload = $this->SalaryUpload->query("select sum(ActualCTC) ActualCTC from salary_master_upload where BranchId='$Branch' and FinanceYear='$FinanceYear' and FinanceMonth='$FinanceMonth' and CostCenter='$CostCenter'");
             $TotalSal = $SalaryUpload['0']['0']['ActualCTC'];
 
-            $checkRecordExist = $this->CostCenterTransferFromFinal->query("select * from cost_center_cost_transfer_master where FinanceYear='$FinanceYear' and FinanceMonth='$FinanceMonth' and  FromBranch='$Branch' and FromCostCenter='$CostCenter'");
+            //$checkRecordExist = $this->CostCenterTransferFromFinal->query("select * from cost_center_cost_transfer_master where FinanceYear='$FinanceYear' and FinanceMonth='$FinanceMonth' and  FromBranch='$Branch' and FromCostCenter='$CostCenter'");
+            $checkRecordExist = "";
             if(empty($checkRecordExist))
             {
                 if($Amount<=$TotalSal)
@@ -232,6 +235,7 @@ $this->layout="home";
     public function get_cost_center()
     {
         $Branch = $this->request->data['Branch'];
+        echo $Branch;die;
         $costcenterArr = $this->CostCenterMaster->query("SELECT cost_center FROM cost_master cm INNER JOIN branch_master bm ON cm.branch=bm.branch_name WHERE bm.id='$Branch'");
         foreach($costcenterArr as $cost)
         {

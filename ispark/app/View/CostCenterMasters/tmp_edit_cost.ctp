@@ -806,19 +806,8 @@ $cost = $cost_master['TmpCostCenterMaster'];
                                             <label class="col-sm-2 control-label">&nbsp;</label>
                                             <?php	echo $this->Form->input('id', array('label'=>false,'class'=>'form-control','type'=>'hidden','value' => $cost['id']));
                                 echo $this->Form->input('approve', array('label'=>false,'type'=>'hidden','value' => $approve));
-                                if($approve=='53' || $approve=='54')
-                                {
-                        ?>
-			<div class="col-sm-2">
-                            <button name="submit" value="Approve" type="submit" class="btn btn-primary btn-label-left" >Approve</button>
-			</div>
-                        <div class="col-sm-2">
-                            <button name="submit" value="DisApprove" type="submit" class="btn btn-primary btn-label-left">DisApprove</button>
-                        </div>
-                        <?php
-                                }
-                                else
-                                {
+                                
+                                
 			?>
                               <div class="col-sm-2">
                             <button name="submit" value="Edit" type="submit" class="btn btn-primary btn-label-left" >Submit</button>
@@ -827,7 +816,7 @@ $cost = $cost_master['TmpCostCenterMaster'];
                             <button name="submit" value="DisApprove" type="submit" class="btn btn-primary btn-label-left">DisApprove</button>
                         </div>
                                             
-                                <?php } ?>                    
+                                
                                         </div>
 				</div>
 			</div>

@@ -1,10 +1,10 @@
 <?php
 class AttendanceExportsController extends AppController {
-    public $uses = array('Addbranch','Masjclrentry','Masattandance','FieldAttendanceMaster','OnSiteAttendanceMaster','HolidayMaster');
+    public $uses = array('Addbranch','Masjclrentry','Masattandance','FieldAttendanceMaster','OnSiteAttendanceMaster','HolidayMaster','Attendance');
         
     public function beforeFilter(){
         parent::beforeFilter(); 
-        $this->Auth->allow('index','show_report','getcostcenter','export_report');
+        $this->Auth->allow('index','show_report','getcostcenter','export_report','last_attendance_date','show_last_date');
         if(!$this->Session->check("username")){
             return $this->redirect(array('controller'=>'users','action' => 'login'));
         }
@@ -719,6 +719,108 @@ class AttendanceExportsController extends AppController {
        </table>
         <?php
         die;
+    }
+
+    public function last_attendance_date(){
+        $this->layout='home';
+        
+        $branchName = $this->Session->read('branch_name');
+        if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
+            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
+            $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
+        }
+        else{
+            $this->set('branchName',array($branchName=>$branchName)); 
+        }    
+    }
+
+    public function show_last_date(){
+        $this->layout='ajax';
+        
+        if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
+            
+            $branch_name = $_REQUEST['BranchName'];
+            $cost_center = $_REQUEST['CostCenter'];
+            $wheretag = '';
+            $wheretag1 = '';
+            if($branch_name == 'ALL')
+            {
+                $wheretag .= '1=1';
+            }else{
+
+                $wheretag .= "BranchName ='$branch_name'";
+            }
+            
+            if($cost_center == 'ALL')
+            {
+                $wheretag1 .= 'group by costcenter';
+            }else{
+                $wheretag1 .= "and costcenter = '$cost_center'";
+            }
+             //echo "SELECT BranchName,costcenter,MAX(AttandDate) as last_upload_date FROM `Attandence` WHERE $wheretag  $wheretag1 ";die;
+            // echo "SELECT BranchName,costcenter,MAX(ImportDate) as last_upload_date FROM `Attandence` WHERE $wheretag  $wheretag1 ";die;
+            $data = $this->Attendance->query("SELECT BranchName,costcenter,MAX(AttandDate) as last_upload_date FROM `Attandence` WHERE $wheretag  AND costcenter IS NOT NULL  $wheretag1 ");
+      
+            if(!empty($data)){
+               
+                $DataArr = array();
+                foreach($data as $d)
+                {
+                    $costcenter = $d['Attandence']['costcenter'];
+
+                    $qry = "select * from cost_master where cost_center='$costcenter' and active ='1' limit 1";
+                    $costdata   =   $this->Attendance->query($qry);
+                    //print_r($costdata);die;
+                    $process_name = $costdata[0]['cost_master']['process_name'];
+                    if($process_name == '')
+                    {
+                        $process['costcentername'] = $costdata[0]['cost_master']['CostCenterName'];
+                    }else{
+                        $process['costcentername'] = $costdata[0]['cost_master']['process_name'];
+                    }
+
+                    // $DataArr[]=$d;
+
+                    $DataArr[] = array_merge($d,$process);
+                    // $DataArr[]['costcentername']=$process;
+                }
+                // print_r($DataArr);die;
+            ?>
+            <div class="col-sm-12" style="overflow-y:scroll;height:500px;">
+                <table class = "table table-striped table-hover  responstable">     
+                    <thead>
+                        <tr>
+                            <th>Sr. No</th>
+                            <th>Branch Name</th>
+                            <th>CostCenter</th>
+                            <th>CostCenter Name</th>
+                            <th>Last Attendance Upload Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>         
+                        <?php
+                      
+                        $n=1; foreach($DataArr as $val){
+                        ?>
+                        <tr>
+                            <td><?php echo $n++;?></td>
+                            <td><?php echo strtoupper($val['Attandence']['BranchName']);?></td>
+                            <td><?php echo $val['Attandence']['costcenter'];?></td>
+                            <td><?php echo $val['costcentername'];?></td>
+                            <td><?php if(!empty($val[0]['last_upload_date'])){ echo date_format(date_create($val[0]['last_upload_date']),"d-M-Y"); } ?></td>
+                        </tr>
+                        <?php }?>
+                    </tbody>   
+                </table>
+            </div>
+            <?php   
+            }
+            else{
+                echo "";
+            }
+            die;
+        }
+        
     }
     
 }

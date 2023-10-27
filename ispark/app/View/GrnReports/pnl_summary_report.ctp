@@ -46,7 +46,7 @@ function DashboardLog(Id){
                         <label class="col-sm-1 control-label">Year</label>
                         <div class="col-sm-3">
                         <?php	
-                            echo $this->Form->input('FinanceYear', array('label'=>false,'id'=>'FinanceYear','class'=>'form-control','options' => $financeYearArr,'empty' => 'Select Year','required'=>true));
+                            echo $this->Form->input('FinanceYear', array('label'=>false,'id'=>'FinanceYear','class'=>'form-control','options' => $financeYearArr,'empty' => 'Select Year','value'=>$FinanceYearLogin,'required'=>true));
                         ?>
                         </div>
                         <label class="col-sm-2 control-label">From Month</label>
@@ -68,7 +68,7 @@ function DashboardLog(Id){
                         <div class="col-sm-2">
                            
                            <button class="btn btn-primary btn-label-left" onclick="return pnl_summary_report('Export')">Export</button>
-                           <a href="/ispark/FinanceReports" class="btn btn-primary btn-label-left">Back</a> 
+                           <a href="/ispark/Menuisps/sub?AX=MTM1" class="btn btn-primary">Back</a> 
                         </div>
                     </div>
                     

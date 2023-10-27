@@ -1,0 +1,207 @@
+Delivered-To: harneet.kaur@teammas.in.test-google-a.com
+Received: by 2002:ab2:6951:0:b0:1ca:b92:2713 with SMTP id r17csp8403934lqo;
+        Fri, 7 Jul 2023 02:11:12 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFXOPMsRAfPnroy7Ddn19vIMHE1H4aSakqzrxLEt8xXsEFX8G1XdciSydHfYyqjKfBzHwP4
+X-Received: by 2002:a0c:f1c9:0:b0:636:51cb:e5fd with SMTP id u9-20020a0cf1c9000000b0063651cbe5fdmr4619738qvl.35.1688721072076;
+        Fri, 07 Jul 2023 02:11:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1688721072; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yZNKA9QEwXbU7hQXYKr2kKgYsHQ0SKvCwpFEjceUUYd44JpFAdnq/NwDvJtO/PzU/1
+         5pKtAnzswU84rSanQD/Xns5UoMVZLewnKVkW1nVG2xswu9SX2Jg62o2+vFQ3wOek8XWs
+         tZg8No/6wh77FAsH7VafFFzO77mfOLlHWXPZ3jnEYMeeuyhl8MeUfS3di9HwPANn4Xx7
+         JF8v2ocoZd3BFw2EcnPXefaJC5AtyR/p0r45HENpiIvDSwlSCGXNiOhQSon6XKM8VEb5
+         PXVCzRGxj0JQ/fWLMF07KyQKeBVMrOcfMBtcqBP1puWiaf3Ym2YaTaLyMf8PkOU0Uae2
+         xwwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:from
+         :dkim-signature;
+        bh=yuLecBlc2av79vq+K0g0xIARVV2Nm6lfXb3UBcEfAEA=;
+        fh=7jh5kuD8BPAR/IWDmr4Ajbn9rw1HMGbj+8dZzY0wmRQ=;
+        b=rwKYlRKixd6M0x9dKtJAlm8bqAJhUNpR4woV9BwUANLJI8NxKfXH3WvfUda7X+gNTG
+         aX6v2nWIGwaKIuElWp2Kt2fnDV5RpdoSGOkB7+qEEg8dXo7o3jqkst5o02C4HgIcmfMe
+         ZfGj7CvWtiAmeaErzG6Jzhdnl+nUu7MGHjtUiRJl8BiXLKiMAqOSXX3HjCcQs+b9nGaj
+         qvBqI0M54rZX4UsGmwL3J8nzn2homcXhe09rI5nx/D8qWN+gwG1q3b6KQRV4OV9O1i7o
+         KZaHD3eBkDiCLv8yTJfTaBkdKxNOkEGLUEX9gF//A8YtjlwZfIkOoIt6mNiqUud15Yl/
+         vNsg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@teammas-in.20221208.gappssmtp.com header.s=20221208 header.b=MwjWQIHK;
+       spf=pass (google.com: domain of shivam.giri@teammas.in designates 204.80.91.190 as permitted sender) smtp.mailfrom=shivam.giri@teammas.in;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=teammas.in
+Return-Path: <shivam.giri@teammas.in>
+Received: from mail05.chinetworks.com (mail05.chinetworks.com. [204.80.91.190])
+        by mx.google.com with ESMTPS id fi19-20020a0562141a5300b006364d83d675si1178780qvb.386.2023.07.07.02.11.11
+        for <harneet.kaur@teammas.in.test-google-a.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jul 2023 02:11:12 -0700 (PDT)
+Received-SPF: pass (google.com: domain of shivam.giri@teammas.in designates 204.80.91.190 as permitted sender) client-ip=204.80.91.190;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@teammas-in.20221208.gappssmtp.com header.s=20221208 header.b=MwjWQIHK;
+       spf=pass (google.com: domain of shivam.giri@teammas.in designates 204.80.91.190 as permitted sender) smtp.mailfrom=shivam.giri@teammas.in;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=teammas.in
+Received: from cmf.dz1.da (unknown [192.168.202.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail05.chinetworks.com (Postfix) with ESMTPS id A65911581EAC
+	for <harneet.kaur@teammas.in>; Fri,  7 Jul 2023 14:41:11 +0530 (IST)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	by cmf.dz1.da (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id 367972HL023216
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
+	for <harneet.kaur@teammas.in>; Fri, 7 Jul 2023 04:07:03 -0500
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-4f4b2bc1565so2578731e87.2
+        for <harneet.kaur@teammas.in>; Fri, 07 Jul 2023 02:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=teammas-in.20221208.gappssmtp.com; s=20221208; t=1688721069; x=1691313069;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:from:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yuLecBlc2av79vq+K0g0xIARVV2Nm6lfXb3UBcEfAEA=;
+        b=MwjWQIHKcjJ9VKEl1c9m2zZIwlx2DuMhjypX89b7BkNvlKQx7lXVMPA6TIogDR4wUj
+         74cA6MA0pOcNE/oA/wJjbP5S2YKYHadNobOsaFD9Sw88FABVddVIJpmecJoDBhEEA+/d
+         58kY3LAi7lIi/nmx+DFar6dpg8J0L6o3TYXZPCnKfzPFNyEDH/gte4JiqqLzTZB+oNV0
+         xSp1ZoeqEmHQJOPVDKRt5Pg437hpn6ZoixVegUMQZTs+Hb5uYtfUbMRnuUG8dqBtnI9q
+         Faqu8dcO/BrgaFt2+BmGMN5XYARMztb2Hp2/TgAuZCK1+ewdPZe545B78lGPmg23eRpS
+         VINQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688721069; x=1691313069;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yuLecBlc2av79vq+K0g0xIARVV2Nm6lfXb3UBcEfAEA=;
+        b=MbnPE3+7CFVqwBU7BmdGZarwRt/pljHq684dkUvf53sR1EnJEeAbOziqTCTaQAj55B
+         RiTpHNlw5h8a/t4Vk+6MYf7OdhiX4C1KP1pyCUbMWiejE1dVycpV9Yn9unv8tF46cauu
+         BsEniBh7Gar7ai53+UkQBb01Qbhbz/HW6E+gHeB+lzfnQ9h9/Xo2v0sRlgeOxij8fOCT
+         yCJcEc9QY3PA4eYbFEyf9weSv8PJlUXYtdXdScTxcF/QfmzrRhCxzUI+2EVqV2ifII5b
+         C0H/ePxxFtMJLwD3Mw2tOs9LAi5wRRAJCzXjPhcFuyFboV44sVhHRGB4UzbfvdW2+xYT
+         rC1g==
+X-Gm-Message-State: ABy/qLYR3JIQxVhP6uEpLKhZaGXNhGoaOjYKnSCzGyS5CjatchDMxJm6
+	eOHnH4OyCmB0Txxc/XhVAkXvxluWO5OolQJOfDcPsJqK
+X-Received: by 2002:a05:6512:31c9:b0:4fb:9631:4bb with SMTP id
+ j9-20020a05651231c900b004fb963104bbmr4229329lfe.11.1688721069574; Fri, 07 Jul
+ 2023 02:11:09 -0700 (PDT)
+From: Shivam Shiv Giri <shivam.giri@teammas.in>
+MIME-Version: 1.0
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdmwsvT8LsLaW6ugQ7ejLwMonz6BCA==
+Date: Fri, 7 Jul 2023 14:41:04 +0530
+Message-ID: <76f7d5a29507d09716ed642185cfd7c7@mail.gmail.com>
+Subject: One Login ID Creation- Batch 186
+To: Upneet Sohal <upneet.sohal@onfido.com>
+Cc: Alka Gupta <alka.gupta@teammas.in>, rahul.gupta@onfido.com,
+        Harneet Kaur <harneet.kaur@teammas.in>,
+        Sachin Ahuja1 <sachin.ahuja1@teammas.in>
+Content-Type: multipart/mixed; boundary="0000000000007a349605ffe203cf"
+X-Spam-Score: undef - shivam.giri@teammas.in is allowed always.
+X-CanIt-Geo: ip=209.85.167.43; country=US; latitude=37.7510; longitude=-97.8220; http://maps.google.com/maps?q=37.7510,-97.8220&z=6
+X-CanItPRO-Stream: teammas-in:harneet.kaur@teammas.in (inherits from teammas-in:default,base:default)
+Received-SPF: pass (cmf.dz1.da: domain of shivam.giri@teammas.in
+	designates 209.85.167.43 as permitted sender)
+	receiver=cmf.dz1.da; client-ip=209.85.167.43;
+	envelope-from=<shivam.giri@teammas.in>; helo=mail-lf1-f43.google.com;
+	identity=mailfrom
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 192.168.202.216
+
+--0000000000007a349605ffe203cf
+Content-Type: multipart/alternative; boundary="0000000000007a349405ffe203cd"
+
+--0000000000007a349405ffe203cd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Greetings Ma=E2=80=99am,
+
+
+
+Please help in creation of One Login ID Creation
+
+
+
+Regards
+
+Shivam Shiv Giri
+
+--0000000000007a349405ffe203cd
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3Dutf-8"><meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered m=
+edium)"><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri","sans-serif";}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style></head><body lang=3D"EN-US" link=3D"blue" vlink=3D"purple"><div =
+class=3D"WordSection1"><p class=3D"MsoNormal"><span style=3D"font-size:11.0=
+pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1f497d">Gr=
+eetings Ma=E2=80=99am,</span></p><p class=3D"MsoNormal"><span style=3D"font=
+-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#=
+1f497d">=C2=A0</span></p><p class=3D"MsoNormal"><span style=3D"font-size:11=
+.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1f497d">=
+Please help in creation of One Login ID Creation </span></p><p class=3D"Mso=
+Normal"><span style=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&qu=
+ot;sans-serif&quot;;color:#1f497d">=C2=A0</span></p><p class=3D"MsoNormal">=
+<span style=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-=
+serif&quot;;color:#1f497d">Regards</span></p><p class=3D"MsoNormal"><span s=
+tyle=3D"font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&q=
+uot;;color:#1f497d">Shivam Shiv Giri</span></p></div></body></html>
+
+--0000000000007a349405ffe203cd--
+--0000000000007a349605ffe203cf
+Content-Type: text/csv; name="Id creation 186.csv"; charset="US-ASCII"
+Content-Disposition: attachment; filename="Id creation 186.csv"
+Content-Transfer-Encoding: base64
+Content-ID: <f_ljsclesb0>
+X-Attachment-Id: ae17d6add101d418_0.1
+
+Uy5ObyxOYW1lLEVtYWlsIElELExvY2F0aW9uLEVtcCBJRA0KMSxQYXdhbiBLdW1hcixwYXdhbi5r
+dW1hcjE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDUxDQoyLFNhdXJhYmgsc2F1cmFi
+aDE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDUwDQozLEppdGVuZHJhIFNpbmdoLGpp
+dGVuZHJhLnNpbmdoMTg2QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFTNTMwNDkNCjQsUmlzaGFi
+aCBqYXdhLHJpc2hhYmguamF3YTE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDM3DQo1
+LE1kIEFicmFyLG1kLmFicmFyMTg2QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFTNTMwNDQNCjYs
+TWFuZ2FsIFNpbmdoLG1hbmdhbC5zaW5naDE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUz
+MDQ1DQo3LFNvbnUsc29udTE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDQ3DQo4LEph
+dGluIHNpbmdoLGphdGluLnNpbmdoMTg2QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFTNTMwNDYN
+CjksSml0ZW5kcmEga3VtYXIsaml0ZW5kcmEua3VtYXIxODZAdGVhbW1hcy5pbixpbmRpYV9ub2lk
+YSxNQVM1MzAzOA0KMTAsQXJqdW4gTWVocmEsYXJqdW4ubWVocmExODZAdGVhbW1hcy5pbixpbmRp
+YV9ub2lkYSxNQVM1MzA0Mg0KMTEsQWJoYXkga3VtYXIsYWJoYXkua3VtYXIxODZAdGVhbW1hcy5p
+bixpbmRpYV9ub2lkYSxNQVM1MzAzNg0KMTIsUmFuamVldCBrdW1hcixyYW5qZWV0Lmt1bWFyMTg2
+QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFTNTMwMzkNCjEzLFNhdXJhYmggSmhhLHNhdXJhYmgu
+amhhMTg2QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFTNTMwMzQNCjE0LFNodWJoYW0gU2luZ2gs
+c2h1YmhhbS5zaW5naDE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDQzDQoxNSxTaGl2
+YW5hbmQgU2luZ2gsc2hpdmFuYW5kLnNpbmdoMTg2QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFT
+NTMwMzMNCjE2LFZpc2hhbCBTaW5naCx2aXNoYWwuc2luZ2gxODZAdGVhbW1hcy5pbixpbmRpYV9u
+b2lkYSxNQVM1MzA0OA0KMTcsQWRpdHlhIEJhbGksYWRpdHlhLmJhbGkxODZAdGVhbW1hcy5pbixp
+bmRpYV9ub2lkYSxNQVM1MzAzNQ0KMTgsQmFsYW0gU2luZ2gsYmFsYW0uc2luZ2gxODZAdGVhbW1h
+cy5pbixpbmRpYV9ub2lkYSxNQVM1MzA0MQ0KMTksSGFyaW9tLGhhcmlvbTE4NkB0ZWFtbWFzLmlu
+LGluZGlhX25vaWRhLE1BUzUzMDQwDQoyMCxQYW5rYWoga3VtYXIgVmVybWEscGFua2FqLnZlcm1h
+MTg2QHRlYW1tYXMuaW4saW5kaWFfbm9pZGEsTUFTNTMwNTMNCjIxLFBhd2FuIFJhdGhvcmUscGF3
+YW4ucmF0aG9yZTE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDU2DQoyMixMYXhtaSBZ
+YWRhdixsYXhtaS55YWRhdjE4NkB0ZWFtbWFzLmluLGluZGlhX25vaWRhLE1BUzUzMDUyDQoyMyxB
+bmtpdKAgRHViZXksYW5raXQuZHViZXkxODZAdGVhbW1hcy5pbixpbmRpYV9ub2lkYSxNQVM1MzA1
+NA0K
+--0000000000007a349605ffe203cf--

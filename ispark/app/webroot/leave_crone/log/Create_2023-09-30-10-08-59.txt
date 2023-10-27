@@ -1,0 +1,118 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\WINDOWS\system32> Get-EventLog -LogName Security | Where-Object {$_.EventID -eq 4720} | Select-Object -Property *
+
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 2229367
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                        Security ID:            S-1-5-21-2373504117-2689643630-3100359099-10155
+                        Account Name:           ranjeetit
+                        Account Domain:         MAS-NOIDA
+                        Logon ID:               0x31ece82d
+
+                     New Account:
+                        Security ID:            S-1-5-21-2373504117-2689643630-3100359099-16624
+                        Account Name:           MAS53941
+                        Account Domain:         MAS-NOIDA
+
+                     Attributes:
+                        SAM Account Name:       MAS53941
+                        Display Name:           VENISH PATEL MAS53941
+                        User Principal Name:    MAS53941@mas-noida.com
+                        Home Directory:         -
+                        Home Drive:             -
+                        Script Path:            -
+                        Profile Path:           -
+                        User Workstations:      -
+                        Password Last Set:      %%1794
+                        Account Expires:                %%1794
+                        Primary Group ID:       513
+                        Allowed To Delegate To: -
+                        Old UAC Value:          0x0
+                        New UAC Value:          0x15
+                        User Account Control:
+                                %%2080
+                                %%2082
+                                %%2084
+                        User Parameters:        -
+                        SID History:            -
+                        Logon Hours:            %%1793
+
+                     Additional Information:
+                        Privileges              -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53941, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-16624,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4720
+TimeGenerated      : 9/30/2023 10:06:44 PM
+TimeWritten        : 9/30/2023 10:06:44 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 2229177
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                        Security ID:            S-1-5-21-2373504117-2689643630-3100359099-10155
+                        Account Name:           ranjeetit
+                        Account Domain:         MAS-NOIDA
+                        Logon ID:               0x31ece82d
+
+                     New Account:
+                        Security ID:            S-1-5-21-2373504117-2689643630-3100359099-16623
+                        Account Name:           MAS53940
+                        Account Domain:         MAS-NOIDA
+
+                     Attributes:
+                        SAM Account Name:       MAS53940
+                        Display Name:           GOHEL MAYANK MAS53940
+                        User Principal Name:    MAS53940@mas-noida.com
+                        Home Directory:         -
+                        Home Drive:             -
+                        Script Path:            -
+                        Profile Path:           -
+                        User Workstations:      -
+                        Password Last Set:      %%1794
+                        Account Expires:                %%1794
+                        Primary Group ID:       513
+                        Allowed To Delegate To: -
+                        Old UAC Value:          0x0
+                        New UAC Value:          0x15
+                        User Account Control:
+                                %%2080
+                                %%2082
+                                %%2084
+                        User Parameters:        -
+                        SID History:            -
+                        Logon Hours:            %%1793
+
+                     Additional Information:
+                        Privileges              -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53940, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-16623,
+                     S-1-5-21-2373504117-2689643630-3100359099-10155...}
+InstanceId         : 4720
+TimeGenerated      : 9/30/2023 10:05:55 PM
+TimeWritten        : 9/30/2023 10:05:55 PM
+UserName           :
+Site               :
+Container          :
+

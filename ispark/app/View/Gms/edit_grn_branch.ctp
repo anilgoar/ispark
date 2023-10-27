@@ -32,7 +32,11 @@
 				<div class="no-move"></div>
 			</div>
 			<div class="box-content no-padding">
+                            <a href="/ispark/Menuisps/sub?AX=NjA=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                             <h4 style="color:green"><?php echo $this->Session->flash(); ?> </h4>
+                            
+                            
+                            
 				<table class="table  table-bordered table-hover table-heading no-border-bottom responstable" id="table_id">
 				<?php $case=array('primary',''); $i=0; ?>
 					<thead>
@@ -44,7 +48,7 @@
                                                         <td>Reject By</td>
                                                         <td>Reject Remarks</td>
                                                         <td>Amount</td>
-                                                        <td>Edit</td>
+                                                        <td>Status</td>
 						</tr>
                                         </thead>
                                         <tbody>
@@ -54,11 +58,18 @@
 							<td><?php echo $post['tu']['username']; ?></td>
 							<td><?php echo $post['cm']['company_name']; ?></td>
                                                         <td><?php echo $post['vm']['vendor']; ?></td>
-                                                        <td><?php  if($post['eemApp']['Reject']=='2') { echo "Reject From Second Level";} else  if($post['eemApp']['Reject']=='0') { echo "Reject From First Level";} ?></td>
+                                                        <td><?php  if($post['eemApp']['Reject']=='2') { echo "Reject From Second Level";} 
+                                                        else  if($post['eemApp']['Reject']=='0') { echo "Reject From First Level";} 
+                                                        else  if($post['eemApp']['Reject']=='3') { echo "Reject From Finance Head Level";}
+                                                        else  if($post['eemApp']['Reject']=='4') { echo "Moved To Finance Head For Approval";}?>
+                                                        </td>
                                                         <td><font color="red"><?php echo $post['eemApp']['RejectRemarks']; ?></font></td>
                                                         <td><?php echo $post['eemApp']['Amount']; ?></td>
-                                                        <td><?php if($post['eemApp']['Reject']=='0') { ?><code><?php echo $this->Html->link('Edit',array('controller'=>'Gms','action'=>'edit_grn_tmp_branch','?'=>array('Id'=>$post['eemApp']['Id']),'full_base' => true)); ?></code><?php } ?></td>
-						</tr>
+<!--                                                        <td><?php //if($post['eemApp']['Reject']=='0') {  echo 'Reject From First Approval'; } else if($post['eemApp']['Reject']=='2') {'Reject From Second Approval';} else if($post['eemApp']['Reject']=='3') {'Reject From Finance Head';} else if($post['eemApp']['Reject']=='3') {'Moved To Finance Head For Approval';} ?></td>-->
+                                                        
+                                                        <td><?php if($post['eemApp']['Reject']=='0' || $post['eemApp']['Reject']=='2' ) { ?><code><?php echo $this->Html->link('Edit',array('controller'=>'Gms','action'=>'edit_grn_tmp_branch','?'=>array('Id'=>$post['eemApp']['Id']),'full_base' => true)); ?></code><?php } ?></td>
+                                                        
+						</tr> 
 						<?php endforeach; ?>
 						<?php unset($data); ?>
 					</tbody>

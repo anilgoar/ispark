@@ -92,6 +92,12 @@ if($payment_master['0']!='') {$flag1 =true;}
 											<input type="radio" name="type" value="RTGS" id="type"  onClick="return collection_validate(this.value)" >RTGS
 											<i class="fa fa-circle-o"></i>
 										</label>
+									</div>
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="type" value = "Cash" id = 'type' onClick="return collection_validate(this.value)" >Cash
+											<i class="fa fa-circle-o"></i>
+										</label>
 									</div>                                   
                         		</div>
                               <?php } else { ?>
@@ -108,7 +114,13 @@ if($payment_master['0']!='') {$flag1 =true;}
 											<input type="radio" name="type" value="RTGS" id="type"  onClick="return collection_validate(this.value)" <?php if($payment_master['4'] == 'RTGS') { echo "checked"; $pay_type = 'RTGS';}else {echo "disabled";} ?>>RTGS
 											<i class="fa fa-circle-o"></i>
 										</label>
-									</div>                                   
+									</div>  
+									<div class="radio-inline">
+										<label>
+											<input type="radio" name="type" value = "Cash" id = 'type' onClick="return collection_validate(this.value)" <?php if($payment_master['4'] == 'Cash') { echo "checked"; $pay_type = 'Cash';}else {echo "disabled";} ?>>Cash
+											<i class="fa fa-circle-o"></i>
+										</label>
+									</div>                                  
                         		</div>                              
                              <?php } ?>
                                
@@ -357,7 +369,7 @@ if($payment_master['0']!='') {$flag1 =true;}
 			</div>
 		</div>
 	</div>
-
+	<input type="hidden" name="advance_id" value="<?php echo $advance_id; ?>"  />					
 <script>
     $(document).ready(function (e) {
         

@@ -16,9 +16,9 @@ class RevenuesController extends AppController
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 				
-            if(in_array('51',$roles)){$this->Auth->allow('index');$this->Auth->allow('get_revenue_cost');$this->Auth->allow('send_bps');}
-            if(in_array('52',$roles)){$this->Auth->allow('get_revenue_cost'); $this->Auth->allow('send_bps');}
-            else{$this->Auth->deny('index');$this->Auth->deny('get_revenue_cost');$this->Auth->deny('edit');}
+            $this->Auth->allow('index');$this->Auth->allow('get_revenue_cost');$this->Auth->allow('send_bps');
+            $this->Auth->allow('get_revenue_cost'); $this->Auth->allow('send_bps');
+            
 	}
     }
 		

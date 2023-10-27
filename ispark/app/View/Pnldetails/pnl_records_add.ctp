@@ -67,7 +67,7 @@
                 <div class="form-group">
                 <label class="col-sm-2 control-label">Finance Year</label>    
                     <div class="col-sm-6">
-                        <?php echo $this->Form->input($pnl['PnlMaster']['PnlMasterId'].'.FinanceYear',array('label'=>false,'id'=>'FinanceYear'.$pnl['PnlMaster']['PnlMasterId'],'options'=>$finance_year,'empty'=>'Select','required'=>true,'class'=>'form-control')); ?>
+                        <?php echo $this->Form->input($pnl['PnlMaster']['PnlMasterId'].'.FinanceYear',array('label'=>false,'id'=>'FinanceYear'.$pnl['PnlMaster']['PnlMasterId'],'options'=>$finance_year,'empty'=>'Select','value'=>$FinanceYearLogin,'required'=>true,'class'=>'form-control')); ?>
                     </div>
                 </div>    
 <!--                    Finance Month-->

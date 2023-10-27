@@ -1,4 +1,6 @@
 <?php
+echo $this->Html->css('jquery-ui');
+echo $this->Html->script('jquery-ui');
 $exp    =   explode("Menus?AX=", $_SERVER['HTTP_REFERER']);
 $expid  =   end($exp);
 if(isset($_REQUEST['backid'])){
@@ -10,13 +12,27 @@ else{
     $backurl=$this->webroot."Menus?AX=".$expid;
 }
 ?>
+<script language="javascript">
+$(function () {
+    $("#FromDate").datepicker1({
+        changeMonth: true,
+        changeYear: true
+    });
+});
+$(function () {
+    $("#ToDate").datepicker1({
+        changeMonth: true,
+        changeYear: true
+    });
+});
+</script>
 <script>
-function getBranch(BranchName){
+function getBranch(){
     $("#msgerr").remove();
     
     var EmpMonth = $("#EmpMonth").val();
     var EmpYear = $("#EmpYear").val();
-    
+    var BranchName = $("#BranchName").val();
     if(BranchName ===""){
         $("#BranchName").focus();
         $("#BranchName").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select branch name.</span>");
@@ -88,7 +104,57 @@ function ExportProcess(){
     }
 }
 
+function ExportPending(){ 
+    $("#msgerr").remove();
+    var BranchName=$("#BranchNameExp1").val();
+    var EmpMonth=$("#EmpMonthExp1").val();
+    var EmpYear=$("#EmpYearExp1").val();
+    
+    if(BranchName ===""){
+        $("#BranchNameExp1").focus();
+        $("#BranchNameExp1").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select branch name.</span>");
+        return false;
+    }
+    else if(EmpMonth ===""){
+        $("#EmpMonthExp1").focus();
+        $("#EmpMonthExp1").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select emp month.</span>");
+        return false;
+    }
+    else if(EmpYear ===""){
+        $("#EmpYearExp1").focus();
+        $("#EmpYearExp1").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select emp year.</span>");
+        return false;
+    }
+    else{
+        window.location="<?php echo $this->webroot;?>ProcessSalarys/export_paid_pending_report?BranchName="+BranchName+"&EmpMonth="+EmpMonth+"&EmpYear="+EmpYear; 
+    }
+}
 
+function ExportAll(){ 
+    $("#msgerr").remove();
+    var BranchName=$("#BranchNameExp2").val();
+    var from=$("#FromDate").val();
+    var to=$("#ToDate").val();
+    
+    if(BranchName ===""){
+        $("#BranchNameExp2").focus();
+        $("#BranchNameExp2").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select branch name.</span>");
+        return false;
+    }
+    else if(from ===""){
+        $("#FromDate").focus();
+        $("#FromDate").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select From Date.</span>");
+        return false;
+    }
+    else if(to ===""){
+        $("#ToDate").focus();
+        $("#ToDate").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select To Date.</span>");
+        return false;
+    }
+    else{
+        window.location="<?php echo $this->webroot;?>ProcessSalarys/export_datewise_report?BranchName="+BranchName+"&From="+from+"&To="+to; 
+    }
+}
 </script>
 
 
@@ -130,12 +196,12 @@ function ExportProcess(){
                 <div class="form-group">
                     <label class="col-sm-1 control-label">Branch</label>
                     <div class="col-sm-2">
-                        <?php echo $this->Form->input('branch_name',array('label' => false,'options'=>$branchName,'empty'=>'Select','onchange'=>'getBranch(this.value)','class'=>'form-control','id'=>'BranchName','required'=>true)); ?>
+                        <?php echo $this->Form->input('branch_name',array('label' => false,'options'=>$branchName,'empty'=>'Select','onchange'=>'getBranch()','class'=>'form-control','id'=>'BranchName','required'=>true)); ?>
                     </div>
                     
                     <label class="col-sm-1 control-label">Month</label>
                     <div class="col-sm-2">
-                        <select id="EmpMonth" name="EmpMonth" autocomplete="off" class="form-control" required="" >
+                        <select id="EmpMonth" name="EmpMonth" autocomplete="off" class="form-control" required="" onchange="getBranch()">
                             <option value="<?php echo date('m', strtotime(date('Y-m')." -2 month"));?>"><?php echo date('M', strtotime(date('Y-m')." -2 month"));?></option>
                             <option value="<?php echo date('m', strtotime(date('Y-m')." -1 month"));?>"><?php echo date('M', strtotime(date('Y-m')." -1 month"));?></option>
                         </select>
@@ -173,14 +239,14 @@ function ExportProcess(){
             
             
             
-            <div class="box-content box-con" style="margin-top: 100px;" >
+            <div class="box-content box-con" style="margin-top: 80px;" >
                 
                 <div class="box-header"  >
-                <div class="box-name">
-                    <span>SALARY EXPORT</span>
-		</div>
-		<div class="no-move"></div>
-            </div>
+                    <div class="box-name">
+                        <span>SALARY EXPORT</span>
+                    </div>
+		            <div class="no-move"></div>
+                </div>
                 
                 <span><?php echo $this->Session->flash(); ?></span>
                 <?php echo $this->Form->create('ProcessSalarys',array('action'=>'index','class'=>'form-horizontal')); ?>
@@ -220,6 +286,95 @@ function ExportProcess(){
               
                     <div class="col-sm-1">
                         <input type="button" onclick="ExportProcess();" value="Export" class="btn pull-right btn-primary btn-new" style="margin-left:5px;" >
+                    </div>
+                </div>                 
+                <?php echo $this->Form->end(); ?>
+            </div>
+
+
+            <div class="box-content box-con" style="margin-top: 5px;" >
+                
+                <div class="box-header"  >
+                    <div class="box-name">
+                        <span>SALARY PAID/PENDING - Monthly</span>
+                    </div>
+		            <div class="no-move"></div>
+                </div>
+                
+                <span><?php echo $this->Session->flash(); ?></span>
+                <?php echo $this->Form->create('ProcessSalarys',array('action'=>'index','class'=>'form-horizontal')); ?>
+                
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Branch</label>
+                    <div class="col-sm-2">
+                        <?php echo $this->Form->input('branch_name',array('label' => false,'options'=>$branchNameAll,'empty'=>'Select','class'=>'form-control','id'=>'BranchNameExp1','required'=>true)); ?>
+                    </div>
+                    
+                    <label class="col-sm-1 control-label">Month</label>
+                    <div class="col-sm-2">
+                        <select id="EmpMonthExp1" name="EmpMonthExp" autocomplete="off" class="form-control" required="" >
+                            <option value="">Select</option>
+                            <option value="01">Jan</option>
+                            <option value="02">Feb</option>
+                            <option value="03">Mar</option>
+                            <option value="04">Apr</option>
+                            <option value="05">May</option>
+                            <option value="06">Jun</option>
+                            <option value="07">Jul</option>
+                            <option value="08">Aug</option>
+                            <option value="09">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                        </select>
+                    </div>
+                    
+                    <label class="col-sm-1 control-label">Year</label>
+                    <div class="col-sm-2">
+                        <select id="EmpYearExp1" name="EmpYearExp" autocomplete="off"   class="form-control" >
+                            <option value="<?php echo date("Y"); ?>"><?php echo date("Y"); ?></option>
+                            <option value="<?php echo date("Y",strtotime("-1 year")); ?>"><?php echo date("Y",strtotime("-1 year")); ?></option>
+                        </select>
+                    </div>
+              
+                    <div class="col-sm-1">
+                        <input type="button" onclick="ExportPending();" value="Export" class="btn pull-right btn-primary btn-new" style="margin-left:5px;" >
+                    </div>
+                </div>                 
+                <?php echo $this->Form->end(); ?>
+            </div>
+
+            <div class="box-content box-con" style="margin-top: 5px;" >
+                
+                <div class="box-header"  >
+                    <div class="box-name">
+                        <span>SALARY - Yearly</span>
+                    </div>
+		            <div class="no-move"></div>
+                </div>
+                
+                <span><?php echo $this->Session->flash(); ?></span>
+                <?php echo $this->Form->create('ProcessSalarys',array('action'=>'index','class'=>'form-horizontal')); ?>
+                
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Branch</label>
+                    <div class="col-sm-2">
+                        <?php echo $this->Form->input('branch_name',array('label' => false,'options'=>$branchNameAll,'empty'=>'Select','class'=>'form-control','id'=>'BranchNameExp2','required'=>true)); ?>
+                    </div>
+                    
+                    <label class="col-sm-1 control-label">From</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="FromDate" id="FromDate" placeholder="From"  autocomplete="off" class="form-control">
+                    </div>
+                    
+                    <label class="col-sm-1 control-label">To</label>
+                    <div class="col-sm-2">
+                        <input type="text" name="ToDate" id="ToDate" placeholder="To" autocomplete="off" class="form-control">
+                    </div>
+                    
+              
+                    <div class="col-sm-1">
+                        <input type="button" onclick="ExportAll();" value="Export" class="btn pull-right btn-primary btn-new" style="margin-left:5px;" >
                     </div>
                 </div>                 
                 <?php echo $this->Form->end(); ?>

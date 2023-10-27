@@ -98,7 +98,10 @@ function getGrnNos()
     </div>
     <div class="form-group">
         <div class="col-sm-5"></div>
-        <div class="col-sm-2"><button type="submit" name="submit" value="Booked" class="btn btn-info">Booked</button></div>
+        <div class="col-sm-2">
+            <button type="submit" name="submit" value="Booked" class="btn btn-info">Booked</button>
+            <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
+        </div>
     </div>    
     
        <div class="clearfix"></div>

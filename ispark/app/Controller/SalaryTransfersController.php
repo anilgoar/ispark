@@ -39,12 +39,18 @@ class SalaryTransfersController extends AppController {
             $mwd        =   cal_days_in_month(CAL_GREGORIAN, $m, $y);
             $SalayDay   =   $y."-".$m."-".$mwd;
                      
-            $where_bra  =   $_REQUEST['BranchName'] !="ALL"?" AND Branch='{$_REQUEST['BranchName']}'":"";//AND SalaryDownload IS NULL
-            $where_cos  =   $_REQUEST['CostCenter'] !="ALL"?" AND CostCenter='{$_REQUEST['CostCenter']}'":"";
+            $where_bra  =   $_REQUEST['BranchName'] !="ALL"?" AND salary_data.Branch='{$_REQUEST['BranchName']}'":"";//AND SalaryDownload IS NULL
+            $where_cos  =   $_REQUEST['CostCenter'] !="ALL"?" AND salary_data.CostCenter='{$_REQUEST['CostCenter']}'":"";
 			
-			$where_fnf  =   $_REQUEST['EmpStatus'] =="0"?" AND FnfStatus='Validate'":"";
+			$where_fnf  =   $_REQUEST['EmpStatus'] =="0"?" AND mjclr.FnfStatus='Validate'":"";
 			
-            $query      =   "SELECT Id,EmpCode,EmpName,CostCenter,Designation,Branch,NetSalary FROM `salary_data` WHERE `Status`='$EmpStatus' $where_fnf AND NetSalary !='0' AND SalaryDownload IS NULL AND DATE(SalayDate)='$SalayDay' AND AcNo IS NOT NULL AND AcNo !='' AND AcNo !='0' AND (ChequeNumber IS NULL OR ChequeNumber='' OR ChequeNumber='0') $where_bra $where_cos";
+            //$query      =   "SELECT Id,EmpCode,EmpName,CostCenter,Designation,Branch,NetSalary FROM `salary_data` WHERE `Status`='$EmpStatus' $where_fnf AND NetSalary !='0' AND SalaryDownload IS NULL AND DATE(SalayDate)='$SalayDay' AND AcNo IS NOT NULL AND AcNo !='' AND AcNo !='0' AND (ChequeNumber IS NULL OR ChequeNumber='' OR ChequeNumber='0') $where_bra $where_cos";
+            
+            $query      =   "SELECT salary_data.Id,salary_data.EmpCode,salary_data.EmpName,salary_data.CostCenter,salary_data.Designation,salary_data.Branch,salary_data.NetSalary FROM `salary_data` 
+INNER JOIN masjclrentry mjclr ON salary_data.EmpCode = mjclr.EmpCode
+ WHERE mjclr.`Status`='$EmpStatus' $where_fnf AND salary_data.NetSalary !='0' AND salary_data.SalaryDownload IS NULL
+  AND DATE(salary_data.SalayDate)='$SalayDay' AND salary_data.AcNo IS NOT NULL AND salary_data.AcNo !='' AND salary_data.AcNo !='0'
+   AND (salary_data.ChequeNumber IS NULL OR salary_data.ChequeNumber='' OR salary_data.ChequeNumber='0') $where_bra $where_cos";
             
 			
 			$dataArr    =   $this->SalarData->query($query);

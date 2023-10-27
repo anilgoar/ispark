@@ -33,6 +33,32 @@ function getImprestHide()
        $('#BankId').prop('disabled',true);
     }
 }
+
+
+
+function getImprestManager()
+{
+    var BranchId=$("#branchId").val();
+  $.post("get_imprest_manager",
+            {
+             BranchId: BranchId,
+            },
+            function(data,status){
+                var text='<option value="">Select</option>';
+                var json = jQuery.parseJSON(data);
+                for(var i in json)
+                {
+                    text += '<option value="'+i+'">'+json[i]+'</option>';
+                }
+                //alert(text);
+                $("#imprestId").empty();
+                $("#imprestId").html(text);
+                
+            });  
+}
+
+
+
 </script>
 <style>
     .textClass{ text-shadow: 5px 5px 5px #5a8db6;}
@@ -63,7 +89,7 @@ function getImprestHide()
         <label class="col-sm-2 control-label">Branch</label>
         <div class="col-sm-3">
             <div class="input-group">
-                <?php echo $this->Form->input('BranchId',array('label' => false,'options'=>$branch_master,'class'=>'form-control','empty'=>'Select','id'=>'branchId','required'=>true)); ?>
+                <?php echo $this->Form->input('BranchId',array('label' => false,'options'=>$branch_master,'class'=>'form-control','empty'=>'Select','id'=>'branchId','onchange'=>'getImprestManager()','required'=>true)); ?>
                 <span class="input-group-addon"><i class="fa fa-sitemap"></i></span>
             </div>    
         </div>
@@ -79,7 +105,7 @@ function getImprestHide()
         <label class="col-sm-2 control-label">Imprest Manager</label>
         <div class="col-sm-3">
             <div class="input-group">
-               <?php echo $this->Form->input('ImprestManagerId',array('label' => false,'options'=>$imprest_master,
+               <?php echo $this->Form->input('ImprestManagerId',array('label' => false,'options'=>'',
                    'class'=>'form-control','empty'=>'--Imprest Manager--','id'=>'imprestId','required'=>true)); ?>
              <span class="input-group-addon"><i class="fa fa-user"></i></span>  
             </div>   

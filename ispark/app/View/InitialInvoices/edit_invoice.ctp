@@ -145,7 +145,7 @@
             <div class="form-group">
                 <table class="table table-striped">
                     <tr>
-                        <th>Revenue</th>
+                        <th>Revenue</th> 
                         <?php
                                 foreach($monthMaster as $mnt=>$mntRevenue)
                                 {
@@ -204,13 +204,13 @@
     <table class="table table-striped table-bordered table-hover table-heading no-border-bottom">
     <?php $case=array('active','','active',''); $i=0; ?>
     <tbody>
-        <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['client'];?></th></tr>
-        <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['bill_to'];?></th></tr>
-        <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address1'];?></th></tr>
-	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address2'];?></th></tr>
-	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address3'];?></th></tr>
-	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address4'];?></th></tr>
-	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address5'];?></th></tr>
+        <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_client'];?></th></tr>
+        <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_bill_to'];?></th></tr>
+        <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_b_Address1'];?></th></tr>
+	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_b_Address2'];?></th></tr>
+	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_b_Address3'];?></th></tr>
+	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_b_Address4'];?></th></tr>
+	<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_b_Address5'];?></th></tr>
     </tbody>
     </table>
     </div>
@@ -232,13 +232,13 @@
 	<table class="table table-striped table-bordered table-hover table-heading no-border-bottom">
 	<?php $case=array('active','','active',''); $i=0; ?>
 	<tbody>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['client'];?></th></tr>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['ship_to'];?></th></tr>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address1'];?></th></tr>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address2'];?></th></tr>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address3'];?></th></tr>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address4'];?></th></tr>
-            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address5'];?></th></tr>						
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_client'];?></th></tr>
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_ship_to'];?></th></tr>
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_a_address1'];?></th></tr>
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_a_address2'];?></th></tr>
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_a_address3'];?></th></tr>
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_a_address4'];?></th></tr>
+            <tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['InitialInvoice']['cost_a_address5'];?></th></tr>						
 	</tbody>
         </table>
 	</div>
@@ -489,7 +489,7 @@
                                     
                                     if(strtotime($data['InitialInvoice']['invoiceDate'])>strtotime("2017-06-30"))
                                                     {
-                                                      if(strtolower($dataX['GSTType'])==strtolower('Integrated') && $data['InitialInvoice']['apply_gst']=='1')
+                                                      if(strtolower($data['InitialInvoice']['cost_GSTType'])==strtolower('Integrated') && $data['InitialInvoice']['apply_gst']=='1')
                                                       {
                                                     ?>
                                                 <tr>
@@ -618,7 +618,7 @@ echo $this->Form->input('InitialInvoice.revenue_str', 	array('label'=>false,'id'
 echo $this->Form->input('InitialInvoice.revenue', 	array('label'=>false,'id'=>"revenue",'value'=>$revenue,'type'=>'hidden')); ?>
 <?php 
 echo $this->Form->input('InitialInvoice.id',array('label'=>false,'value'=>$data['InitialInvoice']['id'],'type'=>'hidden'));
-echo $this->Form->input('InitialInvoice.GSTType',array('label'=>false,'value'=>$dataX['GSTType'],'type'=>'hidden'));
+echo $this->Form->input('InitialInvoice.GSTType',array('label'=>false,'value'=>$data['InitialInvoice']['cost_GSTType'],'type'=>'hidden'));
 echo $this->Form->input('InitialInvoice.apply_gst',array('label'=>false,'value'=>$data['InitialInvoice']['apply_gst'],'type'=>'hidden'));
 ?>
 <?php echo $this->Form->end(); ?>

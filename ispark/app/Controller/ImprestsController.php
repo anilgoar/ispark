@@ -16,9 +16,9 @@ class ImprestsController extends AppController
         {
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
-                $this->Auth->allow('tmp_view_branch_vendor','tmp_edit_branch_vendor','grn_payment','grn_payment_salary','vendor_add_head','add_head','add_sub_head');
+                $this->Auth->allow('tmp_view_branch_vendor','tmp_edit_branch_vendor','grn_payment','grn_payment_salary','vendor_add_head','add_head','add_sub_head','add_sub_head_edit');
                                         if(1){$this->Auth->allow('index','imprest_save','imprest_manager_save','get_user','vendor_save','addunit','get_state_gst_code','view_vendor','vendor_save','edit_vendor','tmp_view_vendor','tmp_edit_vendor','add_tds_section','add_head_type','get_tds');}
-            else if(1){$this->Auth->allow('index','imprest_save','imprest_manager_save','get_user','vendor_save','addunit','get_state_gst_code','view_vendor','vendor_save','edit_vendor','tmp_view_vendor','tmp_edit_vendor');}
+            if(1){$this->Auth->allow('index','get_imprest_manager','imprest_save','imprest_manager_save','get_user','vendor_save','addunit','get_state_gst_code','view_vendor','vendor_save','edit_vendor','tmp_view_vendor','tmp_edit_vendor');}
         }
     }
     
@@ -93,6 +93,49 @@ tu.branch_name = bm.branch_name WHERE bm.id='$branchId'");
         
         exit;
     }
+    
+    public function get_imprest_manager() 
+{
+    $this->layout="ajax";
+        $ImperstList=array();
+        $all = array();
+        $userid = $this->Session->read('userid');
+        if($this->request->is("POST"))
+        {
+            $BranchId=$this->request->data['BranchId'];
+            $role = $this->Session->read('role');
+            
+            
+            if($BranchId=='All' && $role=='admin')
+            {
+                $condition=" and im.active='1'";
+                $all = array('All'=>'All');
+            }
+            else if($BranchId=='All')
+            {
+                $condition=" and im.active='1' and im.UserId='$userid'";
+            }
+            else
+            {
+                //$condition=array('Active'=>'1','BranchId'=>$BranchId);
+                $condition=" and im.active='1' and tga.BranchId='$BranchId'";
+            }
+            $ImperstList_arr = $this->ImprestManager->query("SELECT * FROM `imprest_manager` im 
+            INNER JOIN `tbl_grn_access` tga  ON im.UserId = tga.UserId
+            WHERE 1=1 $condition");
+            
+            foreach($ImperstList_arr as $imprest_det)
+            {
+                $ImperstList[$imprest_det['im']['Id']] = $imprest_det['im']['TallyHead'];
+            }
+            
+            $ImperstList = $all+$ImperstList;
+            echo json_encode($ImperstList);
+        }
+        exit;
+}
+    
+    
     public function imprest_save()
     {
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>array('active'=>1),'fields'=>array('id','branch_name'),
@@ -117,15 +160,21 @@ tu.branch_name = bm.branch_name WHERE bm.id='$branchId'");
         {
             
             $imprest = $this->request->data['Imprests'];
-            
-            $entry_date = explode('-',$imprest['EntryDate']);
-            krsort($entry_date);
-            $imprest['EntryDate'] = implode('-', $entry_date);
-            $imprest['CreateDate'] = date('Y-m-d H:i:s');
-            $imprest['UserId'] = $this->Session->read('userid');
-            $this->ImprestAllotment->save($imprest);
-            //print_r($imprest); exit;
-            $this->Session->setFlash(__('New Allotment Has Been Saved'));
+            if(empty($imprest['EntryDate']))
+            {
+                $this->Session->setFlash(__('Please select Date'));
+            }
+            else
+            {
+                $entry_date = explode('-',$imprest['EntryDate']);
+                krsort($entry_date);
+                $imprest['EntryDate'] = implode('-', $entry_date);
+                $imprest['CreateDate'] = date('Y-m-d H:i:s');
+                $imprest['UserId'] = $this->Session->read('userid');
+                $this->ImprestAllotment->save($imprest);
+                //print_r($imprest); exit;
+                $this->Session->setFlash(__('New Allotment Has Been Saved'));
+            }
         }
         
     }
@@ -167,6 +216,7 @@ tu.branch_name = bm.branch_name WHERE bm.id='$branchId'");
             
         }
         
+        $this->set('imprest_master',$this->ImprestManager->find('all',array('order'=>'TallyHead')));
     }    
     
    public function vendor_save()
@@ -518,9 +568,9 @@ tu.branch_name = bm.branch_name WHERE bm.id='$branchId'");
                 
                 $data['ServiceTaxNo'] = "'".$imprest['sevicetax']."'";
                 $data['VendorGST'] = "'".$imprest['VendorGST']."'";
-                $data['Address1'] = "'".$imprest['Address1']."'";
-                $data['Address2'] = "'".$imprest['Address2']."'";
-                $data['Address3'] = "'".$imprest['Address3']."'";
+                $data['Address1'] = "'".addslashes($imprest['Address1'])."'";
+                $data['Address2'] = "'".addslashes($imprest['Address2'])."'";
+                $data['Address3'] = "'".addslashes($imprest['Address3'])."'";
                 $data['state'] = "'".$imprest['State']."'";
                 $data['state_code'] = "'".$imprest['state_code']."'";
                 $data['VendorGST'] = "'".$imprest['VendorGST']."'";
@@ -1326,7 +1376,7 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON ver.HeadId = subhead.Hea
         
         $this->set('head',$this->Tbl_bgt_expenseheadingmaster->query("SELECT head.HeadingId,head.HeadingDesc,subhead.SubHeadingId,subhead.SubHeadingDesc,subhead.HeadType,subhead.SubHeadTdsSection,tm.section,subhead.SubHeadTds,tm.TDS FROM `tbl_bgt_expenseheadingmaster` head 
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON head.HeadingId = subhead.HeadingId Left Join tds_master tm on subhead.SubHeadTdsSection =tm.id
-WHERE head.EntryBy='' ORDER BY head.HeadingDesc,subhead.SubHeadingDesc"));
+WHERE head.EntryBy='' or head.EntryBy is null ORDER BY head.HeadingDesc,subhead.SubHeadingDesc"));
         $this->set('head1',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'conditions'=>array("EntryBy"=>""),"order"=>array("HeadingDesc"=>"asc"))));
     }
     public function add_sub_head_edit()
@@ -1334,34 +1384,34 @@ WHERE head.EntryBy='' ORDER BY head.HeadingDesc,subhead.SubHeadingDesc"));
         $this->layout="home";
         if($this->request->is('Post'))
         {
-            $data['Tbl_bgt_expensesubheadingmaster']['HeadingId'] = $this->request->data['Imprest']['HeadingId'];
-            $data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'] = $this->request->data['Imprest']['SubHeadingDesc'];
-            
-                        
-            $MaxArr = $this->Tbl_bgt_expensesubheadingmaster->query("SELECT MAX(CONVERT(SubHeadingId,UNSIGNED INTEGER)) maxId FROM `tbl_bgt_expensesubheadingmaster` WHERE LENGTH(HeadingId)<3");
-            //print_r($MaxArr); exit;
-            $Id = round($MaxArr['0']['0']['maxId'])+1; 
-            $data['Tbl_bgt_expensesubheadingmaster']['SubHeadingId'] = $Id;
-            
-            if($this->Tbl_bgt_expensesubheadingmaster->find('first',array('conditions'=>array('SubHeadingDesc'=>$data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'],'HeadingId'=>$data['Tbl_bgt_expensesubheadingmaster']['HeadingId']))))
+            $data['HeadingId'] = $this->request->data['Imprest']['HeadingId'];
+            $data['SubHeadingDesc'] = "'".addslashes($this->request->data['Imprest']['SubHeadingDesc'])."'";
+            $data['HeadType'] = "'".$this->request->data['Imprest']['HeadType']."'";
+            $data['SubHeadTDSEnabled'] = "'".$this->request->data['Imprest']['SubHeadTDSEnabled']."'";
+            $data['SubHeadTdsSection'] = "'".$this->request->data['Imprest']['TDSSection']."'";
+            $data['SubHeadTds'] = "'".$this->request->data['Imprest']['TDS']."'";
+            //print_r($this->request->data);
+            //print_r($data); exit;
+            if($this->Tbl_bgt_expensesubheadingmaster->updateAll($data, array('SubHeadingId'=>$_REQUEST['subheadid'])))
             {
-                $this->Session->setFlash(__(' Expense Sub Head '.$data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'].' Already Exists'));
+                $this->Session->setFlash(__(' Expense Head  '.$data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'].' Has Been Updated Successfully'));
+                $this->redirect(array('action'=>'add_sub_head'));
             }
             else
             {
-                if($this->Tbl_bgt_expensesubheadingmaster->save($data))
-                {
-                    $this->Session->setFlash(__(' Expense Head  '.$data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'].' Has Been Added Successfully'));
-                    $this->redirect(array('action'=>'add_head'));
-                }
-                else
-                {
-                    $this->Session->setFlash(__(' Expense Head  '.$data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'].' Has Been Not Updated Successfully'));
-                }
+                $this->Session->setFlash(__(' Expense Head  '.$data['Tbl_bgt_expensesubheadingmaster']['SubHeadingDesc'].' Has Been Not Updated Successfully'));
             }
         }
-        
+        $TdsMaster=$this->TDSMaster->find('all',array('fields'=>array('id','section','description'),'order'=>array('section'=>'asc')));
+        $TdMas = array();
+        foreach($TdsMaster as $td)
+        {
+            $TdMas[$td['TDSMaster']['id']] =$td['TDSMaster']['description'] .'-'.$td['TDSMaster']['section'];
+        }
+        $this->set('HeadType',array('A'=>'A','B'=>'B')+$this->HeadType->find('list',array('fields'=>array('head_code','head_code'),'order'=>array('head_code'=>'asc'))));
+        $this->set('TdsMaster',$TdMas);
         $this->set('head1',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'conditions'=>array("EntryBy"=>""),"order"=>array("HeadingDesc"=>"asc"))));
+        $this->set('subhead',$this->Tbl_bgt_expensesubheadingmaster->find('first',array('conditions'=>array('SubHeadingId'=>$_REQUEST['subhead']),"order"=>array("SubHeadingDesc"=>"asc"))));
     }
 }
 

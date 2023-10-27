@@ -13,8 +13,8 @@ class CostCenterEmailsController extends AppController
         else
         {   $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
-            if(in_array('58',$roles) || in_array('57',$roles)){$this->Auth->allow('index');$this->Auth->allow('add');$this->Auth->allow('edit');}
-            else{$this->Auth->deny('index');$this->Auth->deny('add');$this->Auth->deny('edit');}  
+            $this->Auth->allow('index');$this->Auth->allow('add');$this->Auth->allow('edit');
+            //else{$this->Auth->deny('index');$this->Auth->deny('add');$this->Auth->deny('edit');}  
         }
 
     }

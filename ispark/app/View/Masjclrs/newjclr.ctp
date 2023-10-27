@@ -159,7 +159,7 @@ function Test(val){
         str +='<input type="text" name="Husband" id="CustomerNameNe" onkeyup="javascript:capitalize(this.id, this.value);" class="form-control" value="<?php echo $Jclr['NewjclrMaster']['Husband'];?>"  placeholder="Husband Name">';
     }
     else if(val=='Father'){
-        str +='<input type="text" name="Father" id="CustomerNameNew" onkeyup="javascript:capitalize(this.id, this.value);"  class="form-control" value="<?php echo $Jclr['NewjclrMaster']['Father'];?>"  placeholder="Father Name">';    
+        str +='<input type="text" name="Father" id="CustomerNameNew" onkeyup="javascript:capitalize(this.id, this.value);"  class="form-control" value="<?php echo addslashes($Jclr['NewjclrMaster']['Father']);?>"  placeholder="Father Name">';    
     }
     document.getElementById('namerel').innerHTML=str;
 }

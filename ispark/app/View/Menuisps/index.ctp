@@ -50,7 +50,7 @@ $result=array_intersect($listid,$access);
                         <?php if (in_array($row['pages_master_ispark']['id'], $access)){?>
 						
 							<?php if($row['pages_master_ispark']['page_url'] =="Menuisps/sub"){?>
-                            <div class="col-sm-3"><input type="radio" name="MENU" onclick="redirect('<?php echo $row['pages_master_ispark']['page_url'] ?>?AX=<?php echo base64_encode($row['pages_master_ispark']['id']);?>')"> <?php echo $row['pages_master_ispark']['page_name'] ?></div>
+                            <div class="col-sm-3"><input type="radio" name="MENU" onclick="redirect('<?php echo $row['pages_master_ispark']['page_url'] ?>?AX=<?php echo base64_encode($row['pages_master_ispark']['id']).'&AY='. base64_encode($back_url);?>')"> <?php echo $row['pages_master_ispark']['page_name'] ?></div>
 							<?php }else{?>   
 							<div class="col-sm-3"><input type="radio" name="MENU" onclick="redirect('<?php echo $row['pages_master_ispark']['page_url'] ?>')"> <?php echo $row['pages_master_ispark']['page_name'] ?></div>
 							<?php }?>  

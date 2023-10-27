@@ -66,7 +66,7 @@ function getSubHeading()
                         <label class="col-sm-1 control-label">Year</label>
                         <div class="col-sm-3">
                                 <?php	
-                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => (array('All'=>'All') +$financeYearArr),'empty' => 'Select Year','required'=>true));
+                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => (array('All'=>'All') +$financeYearArr),'empty' => 'Select Year','value'=>$FinanceYearLogin,'required'=>true));
                                 ?>
                         </div>
                         <label class="col-sm-1 control-label">Month</label>
@@ -127,7 +127,7 @@ function getSubHeading()
                            <button class="btn btn-primary btn-label-left" onClick="return imrest_validate12('Export');">Export</button>
                         </div>
                         <div class="col-sm-1">
-                           <a href="/ispark/FinanceReports" class="btn btn-primary btn-label-left">Back</a> 
+                           <a href="/ispark/Menuisps/sub?AX=MTMx&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OUSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                         </div>
                     </div>
                     

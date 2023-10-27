@@ -1,20 +1,77 @@
 <?php
 $sCost = array('0'=>'61','1'=>'4','3'=>'107','4'=>'17','5'=>'22','6'=>'26','7'=>'35','8'=>'43','9'=>'133','10'=>'52','11'=>'189','12'=>'362','13'=>'366');
 $cntLoop = "3";
-//print_r($provision); exit
+//print_r($provision); exit;
 
-//$cost_branch = array('1'=>'Noida');
-$cost_a1 = array_values($cost_Nbranch);
-$cost_a2 = array_values($cost_master);
 
-$cost_a3 = array_intersect($cost_a1,$cost_a2);
-$branch_a4 = array();
-foreach($cost_a3 as $cost_id)
+foreach($orderD as $Subhead)
+{  
+    foreach($cost_master as $cost=>$cost_value)
+    {
+        $branchDirectT[$cost]['unproc'] +=round($UnDirect[$Subhead][$cost]);
+        $branchDirectT[$cost]['proc'] +=round($Direct[$Subhead][$cost]);
+    }
+}
+
+foreach($orderI as $Subhead)
 {
-    $branch_a4[$cost_Nbranch[$cost_id]] +=1;
+    foreach($cost_master as $cost=>$cost_value)
+    {
+        $branchInDirectT[$cost]['unproc'] +=round($UnInDirect[$Subhead][$cost]);
+        $branchInDirectT[$cost]['proc'] +=round($InDirect[$Subhead][$cost]);
+    }    
 }
 
 
+
+foreach($cost_master as $cost=>$cost_value)
+{
+    if(empty($billing_master_proc[$cost])
+       && empty($billing_master_un[$cost])
+       && empty($inv_master[$cost])
+       && empty($provision[$cost])
+       && empty($billing_proc[$cost])
+       && empty($billing[$cost])
+       && empty($Reimbur_master[$cost])
+       && empty($Reimbur_master_up[$cost])
+       && empty($MPR_Seat[$cost])
+       && empty($NetSalary[$cost])
+       && empty($NetSalaryProc[$cost])
+       && empty($NetSalaryUn[$cost])
+       && empty($NetRevArrProc[$cost])
+       && empty($NetRevArrUnProc[$cost])
+       && empty($Incentive[$cost])
+       && empty($EPF[$cost])
+       && empty($ESIC[$cost])               
+//       && empty($ESIC[$cost])
+       && empty($PT[$cost])
+       && empty($TDS[$cost])
+       && empty($ShortColl[$cost])
+       && empty($Loan[$cost])
+       && empty($SHSH[$cost])
+               
+       && empty($ActualCTC[$cost])
+       //&& empty($ActualCTCBusi[$cost])
+       && empty($Adjust[$cost])
+       && empty($Adjust2[$cost])
+       && empty($Adjust_un[$cost])
+       && empty($Adjust2_un[$cost])
+               
+       && empty($branchDirectT[$cost]['unproc'])
+       && empty($branchDirectT[$cost]['proc'])
+       && empty($Futur_Revenue[$cost])
+       && empty($branchInDirectT[$cost]['unproc'])        
+       && empty($branchInDirectT[$cost]['proc'])
+       && empty($outstand_proc_data[$cost])        
+               
+       && empty($Capex[$cost])
+       && empty($UnCapex[$cost])        
+       )        
+    {
+        unset($cost_master[$cost]);
+    }
+}
+//print_r($cost_master); exit;
 ?>
 <table border="1">
     <thead>
@@ -27,43 +84,25 @@ foreach($cost_a3 as $cost_id)
             <th>Gr. Total</th>
         </tr>
         <tr>
-            <th rowspan="3">Revenue</th>
+            <th rowspan="2">Revenue</th>
             
             <?php 
-                if(!empty($branch_a4)) { foreach($branch_a4 as $br=>$br_cost)
+                if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
                 {
-                    echo "<td colspan=\"$br_cost\">".$br."</td>";
+                    echo "<td>".$cost_value."</td>";
                 }
             ?>
-            <th rowspan="3">Total Processed</th>
+            <th rowspan="2">Total Processed</th>
                 <?php }
-                if(!empty($branch_a4)) { foreach($branch_a4 as $br=>$br_cost)
+                if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
                 {
-                    echo "<td colspan=\"$br_cost\">".$br."</td>";
+                    echo "<td>".$cost_value."</td>";
                 }
             ?>
-            <th rowspan="3">Total UnProcessed</th>
-            <th rowspan="3">Gr. Total</th>            
+            <th rowspan="2">Total UnProcessed</th>
+            <th rowspan="2">Gr. Total</th>            
             <?php } ?> 
         </tr>
-        <tr>
-            
-            
-            <?php 
-                if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
-                {
-                    echo "<td>".$cost_name[$cost]."</td>";
-                }
-            ?>
-            
-                <?php }
-                if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
-                {
-                    echo "<td>".$cost_name[$cost]."</td>";
-                }
-             } ?> 
-        </tr>
-        
           <tr>
             
             
@@ -1518,6 +1557,30 @@ foreach($orderD as $Subhead)
                 
         ?>
         
+        <tr></tr>
+        <tr>
+                <th>Capex</th>
+                <?php
+                    if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
+                    {
+                        echo '<td>'.round($Capex[$cost]).'</td>';
+                        $tot_capex +=round($Capex[$cost]);
+                    }
+                    echo '<th>'.$tot_capex.'</th>';
+                    }
+                    if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
+                    {
+                        echo '<td>'.round($UnCapex[$cost]-$Capex[$cost]).'</td>';
+                        $tot_uncapex +=round($UnCapex[$cost]-$Capex[$cost]);
+                    }
+                        echo '<th>'.$tot_uncapex.'</th>';
+                        echo '<th>'.round($tot_capex+$tot_uncapex).'</th>';
+                ?>
+                
+        <?php } ?> 
+        </tr>
+        
+        <tr></tr>
         <tr>
             <th>OutStanding</th>
             <?php
@@ -1770,28 +1833,7 @@ foreach($orderD as $Subhead)
         
         <tr></tr>
         
-        <tr>
-                <th>Capex</th>
-                <?php
-                    if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
-                    {
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        $tot_capex +=round($capex[$cost]);
-                    }
-                    echo '<td>'.$tot_capex.'</td>';
-                    }
-                    if(!empty($cost_master)) { foreach($cost_master as $cost=>$cost_value)
-                    {
-                        echo '<td></td>';
-                    }
-                        echo '<td></td>';
-                        echo '<th>'.$tot_capex.'</th>';
-                ?>
-                
-        <?php } ?> 
-        </tr>
         
-        <tr></tr>
         
         <tr>
             <th>Net Profit Excluding Capex</th>
@@ -1819,8 +1861,8 @@ foreach($orderD as $Subhead)
 //                }
 //                else
 //                {
-                    echo "<td>".round(($NetRevArrProc[$cost])-($TotCost_cc_proc[$cost])-round($outstand_proc_data[$cost]*0.04)+$capex[$cost])."</td>";
-                    $TotCostProc += round(($NetRevArrProc[$cost])-($TotCost_cc_proc[$cost])-round($outstand_proc_data[$cost]*0.04)+$capex[$cost]);
+                    echo "<td>".round(($NetRevArrProc[$cost])-($TotCost_cc_proc[$cost])-round($outstand_proc_data[$cost]*0.04)-$Capex[$cost])."</td>";
+                    $TotCostProc += round(($NetRevArrProc[$cost])-($TotCost_cc_proc[$cost])-round($outstand_proc_data[$cost]*0.04)-$Capex[$cost]);
                 //}
             }
             }
@@ -1835,8 +1877,8 @@ foreach($orderD as $Subhead)
 //                }
 //                else
 //                {
-                    echo "<td>".round(($NetRevArrUnProc[$cost])-($TotCost_cc_unproc[$cost])-round($outstand_unproc_data[$cost]*0.04))."</td>";
-                    $TotCostUNProc += round($NetRevArrUnProc[$cost]-$TotCost_cc_unproc[$cost]-round($outstand_unproc_data[$cost]*0.04));
+                    echo "<td>".round(($NetRevArrUnProc[$cost])-($TotCost_cc_unproc[$cost])-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost]-$Capex[$cost]))."</td>";
+                    $TotCostUNProc += round($NetRevArrUnProc[$cost]-$TotCost_cc_unproc[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost]-$Capex[$cost]));
                     
                 //}
             }

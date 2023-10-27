@@ -970,6 +970,11 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadin
         }
          $qry .= " and em.Active=1 and em.Approve1=1 and em.Approve2=1 and em.Approve3 is null";
         
+         echo "SELECT em.Id,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(Approve1 IS NULL,'BM Pending',IF(Approve2 IS NULL,'VH Pending',IF(Approve3 IS NULL,'FH Pending','Approved'))) 
+`bus_status` FROM tmp_expense_master em 
+           INNER JOIN `tbl_bgt_expenseheadingmaster` hm ON em.HeadId = hm.HeadingId 
+INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadingId $qry order by em.HeadId"; exit;
+         
         $data = $this->TmpExpenseMaster->query("SELECT em.Id,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(Approve1 IS NULL,'BM Pending',IF(Approve2 IS NULL,'VH Pending',IF(Approve3 IS NULL,'FH Pending','Approved'))) 
 `bus_status` FROM tmp_expense_master em 
            INNER JOIN `tbl_bgt_expenseheadingmaster` hm ON em.HeadId = hm.HeadingId 

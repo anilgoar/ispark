@@ -281,16 +281,20 @@ td#t07
                                 
                                 ?>
                                     <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30") && $cost_master['CostCenterMaster']['company_name']!='IDC') { ?> 
-                                    <br/><div style="font-size:10px; font-family:Arial, Helvetica, sans-serif;"><b>Branch Address:</b> <?php echo wordwrap($branch_detail['Addbranch']['branch_address'],60,"<br>\n"); ?></div>
+										<div style="font-size:10px; font-family:Arial, Helvetica, sans-serif;"><b><?php if($tbl_invoice['InitialInvoice']['cost_company_name']=='IDC') {echo 'CIN : U74900DL2008PTC174898';} else if($tbl_invoice['InitialInvoice']['cost_company_name']=='Pikquick Pvt. Ltd.') {} else  { echo 'CIN : U74899DL1990PTC038798';} ?></b></div>
+                                    <div style="font-size:10px; font-family:Arial, Helvetica, sans-serif;"><b>Branch Address:</b> <?php echo wordwrap($branch_detail['Addbranch']['branch_address'],60,"<br>\n"); ?></div>
                                    <?php } ?>
 				</td>
 
 				<td align="right">
 					<?php
                                         if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd')
-                                        {echo $this->Html->image('MasLogo.jpg', array('fullBase' => true,'height'=>60));}
+                                        {echo '<img src="/var/www/html/mascallnetnorth.in/ispark/app/webroot/img/MasLogo.jpg" style="height:60">'; //$this->Html->image('MasLogo.jpg', array('fullBase' => true,'height'=>60));
+										}
                                         else if($cost_master['CostCenterMaster']['company_name']=='Pikquick Pvt. Ltd.')
-                                        {echo $this->Html->image('PaypikLogo.jpg', array('fullBase' => true,'height'=>60));}
+                                        {	echo '<img src="/var/www/html/mascallnetnorth.in/ispark/app/webroot/img/PaypikLogo.jpg" style="height:60">';
+											//echo $this->Html->image('PaypikLogo.jpg', array('fullBase' => true,'height'=>60));
+										}
                                         ?>
 				</td>
 			</tr>
@@ -306,7 +310,7 @@ else
     echo '<br/>';
 }
 ?>
-<div style="margin-top:-30px;" align="center" ><b>Proforma Invoice</b></div> 
+<div style="margin-top:-20px;" align="center" ><b>Proforma Invoice</b></div> 
 <table width="544" border ="1" cellpadding="2" cellspacing="0">
 
 
@@ -367,10 +371,10 @@ else
                                         <?php } ?>
 					<tr><td id = "t06">Pan No</td></tr>
 					<tr><td id = "t06"><b>GRN No</b></td></tr>
-                                        <?php if($cost_master['CostCenterMaster']['GSTType'] && strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
+                                        <?php //if($cost_master['CostCenterMaster']['GSTType'] && strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
                                         <tr><td id = "t06"><b>Place Of Supply</b></td></tr>
                                         <tr><td id = "t06"><b>TAX PAYBLE UNDER RCM</b></td></tr>
-                                        <?php } ?>
+                                        <?php //} ?>
                                         
 		  </table>
 		</td>
@@ -389,18 +393,18 @@ else
                                         <?php } ?>
 					<tr><td id = "t06"><?php echo $company['Addcompany']['pan_no'];?>&nbsp;</td></tr>
 					<tr><td id = "t06"><b><?php if($tbl_invoice['InitialInvoice']['approve_grn']=='Yes')echo $tbl_invoice['InitialInvoice']['grn']; ?>&nbsp;</b></td></tr>
-                                        <?php if($cost_master['CostCenterMaster']['GSTType'] && strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
+                                        <?php //if($cost_master['CostCenterMaster']['GSTType'] && strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
                                         <tr><td width="130"  id = "t07"><?php if(empty($cost_master['CostCenterMaster']['statenamecost'])) { echo $branch_detail['Addbranch']['state']; } else {echo $cost_master['CostCenterMaster']['statenamecost'];} ?>&nbsp;</td></tr>
                                         <tr><td width="130"  id = "t07">NO&nbsp;</td></tr>
-                                         <?php } ?>
+                                         <?php //} ?>
 		  </table>
 
 		</td>
 	</tr>
 
 	<tr>
-	<td colspan="5"  valign = "top" style = "height:400">
-	<table width="540" height = "400" cellpadding="0" cellspacing="0" >
+	<td colspan="5"  valign = "top" style = "height:360">
+	<table width="540" height = "360" cellpadding="0" cellspacing="0" >
 		<tr>
 		<th width = "20"  id="t01">S.No</th>
 		<th width = "202" id="t01">Particulars </th>
@@ -443,7 +447,7 @@ else
 			<?php endforeach; ?>	
 			
 		<tr>
-			<td height = "<?php echo 20*(12-$i-$j); ?>" id = "t02"></td>
+			<td height = "<?php echo 17*(12-$i-$j); ?>" id = "t02"></td>
 			<td id = "t02"></td>
 			<td id = "t02"></td>
 			<td id = "t02"></td>
@@ -604,18 +608,18 @@ else
 	</tr>
 	<tr>
 		<td>
-			Tel.	:	011-61105550<br>
+			<!-- Tel.	:	011-61105550<br> -->
 			E-mail	:	care@teammas.in<br>
 			Web :		teammas.in
 		</td>
 		<td>
-			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd')echo $this->Html->image('9001.jpg', array('fullBase' => true,'height'=>74));?>
+			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd') echo '<img src="/var/www/html/mascallnetnorth.in/ispark/app/webroot/img/9001.jpg" style="height:74">'; //echo $this->Html->image('9001.jpg', array('fullBase' => true,'height'=>74));?>
 		</td>
 		<td>
-			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd')echo $this->Html->image('14001.jpg', array('fullBase' => true,'height'=>74));?>
+			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd') echo '<img src="/var/www/html/mascallnetnorth.in/ispark/app/webroot/img/14001.jpg" style="height:74">';//echo $this->Html->image('14001.jpg', array('fullBase' => true,'height'=>74));?>
 		</td>
 		<td>
-			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd')echo $this->Html->image('27001.jpg', array('fullBase' => true,'height'=>80));?>
+			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd') echo '<img src="/var/www/html/mascallnetnorth.in/ispark/app/webroot/img/27001.jpg" style="height:74">'; //echo $this->Html->image('27001.jpg', array('fullBase' => true,'height'=>80));?>
 		</td>
 	</tr>
 	

@@ -76,10 +76,11 @@
         ?>
         <div class="form-group">
             <label class="col-sm-3 control-label"></label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                         <button type="submit" class="btn btn-primary btn-label-left">
                                 Delete Request 
                         </button>
+                    <a href="/ispark/Menuisps/sub?AX=NjA=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                 </div>
         </div>
         <?php } ?>

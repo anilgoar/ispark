@@ -89,13 +89,13 @@
 				<table class="table table-striped table-bordered table-hover table-heading no-border-bottom">
 				<?php $case=array('primary','success','info','danger'); $i=0; ?>
 						<tbody>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['client'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['bill_to'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address1'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address2'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address3'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address4'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['b_Address5'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_client'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_bill_to'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_b_Address1'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_b_Address2'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_b_Address3'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_b_Address4'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_b_Address5'];?></th></tr>
 						</tbody>
 				</table>
 			</div>
@@ -128,13 +128,13 @@
 				<table class="table table-striped table-bordered table-hover table-heading no-border-bottom">
 				<?php $case=array('primary','success','info','danger'); $i=0; ?>
 					<tbody>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['client'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['ship_to'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address1'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address2'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address3'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address4'];?></th></tr>
-						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $dataX['a_address5'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_client'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_ship_to'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_a_address1'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_a_address2'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_a_address3'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_a_address4'];?></th></tr>
+						<tr class="<?php  echo $case[$i%3]; $i++;?>"><th><?php echo $data['cost_a_address5'];?></th></tr>
 					</tbody>
 				</table>
 			</div>

@@ -1,5 +1,5 @@
 <?php
-    $costArr=array($Scost);
+    $costArr=$Scost;
     
     //print_r($costArr); exit;
     
@@ -64,7 +64,7 @@
         $costArr = array_unique(array_merge(array($Scost),$costArr,$costArrNew));
       sort($costArr);  
     }
-    //print_r($costArr); exit;
+    //zprint_r($costArr); exit;
     $TypeArr = array_unique($TypeArr);
 ?>
 <table border="1">

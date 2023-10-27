@@ -43,7 +43,7 @@
                                                         <td>Reject Remarks</td>
                                                         <td>Reject By</td>
                                                         <td>Amount</td>
-                                                        <td>Edit</td>
+                                                        <td>Status</td>
                                                         
 						</tr>
                                         </thead>
@@ -53,10 +53,14 @@
 							<td><?php echo $i; ?></td>
 							<td><?php echo $post['tu']['username']; ?></td>
 							<td><?php echo $post['cm']['company_name']; ?></td>
-                                                        <td><?php  if($post['eemApp']['Reject']=='2') { echo "Reject From Second Level";} else  if($post['eemApp']['Reject']=='0') { echo "Reject From First Level";} ?></td>
+                                                        <td><?php  if($post['eemApp']['Reject']=='2') { echo "Reject From Second Level";} 
+                                                        else  if($post['eemApp']['Reject']=='0') { echo "Reject From First Level";} 
+                                                        else  if($post['eemApp']['Reject']=='3') { echo "Reject From Finance Head Level";}
+                                                        else  if($post['eemApp']['Reject']=='4') { echo "Moved To Finance Head For Approval";}?>
+                                                        </td>
                                                         <td><font color="red"><?php echo $post['eemApp']['RejectRemarks']; ?></font></td>
                                                         <td><?php echo $post['eemApp']['Amount']; ?></td>
-                                                        <td><?php if($post['eemApp']['Reject']=='0') { ?><code><?php echo $this->Html->link('Edit',array('controller'=>'Gms','action'=>'edit_imprest_tmp_branch','?'=>array('Id'=>$post['eemApp']['Id']),'full_base' => true)); ?></code><?php } ?></td>
+                                                        <td><?php if($post['eemApp']['Reject']=='0') {  echo 'Reject From First Approval'; } else if($post['eemApp']['Reject']=='2') {'Reject From Second Approval';} else if($post['eemApp']['Reject']=='3') {'Reject From Finance Head';} else if($post['eemApp']['Reject']=='3') {'Moved To Finance Head For Approval';} ?></td>
 						</tr>
 						<?php endforeach; ?>
 						<?php unset($data); ?>

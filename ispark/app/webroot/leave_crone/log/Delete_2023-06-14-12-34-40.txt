@@ -1,0 +1,16 @@
+    HostName = "dialdesk.co.in";
+    UserName = "mas";
+    Password = "ec12cb34fa569d";
+
+
+
+        'host' => '192.168.10.12';
+        'login' => 'root';
+        'password' => 'dial@mas123';
+        'database' => 'db_dialdesk';
+
+username - superadmin
+password - super!$@tumq&@!*(
+
+
+

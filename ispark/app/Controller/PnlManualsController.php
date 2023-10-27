@@ -17,19 +17,29 @@ class PnlManualsController extends AppController
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 				
-            if(in_array('51',$roles)){$this->Auth->allow('index');$this->Auth->allow('get_revenue_cost');$this->Auth->allow('send_bps');}
-            if(in_array('52',$roles)){$this->Auth->allow('get_revenue_cost'); $this->Auth->allow('send_bps');}
-            else{$this->Auth->allow('index');$this->Auth->deny('get_revenue_cost');$this->Auth->deny('edit');}
+            $this->Auth->allow('index');$this->Auth->allow('get_revenue_cost');$this->Auth->allow('send_bps');
+            $this->Auth->allow('get_revenue_cost'); $this->Auth->allow('send_bps');
+            
 	}
     }
 		
     public function index() 
     {
         $this->layout='home';
-        
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+        //$this->set('FinanceYearLogin',$FinanceYearLogin);
         $month_master = $this->MonthMaster->find('list',array('fields'=>array('MonthId','MonthName'),'conditions'=>array('MonthType'=>'3')));
         
-        $y_arr = array("20"=>"21","19"=>"20");
+        $login_year = explode('-',$FinanceYearLogin);
+        if(!empty($login_year))
+        {
+            $y_arr = array(($login_year[1]-1)=>$login_year[1]);
+        }
+        else
+        {
+            $y_arr = array("21"=>"22","20"=>"21");
+        }
+        
         
          $new_month_master = array();
         foreach($y_arr as $key=>$value)
@@ -74,7 +84,7 @@ class PnlManualsController extends AppController
         
         $this->set('new_month_master', $new_month_master);
         
-        $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name'))); 
+        $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('pnl_active'=>1),'order'=>array('branch_name'))); 
         $this->set('branch_name', $BranchArray);
         
         //$this->set('direct_exp',$direct_exp);

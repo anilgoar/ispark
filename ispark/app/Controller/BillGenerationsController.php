@@ -15,15 +15,12 @@ class BillGenerationsController extends AppController
         {
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
-            if(in_array('26',$roles)){$this->Auth->allow('index','report','get_type','get_report','get_report2','bill_genrate_report','get_report3','get_report4','get_bill_generation');}
-            if(in_array('206',$roles))
-            {
+            $this->Auth->allow('index','report','get_type','get_report','get_report2','bill_genrate_report','get_report3','get_report4','get_bill_generation');
+            
                 $this->Auth->allow('get_update_bill_det');
-            }
-            if(in_array('207',$roles))
-            {
+            
                 $this->Auth->allow('bill_det_up_report','get_report_bill_upd');
-            }
+            
         }
     }
     
@@ -31,6 +28,8 @@ class BillGenerationsController extends AppController
     {
         $this->layout='home';
         $role = $this->Session->read('role');
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+        $this->set('FinanceYearLogin',$FinanceYearLogin);
         if(strtolower($role)==strtolower('admin'))
         {
             $condition=array('active'=>1);
@@ -226,6 +225,9 @@ class BillGenerationsController extends AppController
     public function bill_det_up_report() 
     {
             $this->layout='home';
+            
+            $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         if($role=='admin')
         {
             $condition=array('active'=>1);

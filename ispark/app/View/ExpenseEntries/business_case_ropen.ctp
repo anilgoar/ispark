@@ -75,7 +75,7 @@ function getExpneseAmount(ExpenseId)
         <label class="col-sm-3 control-label">Year</label>
         <div class="col-sm-3">
             <div class="input-group">
-                <?php echo $this->Form->input('FinanceYear',array('label' => false,'options'=>$financeYearArr,'class'=>'form-control','empty'=>'Select','id'=>'finance_year')); ?>
+                <?php echo $this->Form->input('FinanceYear',array('label' => false,'options'=>$financeYearArr,'class'=>'form-control','empty'=>'Select','value'=>$FinanceYearLogin,'id'=>'finance_year')); ?>
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>  
             </div>    
         </div>
@@ -139,6 +139,7 @@ function getExpneseAmount(ExpenseId)
         <label class="col-sm-3 control-label"></label>
         <div class="col-sm-3">
             <button type='submit' class="btn btn-info" value="Save">Make Request</button>
+            <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
         </div>
     </div>
     <div class="clearfix"></div>

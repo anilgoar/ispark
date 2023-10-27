@@ -290,34 +290,49 @@ public function get_report2()
 //    FROM tbl_invoice t1 INNER JOIN cost_master t2 ON t1.cost_center = t2.cost_center LEFT JOIN receipt_master t3
 //     ON t1.id = t3.Invoiceid  left join bill_pay_particulars bpp on SUBSTRING_INDEX(t1.bill_no,'/','1')=bpp.bill_no and t1.finance_year = bpp.financial_year and t2.company_name=bpp.company_name AND t1.branch_name = bpp.branch_name
 //      WHERE t1.status = '0' and bpp.bill_no is null $query order by t1.finance_year, CONVERT (SUBSTRING_INDEX(t1.bill_no,'/','1'),UNSIGNED INT) "; exit;
-        $this->set("res",$this->InitialInvoice->query("SELECT t1.id,t1.eptp_act_date,t1.createdate, t3.ExpDatesPayment,t2.company_name,t2.cost_center,t2.CostCenterName,t2.client,
+        $this->set("res",$this->InitialInvoice->query("SELECT t1.id,
+        t1.eptp_act_date,
+        t1.createdate,
+        t1.category,
+        t3.ExpDatesPayment,
+        t2.company_name, 
+        t2.cost_center,
+        t2.CostCenterName,
+        t2.client,
 t1.bill_no,t1.branch_name,t1.finance_year, t1.month,t1.total,t1.tax,t1.sbctax,t1.krishi_tax,t1.igst,t1.cgst,t1.sgst,bpp.net_amount,bpp.tds_ded,
 t1.grnd,t1.invoiceDescription,t1.invoiceDate,t1.grn, 
-(IF(CurrentInvoiceType='Dispute','Disputed',IF(CurrentInvoiceType='Write-Off','Write-Off',IF(bpp.status = 'part payment','part payment',IF (DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'30','&lt;30 Days',
+(IF(CurrentInvoiceType='Dispute','Disputed',IF(CurrentInvoiceType='Write-Off','Write-Off',IF(bpp.status = 'part payment',
+'part payment',IF (DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'30','&lt;30 Days',
 IF (DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'60', '30-60', 
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'60','30-60',
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'90','60-90', 
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'120','90-120',
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'150','120-150','&gt;150 Days')))))))))) `Ageing`, 
-IF(CurrentInvoiceType='Dispute','Disputed',IF(CurrentInvoiceType='Write-Off','Write-Off',IF(bpp.status = 'part payment','part payment',IF(t2.po_required='Yes' AND (t1.approve_po = '' OR t1.approve_po IS NULL),'PO Pending', IF(t2.grn='Yes' AND 
+IF(CurrentInvoiceType='Dispute','Disputed',IF(CurrentInvoiceType='Write-Off','Write-Off',IF(bpp.status = 'part payment','part payment',
+IF(t2.po_required='Yes' AND (t1.approve_po = '' OR t1.approve_po IS NULL),'PO Pending', IF(t2.grn='Yes' AND 
 (t1.approve_grn = '' OR t1.approve_po IS NULL),'GRN Pending','submitted'))))) `bill_status` FROM tbl_invoice t1 
 INNER JOIN cost_master t2 ON t1.cost_center = t2.cost_center LEFT JOIN receipt_master t3 ON t1.id = t3.Invoiceid  
-LEFT JOIN (SELECT bill_no,company_name,branch_name,financial_year,pay_type,pay_no,bank_name,pay_dates,pay_amount,bill_amount,tds_ded,bill_passed,net_amount,deduction,
+LEFT JOIN (SELECT bill_no,company_name,branch_name,financial_year,pay_type,pay_no,bank_name,pay_dates,pay_amount,
+bill_amount,tds_ded,bill_passed,net_amount,deduction,
 IF(bill_amount=(net_amount+tds_ded),'paid',IF(`status` LIKE '%paid%','paid','part payment'))`status`,remarks, pay_type_dates FROM 
 (SELECT bill_no,company_name,branch_name,financial_year,GROUP_CONCAT(bpp.pay_type  ORDER BY id SEPARATOR '#') pay_type,
 GROUP_CONCAT(bpp.pay_no  ORDER BY id SEPARATOR '#') pay_no,GROUP_CONCAT(bpp.bank_name  ORDER BY id SEPARATOR '#') bank_name,
 GROUP_CONCAT(pay_dates  ORDER BY id SEPARATOR '#')pay_dates,GROUP_CONCAT(pay_amount  ORDER BY id SEPARATOR '#') pay_amount,bill_amount,
 bill_passed,SUM(tds_ded) tds_ded,SUM(net_amount) net_amount,SUM(deduction) deduction,GROUP_CONCAT(`status` ORDER BY id) `status`,remarks,
-pay_type_dates FROM `bill_pay_particulars` bpp  GROUP BY bpp.financial_year,bpp.company_name,bpp.branch_name,bpp.bill_no) bill_pay_particulars) bpp ON SUBSTRING_INDEX(t1.bill_no,'/','1')=bpp.bill_no AND t1.finance_year = bpp.financial_year 
+pay_type_dates FROM `bill_pay_particulars` bpp  
+GROUP BY bpp.financial_year,bpp.company_name,bpp.branch_name,bpp.bill_no) bill_pay_particulars) bpp 
+ON SUBSTRING_INDEX(t1.bill_no,'/','1')=bpp.bill_no AND t1.finance_year = bpp.financial_year 
 AND t2.company_name=bpp.company_name AND t1.branch_name = bpp.branch_name 
-WHERE t1.grnd!=0 and t1.grnd!=1 and t1.status = '0' AND (bpp.status ='part payment' || bpp.status is null) $query  ORDER BY t1.finance_year, CONVERT (SUBSTRING_INDEX(t1.bill_no,'/','1'),UNSIGNED INT)"));
+WHERE t1.grnd!=0 and t1.grnd!=1 and t1.status = '0' AND (bpp.status ='part payment' || bpp.status is null) $query
+  ORDER BY t1.finance_year, CONVERT (SUBSTRING_INDEX(t1.bill_no,'/','1'),UNSIGNED INT)"));
 	
     $this->set("res1",$this->InitialInvoice->query("select *,IF (DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'30','&lt;30 Days',
 IF (DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'60', '30-60', 
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'60','30-60',
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'90','60-90', 
 IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'120','90-120',
-IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'150','120-150','&gt;150 Days'))))))Ageing from provision_master t1 inner join cost_master t2 on t1.cost_center = t2.cost_center where t1.provision_balance!=0 $query1")); 
+IF(DATEDIFF(CURDATE(),ADDDATE(STR_TO_DATE(CONCAT('1-',`month`),'%d-%M-%Y'),INTERVAL 1 MONTH))<'150','120-150','&gt;150 Days'))))))Ageing 
+from provision_master t1 inner join cost_master t2 on t1.cost_center = t2.cost_center where t1.provision_balance!=0 $query1")); 
         
         
     }
@@ -333,6 +348,7 @@ t1.total,
 t1.igst,
 t1.cgst,
 t1.sgst,
+t1.category,
 bpp.net_amount,
 bpp.tds_ded,
 t1.grnd,

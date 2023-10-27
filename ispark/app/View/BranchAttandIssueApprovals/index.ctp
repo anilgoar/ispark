@@ -2,6 +2,24 @@
 function downloadReport(){
     window.location="<?php echo $this->webroot;?>branch-wise-attendance-issue-approval-report";  
 }
+
+$(document).ready(function(){
+    $("#select_all").change(function(){  //"select all" change
+        $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+    });
+
+    //".checkbox" change
+    $('.checkbox').change(function(){
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if(false == $(this).prop("checked")){ //if this item is unchecked
+            $("#select_all").prop('checked', false); //change "select all" checked status to false
+        }
+        //check "select all" if all checkbox items are checked
+        if ($('.checkbox:checked').length == $('.checkbox').length ){
+            $("#select_all").prop('checked', true);
+        }
+    });
+});
 </script>
 
 <div class="row">
@@ -41,7 +59,7 @@ function downloadReport(){
                 <table class = "table table-striped table-hover  responstable"  >     
                     <thead>
                         <tr>
-                            <th style="text-align: center;width:30px;" >&#10004;</th>
+                            <th style="text-align: center;width:30px;" ><input type="checkbox" id="select_all"/></th>
                             <th style="width:70px;text-align: center;">Emp Code</th>
                             <th style="width:70px;text-align: center;">Bio Code</th>
                             <th style="width:225px;text-align: left;">Emp Name</th>

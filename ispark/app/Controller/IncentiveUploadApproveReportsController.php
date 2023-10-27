@@ -76,12 +76,13 @@ class IncentiveUploadApproveReportsController extends AppController {
                             <th style="text-align: center;">CostCenter</th>
                             <th style="text-align: center;">SalaryMonth</th>
                             <th style="text-align: center;">IncentiveType</th>
+		            <th style="text-align: center;">Status</th>
                             <th style="text-align: center;">Total</th>
                         </tr>
                     </thead>
                     <tbody>         
                         <?php foreach ($data as $val){
-                            $TAM=$TAM+$val['UploadIncentiveBreakup']['Amount'];
+                            $TAM=$TAM+$val['UploadIncentiveBreakup']['Amount']; 
                         ?>
                         <tr>
                             <td style="text-align: center;"><?php echo $n++;?></td>
@@ -90,6 +91,7 @@ class IncentiveUploadApproveReportsController extends AppController {
                             <td style="text-align: center;"><?php echo $val['UploadIncentiveBreakup']['CostCenter'];?></td>
                             <td style="text-align: center;"><?php echo date('d-M-Y',strtotime($val['UploadIncentiveBreakup']['SalaryMonth']));?></td>
                             <td style="text-align: center;"><?php echo $val['UploadIncentiveBreakup']['IncentiveType'];?></td>
+			    <td style="text-align: center;"><?php echo $val['UploadIncentiveBreakup']['ApproveStatus'];?></td>
                             <td style="text-align: center;"><?php echo $val['UploadIncentiveBreakup']['Amount'];?></td>
                         </tr>
                         <?php }?>

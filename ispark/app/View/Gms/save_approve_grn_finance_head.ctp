@@ -303,6 +303,12 @@ else
                             <a href="<?php echo $this->webroot.'app/webroot/GRN/'.$file; ?>"> <?php echo 'File'.$files_no++; ?></a>
                             <?php }  ?>
                         </div>
+                        
+                        <label class="col-sm-2 control-label">Old Rejected Remarks</label>
+                        <div class="col-sm-3">
+                            <textarea name="ii" id="ii" value="" class="form-control" readonly=""><?php echo $RejectRemarks; ?></textarea>
+                        </div>
+                        
                         <label class="col-sm-2 control-label">Reject Remarks</label>
                         <div class="col-sm-3">
                             <textarea name="RejectRemarks" id="RejectRemarks" value="" class="form-control" ></textarea>

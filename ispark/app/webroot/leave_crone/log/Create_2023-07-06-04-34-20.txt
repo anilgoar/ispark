@@ -1,0 +1,2161 @@
+Windows PowerShell
+Copyright (C) 2014 Microsoft Corporation. All rights reserved.
+
+PS C:\Windows\system32> Get-EventLog -LogName Security | Where-Object {$_.EventID -eq 4720} | Select-Object -Property *
+
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29215975
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3c6d79e2
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14825
+                         Account Name:        MAS53011
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53011
+                         Display Name:        Kumar Ishan
+                         User Principal Name:    MAS53011@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53011, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14825,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/5/2023 12:42:00 PM
+TimeWritten        : 7/5/2023 12:42:00 PM
+UserName           :
+Site               :
+Container          :
+
+
+
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400750
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14846
+                         Account Name:        MAS53013
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53013
+                         Display Name:        MANN SHAH
+                         User Principal Name:    MAS53013@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53013, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14846,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:10:28 PM
+TimeWritten        : 7/6/2023 1:10:28 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400585
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14845
+                         Account Name:        MAS53013
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53013
+                         Display Name:        MANN SHAH
+                         User Principal Name:    MAS53013@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53013, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14845,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:09:45 PM
+TimeWritten        : 7/6/2023 1:09:45 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400462
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14844
+                         Account Name:        MAS53014
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53014
+                         Display Name:        HARSHAD NATVARABHAI RATHOD
+                         User Principal Name:    MAS53014@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53014, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14844,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:09:11 PM
+TimeWritten        : 7/6/2023 1:09:11 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400359
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14843
+                         Account Name:        MAS53015
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53015
+                         Display Name:        KUNTAL MODI
+                         User Principal Name:    MAS53015@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53015, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14843,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:08:43 PM
+TimeWritten        : 7/6/2023 1:08:43 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400251
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14842
+                         Account Name:        MAS53016
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53016
+                         Display Name:        BHADANIYA DHRUV R
+                         User Principal Name:    MAS53016@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53016, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14842,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:08:17 PM
+TimeWritten        : 7/6/2023 1:08:17 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400179
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14841
+                         Account Name:        MAS53017
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53017
+                         Display Name:        JAMBUKIYA KIRAN GANESHBHAI
+                         User Principal Name:    MAS53017@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53017, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14841,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:07:51 PM
+TimeWritten        : 7/6/2023 1:07:51 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29400072
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14840
+                         Account Name:        MAS53018
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53018
+                         Display Name:        RAJENDRA RAJPUT
+                         User Principal Name:    MAS53018@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53018, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14840,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:07:13 PM
+TimeWritten        : 7/6/2023 1:07:13 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399985
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14839
+                         Account Name:        MAS53019
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53019
+                         Display Name:        CHIRAG RATHOD
+                         User Principal Name:    MAS53019@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53019, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14839,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:06:38 PM
+TimeWritten        : 7/6/2023 1:06:38 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399927
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14838
+                         Account Name:        MAS53020
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53020
+                         Display Name:        SNEH VIPULKUNAR GAJJAR
+                         User Principal Name:    MAS53020@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53020, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14838,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:06:16 PM
+TimeWritten        : 7/6/2023 1:06:16 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399838
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14837
+                         Account Name:        MAS53022
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53022
+                         Display Name:        HARSHIL PATEL
+                         User Principal Name:    MAS53022@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53022, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14837,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:05:51 PM
+TimeWritten        : 7/6/2023 1:05:51 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399772
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14836
+                         Account Name:        MAS53023
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53023
+                         Display Name:        RAJESH KUMAR RAMESH BHAI PAR
+                         User Principal Name:    MAS53023@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53023, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14836,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:05:23 PM
+TimeWritten        : 7/6/2023 1:05:23 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399665
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14835
+                         Account Name:        MAS53024
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53024
+                         Display Name:        ASODIYA DHAVALKUMAR GAUTAMBH
+                         User Principal Name:    MAS53024@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53024, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14835,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:04:50 PM
+TimeWritten        : 7/6/2023 1:04:50 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399363
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14834
+                         Account Name:        MAS53025
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53025
+                         Display Name:        KARTIK JAYSWAR
+                         User Principal Name:    MAS53025@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53025, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14834,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:02:44 PM
+TimeWritten        : 7/6/2023 1:02:44 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29399238
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14833
+                         Account Name:        MAS53026
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53026
+                         Display Name:        MUKESH B
+                         User Principal Name:    MAS53026@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53026, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14833,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 1:02:07 PM
+TimeWritten        : 7/6/2023 1:02:07 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29398310
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14832
+                         Account Name:        MAS53027
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53027
+                         Display Name:        SOLANKI ANJALI JAGDISHBHAI
+                         User Principal Name:    MAS53027@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53027, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14832,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 12:56:28 PM
+TimeWritten        : 7/6/2023 12:56:28 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29398183
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14831
+                         Account Name:        MAS53028
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53028
+                         Display Name:        Desai Pratikkumar Baldevbhai
+                         User Principal Name:    MAS53028@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53028, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14831,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 12:56:01 PM
+TimeWritten        : 7/6/2023 12:56:01 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29397724
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14830
+                         Account Name:        MAS53029
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53029
+                         Display Name:        BHOOMI PANCHAL
+                         User Principal Name:    MAS53029@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53029, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14830,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 12:53:47 PM
+TimeWritten        : 7/6/2023 12:53:47 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29397620
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14829
+                         Account Name:        MAS53030
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53030
+                         Display Name:        BHAVESH RABARI
+                         User Principal Name:    MAS53030@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53030, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14829,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 12:53:12 PM
+TimeWritten        : 7/6/2023 12:53:12 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29397492
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x3e58a6e5
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14828
+                         Account Name:        MAS53031
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53031
+                         Display Name:        MANSI VIROLIYA
+                         User Principal Name:    MAS53031@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53031, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14828,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 12:52:41 PM
+TimeWritten        : 7/6/2023 12:52:41 PM
+UserName           :
+Site               :
+Container          :
+
+Windows PowerShell
+Copyright (C) 2014 Microsoft Corporation. All rights reserved.
+
+PS C:\Windows\system32> Get-EventLog -LogName Security | Where-Object {$_.EventID -eq 4720} | Select-Object -Property *
+
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29433728
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14865
+                         Account Name:        MAS53033
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53033
+                         Display Name:        SHIVANAND SINGH
+                         User Principal Name:    MAS53033@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53033, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14865,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:31:51 PM
+TimeWritten        : 7/6/2023 4:31:51 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29433656
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14864
+                         Account Name:        MAS53034
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53034
+                         Display Name:        SAURABH KUMAR JHA
+                         User Principal Name:    MAS53034@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53034, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14864,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:31:26 PM
+TimeWritten        : 7/6/2023 4:31:26 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29433532
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14863
+                         Account Name:        MAS53035
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53035
+                         Display Name:        ADITYA BALI
+                         User Principal Name:    MAS53035@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53035, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14863,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:30:58 PM
+TimeWritten        : 7/6/2023 4:30:58 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29433422
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14862
+                         Account Name:        MAS53036
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53036
+                         Display Name:        ABHAY KUMAR
+                         User Principal Name:    MAS53036@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53036, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14862,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:30:27 PM
+TimeWritten        : 7/6/2023 4:30:27 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29433318
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14861
+                         Account Name:        MAS53037
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53037
+                         Display Name:        RISHABH JAWA
+                         User Principal Name:    MAS53037@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53037, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14861,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:29:56 PM
+TimeWritten        : 7/6/2023 4:29:56 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29433203
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14860
+                         Account Name:        MAS53038
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53038
+                         Display Name:        JITENDRA KUMAR
+                         User Principal Name:    MAS53038@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53038, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14860,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:29:24 PM
+TimeWritten        : 7/6/2023 4:29:24 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29432930
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14859
+                         Account Name:        MAS53039
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53039
+                         Display Name:        RANJEET KUMAR1
+                         User Principal Name:    MAS53039@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53039, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14859,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:28:08 PM
+TimeWritten        : 7/6/2023 4:28:08 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29432368
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14858
+                         Account Name:        MAS53040
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53040
+                         Display Name:        HARIOM
+                         User Principal Name:    MAS53040@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53040, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14858,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:24:58 PM
+TimeWritten        : 7/6/2023 4:24:58 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29432275
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14857
+                         Account Name:        MAS53041
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53041
+                         Display Name:        BALAM SINGH
+                         User Principal Name:    MAS53041@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53041, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14857,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:24:35 PM
+TimeWritten        : 7/6/2023 4:24:35 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29432167
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14856
+                         Account Name:        MAS53042
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53042
+                         Display Name:        ARJUN SINGH MEHRA
+                         User Principal Name:    MAS53042@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53042, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14856,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:24:09 PM
+TimeWritten        : 7/6/2023 4:24:09 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29432086
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14855
+                         Account Name:        MAS53043
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53043
+                         Display Name:        SHUBHAM SINGH
+                         User Principal Name:    MAS53043@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53043, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14855,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:23:46 PM
+TimeWritten        : 7/6/2023 4:23:46 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29432014
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14854
+                         Account Name:        MAS53044
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53044
+                         Display Name:        MD ABRAR
+                         User Principal Name:    MAS53044@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53044, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14854,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:23:22 PM
+TimeWritten        : 7/6/2023 4:23:22 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431921
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14853
+                         Account Name:        MAS53045
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53045
+                         Display Name:        MANGAL SINGH
+                         User Principal Name:    MAS53045@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53045, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14853,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:22:55 PM
+TimeWritten        : 7/6/2023 4:22:55 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431838
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14852
+                         Account Name:        MAS53046
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53046
+                         Display Name:        JATIN SINGH
+                         User Principal Name:    MAS53046@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53046, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14852,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:22:26 PM
+TimeWritten        : 7/6/2023 4:22:26 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431755
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14851
+                         Account Name:        MAS53047
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53047
+                         Display Name:        SONU
+                         User Principal Name:    MAS53047@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53047, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14851,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:22:01 PM
+TimeWritten        : 7/6/2023 4:22:01 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431681
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14850
+                         Account Name:        MAS53048
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53048
+                         Display Name:        VISHAL SINGH
+                         User Principal Name:    MAS53048@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53048, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14850,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:21:37 PM
+TimeWritten        : 7/6/2023 4:21:37 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431597
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14849
+                         Account Name:        MAS53049
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53049
+                         Display Name:        JITENDRA SINGH
+                         User Principal Name:    MAS53049@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53049, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14849,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:21:10 PM
+TimeWritten        : 7/6/2023 4:21:10 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431522
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14848
+                         Account Name:        MAS53050
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53050
+                         Display Name:        SAURABH
+                         User Principal Name:    MAS53050@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53050, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14848,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:20:39 PM
+TimeWritten        : 7/6/2023 4:20:39 PM
+UserName           :
+Site               :
+Container          :
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 29431427
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-1499
+                         Account Name:        anupk
+                         Account Domain:        MAS-NOIDA
+                         Logon ID:        0x457976c4
+
+                     New Account:
+                         Security ID:        S-1-5-21-2373504117-2689643630-3100359099-14847
+                         Account Name:        MAS53051
+                         Account Domain:        MAS-NOIDA
+
+                     Attributes:
+                         SAM Account Name:    MAS53051
+                         Display Name:        PAWAN KUMAR
+                         User Principal Name:    MAS53051@mas-noida.com
+                         Home Directory:        -
+                         Home Drive:        -
+                         Script Path:        -
+                         Profile Path:        -
+                         User Workstations:    -
+                         Password Last Set:    %%1794
+                         Account Expires:        %%1794
+                         Primary Group ID:    513
+                         Allowed To Delegate To:    -
+                         Old UAC Value:        0x0
+                         New UAC Value:        0x15
+                         User Account Control:
+                             %%2080
+                             %%2082
+                             %%2084
+                         User Parameters:    -
+                         SID History:        -
+                         Logon Hours:        %%1793
+
+                     Additional Information:
+                         Privileges        -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53051, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-14847,
+                     S-1-5-21-2373504117-2689643630-3100359099-1499...}
+InstanceId         : 4720
+TimeGenerated      : 7/6/2023 4:20:06 PM
+TimeWritten        : 7/6/2023 4:20:06 PM
+UserName           :
+Site               :
+Container          :
+
+

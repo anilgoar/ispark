@@ -21,6 +21,7 @@
                 <div class="box-name">
 					<span><input type='radio' name='Accesstype'  onclick="return window.location.href='<?php echo $this->webroot;?>Acces'" > User Rights</span>
 					<span style='margin-left:20px;'><input type='radio' name='Accesstype' checked > Branch Rights</span>
+                    <span style='margin-left:20px;'><input type='radio' name='Accesstype' onclick="return window.location.href='http://mascallnetnorth.in/ispark/AccesCostCenterWise'" > Payroll Rights</span>
                 </div>
 				<div class="box-icons">
 					<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>

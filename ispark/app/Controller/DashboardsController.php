@@ -15,8 +15,8 @@ class DashboardsController extends AppController
         {
             $role=$this->Session->read("role"); $this->Auth->allow('get_os','get_data');
             $roles=explode(',',$this->Session->read("page_access"));				
-            if(in_array('42',$roles)){$this->Auth->allow('index','get_data');$this->Auth->allow('get_process');$this->Auth->allow('get_tower','get_freeze_data');$this->Auth->allow('add_process');$this->Auth->allow('get_dash_data');}
-       if(in_array('138',$roles)){ $this->Auth->allow('get_data');	$this->Auth->allow('get_table');$this->Auth->allow('getexpot');}
+            $this->Auth->allow('index','get_data');$this->Auth->allow('get_process');$this->Auth->allow('get_tower','get_freeze_data');$this->Auth->allow('add_process');$this->Auth->allow('get_dash_data');
+        $this->Auth->allow('get_data');	$this->Auth->allow('get_table');$this->Auth->allow('getexpot');
         }
     }
 		

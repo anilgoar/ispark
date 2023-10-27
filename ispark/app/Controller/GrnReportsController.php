@@ -70,13 +70,15 @@ where $qry
   public function pnl_revenue_report()
   {
         $this->layout='home';
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         $role = $this->Session->read('role');
         $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
         
         if($role=='admin')
         {
-            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'order'=>array('branch_name')));
+            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
             $branchMaster = array('All'=>'All') + $branchMaster2;
         }
         else
@@ -107,7 +109,7 @@ where $qry
       $qry3 = " ";
       $qry4 = " ";
       
-      $sCost = array('1'=>'BO/AHMH','2'=>'BO/DEL','3'=>'BSS/BO/CORP/107','4'=>'BO/HYD','5'=>'BO/JPR','6'=>'BO/KNL','7'=>'BO/MRT','8'=>'BO/CHD','9'=>'BO/','12'=>'CM/BO/JPR/0103','13'=>'BSS/BO/QUAL/257');
+      $sCost = array('18'=>'BSS/BO/AHMH-JD/560','5'=>'BO/JPR','9'=>'BO/');
       
         if($Expense['comp_Name']!='All')
         {
@@ -119,12 +121,24 @@ where $qry
             $qry4 = " and ToBranch='".$Expense['comp_Name']."'";
             $branchIdget = $this->Addbranch->find('first',array('conditions'=>"branch_name='{$Expense['comp_Name']}'"));
             $branchId = $branchIdget['Addbranch']['id'];
-            $this->set('Scost',$sCost[$branchId]);
+            $this->set('Scost',array("$branchId"=>$sCost[$branchId]));
         }
         else
         {
+            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
+            $br_in = implode("','", $branchMaster2);
+            $qry .= " and cm.branch in ('".$br_in."')";
+            $qry1 .= " and pm.branch_name in ('".$br_in."')";
+            $qry2 = " and BranchId in ('".$br_in."')";
+            
+            //$qry3 = " and FromBranch='".$Expense['comp_Name']."'";
+            //$qry4 = " and ToBranch='".$Expense['comp_Name']."'";
+            $branchIdget = $this->Addbranch->find('first',array('conditions'=>"branch_name='{$Expense['comp_Name']}'"));
+            $branchId = $branchIdget['Addbranch']['id'];
+            
             $this->set('Scost',$sCost);
         }
+        
         if($Expense['year']!='All')
         {
             $qry .= " and eem.FinanceYear='".$Expense['year']."'";
@@ -326,7 +340,21 @@ public function export_grn_imprest_report()
             $qry .= " and DATE_FORMAT(em.ApprovalDate,'%b-%y')='".$NewMonth."'";
         }
         
-        
+//        $qr = "SELECT em.Id,SUBSTRING_INDEX(GrnNo,'/',-1) VchNo,DATE_FORMAT(em.ApprovalDate,'%d-%b-%Y') Dates,head.HeadingDesc,
+//subhead.SubHeadingDesc,im.TallyHead,
+//SUM(eep.Amount)Amount,eep.Rate,SUM(eep.Tax) Tax,SUM(eep.Total) Total,''DebitCredit,cm.Branch CostCategory,
+//cm.Branch CostCenter,em.FinanceYear,em.FinanceMonth,eep.Particular NarrationEach,em.Description Narration,bm.state,bm.tally_code,bm.tally_branch,em.GrnNo FROM 
+//expe_grn_change egc inner join
+//`expense_entry_master` 
+//em on egc.new = em.grnno and em.FinanceYear='2020-21' and em.ExpenseEntryType='Imprest'
+// INNER JOIN expense_entry_particular eep ON em.Id=eep.ExpenseEntry  
+//INNER JOIN cost_master cm ON cm.Id = eep.CostCenterId
+//INNER JOIN branch_master bm ON cm.branch = bm.branch_name
+//INNER JOIN `tbl_bgt_expenseheadingmaster` head ON em.HeadId = head.HeadingId
+//INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON em.SubHeadId = subhead.SubHeadingId
+//LEFT JOIN imprest_manager im ON em.userid = im.UserId AND bm.branch_name = im.Branch
+//WHERE  em.ExpenseEntryType='Imprest' 
+//GROUP BY em.Id,cm.branch,em.SubHeadId,im.TallyHead ORDER BY date(em.ApprovalDate),CONVERT(SUBSTRING_INDEX(GrnNo,'/',-1),UNSIGNED INTEGER)";
         
         //print_r($qry);exit;
         
@@ -340,7 +368,7 @@ INNER JOIN cost_master cm ON cm.Id = eep.CostCenterId
 INNER JOIN branch_master bm ON cm.branch = bm.branch_name
 INNER JOIN `tbl_bgt_expenseheadingmaster` head ON em.HeadId = head.HeadingId
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON em.SubHeadId = subhead.SubHeadingId
-LEFT JOIN imprest_manager im ON em.userid = im.UserId AND bm.branch_name = im.Branch
+LEFT JOIN imprest_manager im ON em.userid = im.UserId  
 WHERE  em.ExpenseEntryType='Imprest' $qry
 GROUP BY em.Id,cm.branch,em.SubHeadId,im.TallyHead ORDER BY date(em.ApprovalDate),CONVERT(SUBSTRING_INDEX(GrnNo,'/',-1),UNSIGNED INTEGER)");
        $this->set('ExpenseReport',$ExpenseReport);
@@ -526,8 +554,8 @@ INNER JOIN cost_master cm ON TallyInvoiceVoucherExport.Process_Code = cm.cost_ce
                                     echo "<td>";
                                     echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                     echo "</td>";
-                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
-                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
+                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
+                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
                                     echo "<td>JrnlS</td>";
                                     echo "</tr>";
 
@@ -541,8 +569,8 @@ INNER JOIN cost_master cm ON TallyInvoiceVoucherExport.Process_Code = cm.cost_ce
                                     echo "<td>";
                                     echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                     echo "</td>";
-                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
-                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
+                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
+                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
                                     echo "<td>JrnlS</td>";
                                     echo "</tr>";
 
@@ -570,8 +598,8 @@ INNER JOIN cost_master cm ON TallyInvoiceVoucherExport.Process_Code = cm.cost_ce
                                     echo "<td>";
                                     echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                                     echo "</td>";
-                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
-                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
+                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
+                                    echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
                                     echo "<td>JrnlS</td>";
                                     echo "</tr>";
                                     $diff += $igst;
@@ -608,8 +636,8 @@ INNER JOIN cost_master cm ON TallyInvoiceVoucherExport.Process_Code = cm.cost_ce
                             echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                             echo "</td>";
                             
-                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
-                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
+                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
+                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
                             echo "<td>JrnlS</td>";
                             echo "</tr>";
                         echo "</tr>";
@@ -636,8 +664,8 @@ INNER JOIN cost_master cm ON TallyInvoiceVoucherExport.Process_Code = cm.cost_ce
                             echo $exp['bm']['tally_code'].'/'.$FinanceYear2.$FinanceMonth1;
                             echo "</td>";
                             
-                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
-                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally']."</td>";
+                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
+                            echo "<td>".$exp['TallyInvoiceVoucherExport']['Remarks'].' Tally Bill NO.: '.$exp['TallyInvoiceVoucherExport']['BillNoTally'].' Invoice Date.:'.$exp['TallyInvoiceVoucherExport']['invoiceDate']."</td>";
                             echo "<td>JrnlS</td>";
                             echo "</tr>";
                         }
@@ -679,7 +707,7 @@ exit;
         $wrongData = array();
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>array('active'=>1),'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
         
         $this->set('activity','upload');
         
@@ -1858,7 +1886,7 @@ public function grn_report()
     
         
     $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>'2019-20','2020-21'))));
+    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>'2019-20','2020-21','2021-22'))));
     
     if($this->request->is('POST'))
     {
@@ -2148,7 +2176,8 @@ public function salary_vch_report()
 {
     $this->layout = "home";
     $all = array();
-    
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
     $role = $this->Session->read('role');
     if($role=='admin')
         {
@@ -2161,7 +2190,7 @@ public function salary_vch_report()
         }
     $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>$condition,'order'=>array('branch_name')));
     $branchMaster = $all+$branchMaster2;
-    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2018-19','2019-20','2020-21')))));  
+    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16','2014-15','2015-16','2016-17')")));  
     $this->set('branch_master',$branchMaster);
     $this->set('head',array_merge(array('All'=>'All'),$this->Tbl_bgt_expenseheadingmaster->find('list',array('conditions'=>array('EntryBy'=>""),'fields'=>array('HeadingId','HeadingDesc')))));
     
@@ -2225,13 +2254,17 @@ INNER JOIN cost_master cm ON eep.CostCenterId = cm.id $qry order by em.GrnNo"));
 }
 public function pnl_branch_wise_report()
   {
-        $this->layout='home';
+  
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
+    
+    $this->layout='home';
         $role = $this->Session->read('role');
         $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
         if($role=='admin')
         {
-            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'order'=>array('branch_name')));
+            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
             $branchMaster = array('All'=>'All') + $branchMaster2;
         }
         else
@@ -2309,24 +2342,27 @@ public function pnl_branch_wise_report()
       /// Getting Provision Branch Wise as UnProcessed Provision in Gross Salary in p&l report From table provision_master
       $provisionArr = $this->Provision->query("SELECT OPBranch,cm.Billing,SUM(pm.provision) provision,SUM(pm.out_source_amt) out_source FROM provision_master pm
 INNER JOIN cost_master cm ON pm.cost_center = cm.cost_center
- WHERE pm.invoiceType1='Revenue' and pm.finance_year='{$Expense['FinanceYear']}' AND left(pm.`month`,3) = '{$Expense['FinanceMonth']}' $qu4 GROUP BY cm.OPBranch;");
+ WHERE pm.invoiceType1='Revenue'
+ 
+and  pm.month='$month'  $qu4 GROUP BY cm.OPBranch;");
+      //#and pm.finance_year='{$Expense['FinanceYear']}' AND left(pm.`month`,3) = '{$Expense['FinanceMonth']}'
       foreach($provisionArr as $pro)
       {
         $provision_master[strtoupper($pro['cm']['OPBranch'])] = round($pro['0']['provision'],2)+round($pro['0']['out_source'],2);
         if($pro['cm']['Billing']=='1')
         {
             $billing_master_un[$pro['cm']['OPBranch']] += $pro['0']['provision'];
-            
         }
-        
-        
-        
       }
       
      
       $billingUnProc_select = "SELECT OPBranch,SUM(pm.outsource_amt) billing_amt FROM provision_particulars pm 
 INNER JOIN cost_master cm ON pm.Cost_Center_OutSource = cm.cost_center 
- WHERE  pm.FinanceYear='{$Expense['FinanceYear']}' AND pm.`FinanceMonth1` = '{$Expense['FinanceMonth']}' $qu4 GROUP BY cm.OPBranch;"; 
+ WHERE 
+ pm.FinanceYear='{$Expense['FinanceYear']}' AND pm.`FinanceMonth1` = '{$Expense['FinanceMonth']}'
+     
+  $qu4 GROUP BY cm.OPBranch;";
+      
       $billingUnProcArrRsc = $this->Provision->query($billingUnProc_select);
  
       foreach($billingUnProcArrRsc as $pro)
@@ -2336,7 +2372,11 @@ INNER JOIN cost_master cm ON pm.Cost_Center_OutSource = cm.cost_center
       
       $billingProc_select = "SELECT OPBranch,SUM(pm.outsource_amt) billing_amt FROM provision_particulars pm 
 INNER JOIN cost_master cm ON pm.Cost_Center_OutSource = cm.cost_center 
- WHERE Processed='1' and pm.FinanceYear='{$Expense['FinanceYear']}' AND pm.`FinanceMonth1` = '{$Expense['FinanceMonth']}' $qu4 GROUP BY cm.OPBranch;"; 
+ WHERE Processed='1' 
+ and pm.FinanceYear='{$Expense['FinanceYear']}' AND pm.`FinanceMonth1` = '{$Expense['FinanceMonth']}'
+  
+ $qu4 GROUP BY cm.OPBranch;"; 
+      //#' 
       $billingProcArrRsc = $this->Provision->query($billingProc_select);
  
       foreach($billingProcArrRsc as $pro)
@@ -2366,7 +2406,13 @@ INNER JOIN cost_master cm ON pm.Cost_Center_OutSource = cm.cost_center
       /// Getting Sell Invoice as Processed Amount in Gros Salary in p&l report from table table_invoice 
       $InvoiceArr = $this->InitialInvoice->query("SELECT OPBranch,SUM(total) total,cm.Billing FROM tbl_invoice ti 
  INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
- WHERE ti.invoiceType='Revenue' and ti.finance_year='{$Expense['FinanceYear']}' AND left(ti.`month`,3)='{$Expense['FinanceMonth']}' AND ti.`status`=0 $qu4 GROUP BY cm.OPBranch");
+ WHERE ti.invoiceType='Revenue' 
+ 
+ and ti.month='$month'    
+  AND ti.`status`=0 $qu4 GROUP BY cm.OPBranch");
+      
+      //#and ti.finance_year='{$Expense['FinanceYear']}' AND left(ti.`month`,3)='{$Expense['FinanceMonth']}'
+      
       foreach($InvoiceArr as $pro)
       {
           $inv_master[strtoupper($pro['cm']['OPBranch'])] = $pro['0']['total'];
@@ -2541,17 +2587,17 @@ INNER JOIN expense_particular eep ON eem.Id = eep.ExpenseId AND eep.ExpenseType=
 INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
 INNER JOIN cost_master cm ON eep.ExpenseTypeId = cm.id
 WHERE eem.FinanceYear='{$Expense['FinanceYear']}' AND eem.FinanceMonth='{$Expense['FinanceMonth']}'  AND eem.HeadId='24'  $qu2
-GROUP BY cm.OPBranch");
+GROUP BY cm.OPBranch,eem.HeadId,eem.SubHeadId");
      
       foreach($SalaryBusiMaster as $pro)
       {
           if($pro['eem']['EntryStatus']=='0')
           {
-              $ActualCTCBusi[strtoupper($pro['cm']['OPBranch'])] = $ActualCTC[strtoupper($pro['cm']['OPBranch'])];
+              $ActualCTCBusi[strtoupper($pro['cm']['OPBranch'])] += $ActualCTC[strtoupper($pro['cm']['OPBranch'])];
           }
           else
           {
-            $ActualCTCBusi[strtoupper($pro['cm']['OPBranch'])] = $pro['0']['Amount'];
+            $ActualCTCBusi[strtoupper($pro['cm']['OPBranch'])] += $pro['0']['Amount'];
           }
       }
       
@@ -2589,11 +2635,11 @@ INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
 INNER JOIN cost_master cm ON eep.CostCenterId = cm.id
 WHERE eem.FinanceYear='{$Expense['FinanceYear']}' and eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'D' and eem.HeadId!='24' AND eem.HeadId!='23' $qu4
-GROUP BY eep.BranchId,subhead.SubHeadingDesc"); 
+GROUP BY cm.OPBranch,subhead.SubHeadingDesc"); 
        
        foreach($DirectArr as $Dir)
        {
-           $Direct[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] = $Dir['0']['Amount'];
+           $Direct[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] += $Dir['0']['Amount'];
            $SubHeadDir[] = $Dir['subhead']['SubHeadingDesc'];
            $HeadDir[] = $Dir['head']['HeadingDesc'];
            $BranchNArr[] = strtoupper($Dir['cm']['OPBranch']);
@@ -2606,7 +2652,7 @@ INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
 INNER JOIN cost_master cm ON eep.ExpenseTypeId = cm.id
 WHERE eem.FinanceYear='{$Expense['FinanceYear']}' AND eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'D' AND eem.HeadId!='24' AND eem.HeadId!='23'  $qu4
-GROUP BY eep.BranchId,subhead.SubHeadingDesc"); 
+GROUP BY cm.OPBranch,eem.HeadId,eem.SubHeadId"); 
        
         
 
@@ -2614,11 +2660,11 @@ GROUP BY eep.BranchId,subhead.SubHeadingDesc");
        {
            if($Dir['eem']['EntryStatus']=='0')
            {
-                $UnDirect[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] = $Direct[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])];  
+                $UnDirect[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] += $Direct[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])];  
            }
            else
            {
-                $UnDirect[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] = $Dir['0']['Amount'];
+                $UnDirect[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] += $Dir['0']['Amount'];
            }
            $SubHeadDir[] = $Dir['subhead']['SubHeadingDesc'];
            $HeadDir[] = $Dir['head']['HeadingDesc'];
@@ -2653,11 +2699,11 @@ INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
 INNER JOIN cost_master cm ON eep.CostCenterId = cm.id
 WHERE eem.FinanceYear='{$Expense['FinanceYear']}' and eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'I' and eem.HeadId!=24  $qu4
-GROUP BY eep.BranchId,head.HeadingDesc,subhead.SubHeadingDesc");  
+GROUP BY cm.OPBranch,head.HeadingDesc,subhead.SubHeadingDesc");  
        
        foreach($InDirectArr as $InDir)
        {
-           $InDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])] = $InDir['0']['Amount'];
+           $InDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])] += $InDir['0']['Amount'];
            $SubHeadInDir[] = $InDir['subhead']['SubHeadingDesc'];
            $HeadInDir[] = $InDir['head']['HeadingDesc'];
            $BranchInNArr[] = strtoupper($InDir['cm']['OPBranch']);
@@ -2668,7 +2714,7 @@ INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
 INNER JOIN cost_master cm ON eep.ExpenseTypeId = cm.id
 WHERE eem.FinanceYear='{$Expense['FinanceYear']}' AND eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'I' AND eem.HeadId!='24'  $qu4
-GROUP BY eep.BranchId,head.HeadingDesc,subhead.SubHeadingDesc"); 
+GROUP BY cm.OPBranch,head.HeadingDesc,subhead.SubHeadingDesc"); 
        
     
 
@@ -2676,16 +2722,81 @@ GROUP BY eep.BranchId,head.HeadingDesc,subhead.SubHeadingDesc");
        {
            if($InDir['eem']['EntryStatus']=='0')
            {
-                $UnInDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])] = $InDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])];
+                $UnInDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])] += $InDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])];
            }
            else
            {
-                $UnInDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])] = $InDir['0']['Amount'];
+                $UnInDirect[$InDir['subhead']['SubHeadingDesc']][$InDir['head']['HeadingDesc']][strtoupper($InDir['cm']['OPBranch'])] += $InDir['0']['Amount'];
            }
            $SubHeadInDir[] = $InDir['subhead']['SubHeadingDesc'];
            $HeadInDir[] = $InDir['head']['HeadingDesc'];
            $BranchInNArr[] = strtoupper($InDir['cm']['OPBranch']);
        }
+       
+       
+       $CapexArr = $this->ExpenseEntryMaster->query("SELECT subhead.SubHeadingDesc,head.HeadingDesc,cm.OPBranch,SUM(eep.Amount) Amount FROM expense_entry_master eem 
+INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
+INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
+INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
+INNER JOIN cost_master cm ON eep.CostCenterId = cm.id
+WHERE eem.FinanceYear='{$Expense['FinanceYear']}' and eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'C' and eem.HeadId!='24' AND eem.HeadId!='23' $qu4
+GROUP BY cm.OPBranch,subhead.SubHeadingDesc"); 
+       
+       foreach($CapexArr as $Cap)
+       {
+           $Capex[$Cap['subhead']['SubHeadingDesc']][$Cap['head']['HeadingDesc']][strtoupper($Cap['cm']['OPBranch'])] += $Cap['0']['Amount'];
+           $CSubHeadDir[] = $Cap['subhead']['SubHeadingDesc'];
+           $CHeadDir[] = $Cap['head']['HeadingDesc'];
+           $BranchNArr[] = strtoupper($Cap['cm']['OPBranch']);
+       }
+       
+       $UnCapexArr = $this->ExpenseMaster->query("SELECT eem.EntryStatus,subhead.SubHeadingDesc,head.HeadingDesc,cm.OPBranch,SUM(eep.Amount) Amount FROM expense_master eem 
+INNER JOIN expense_particular eep ON eem.Id = eep.ExpenseId AND eep.ExpenseType='CostCenter'
+INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
+INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
+INNER JOIN cost_master cm ON eep.ExpenseTypeId = cm.id
+WHERE eem.FinanceYear='{$Expense['FinanceYear']}' AND eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'C' AND eem.HeadId!='24' AND eem.HeadId!='23'  $qu4
+GROUP BY cm.OPBranch,eem.HeadId,eem.SubHeadId"); 
+       
+        
+
+       foreach($UnCapexArr as $Dir)
+       {
+           if($Dir['eem']['EntryStatus']=='0')
+           {
+                $UnCapex[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] += $Capex[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])];  
+           }
+           else
+           {
+                $UnCapex[$Dir['subhead']['SubHeadingDesc']][$Dir['head']['HeadingDesc']][strtoupper($Dir['cm']['OPBranch'])] += $Dir['0']['Amount'];
+           }
+           $CSubHeadDir[] = $Dir['subhead']['SubHeadingDesc'];
+           $CHeadDir[] = $Dir['head']['HeadingDesc'];
+           $BranchNArr[] = strtoupper($Dir['cm']['OPBranch']);
+       }
+       
+       $CHeadDir = array_unique($CHeadDir);
+       $CSubHeadDir = array_unique($CSubHeadDir);
+       $BranchNArr = array_unique($BranchNArr);
+       
+       foreach($CSubHeadDir as $sub)
+       {
+           foreach($CHeadDir as $head)
+            {
+               foreach($BranchNArr as $br)
+               {
+                    $DataCapPr[$br] +=$Capex[$sub][$head][$br];
+                    $DataCapUnPr[$br] +=$UnCapex[$sub][$head][$br];
+               }        
+            }
+       }
+       $Capex = $DataCapPr;
+       $UnCapex = $DataCapUnPr;
+       
+       $this->set('Capex',$Capex);
+       $this->set('UnCapex',$UnCapex);
+       
+       
        
        $billingUnProc_select_contract_fees = "SELECT cm.OPBranch,SUM(pm.outsource_amt) billing_amt FROM provision_particulars pm 
 INNER JOIN cost_master cm ON pm.cost_center = cm.cost_center 
@@ -3025,12 +3136,15 @@ GROUP BY cm.branch,em.GrnNo,em.Id   ORDER BY STR_TO_DATE(em.approvalDate,'%d-%m-
 public function pnl_summary_report()
   {
         $this->layout='home';
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         $role = $this->Session->read('role');
         $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20')))));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
         if($role=='admin')
         {
-            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'order'=>array('branch_name')));
+            //$branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'order'=>array('branch_name')));
+            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
             $branchMaster = array('All'=>'All') + $branchMaster2;
         }
         else
@@ -3114,8 +3228,8 @@ public function pnl_summary_report()
              /// Getting Provision Branch Wise as UnProcessed Provision in Gross Salary in p&l report From table provision_master
                 $provisionArr = $this->Provision->query("SELECT OPBranch,SUM(pm.provision) provision,SUM(pm.out_source_amt) out_source FROM provision_master pm
           INNER JOIN cost_master cm ON pm.cost_center = cm.cost_center
-           WHERE pm.invoiceType1='Revenue' and pm.finance_year='{$Expense['FinanceYear']}' AND pm.`month` = '$month'");
-           
+           WHERE pm.invoiceType1='Revenue'  AND pm.`month` = '$month'");
+           //and pm.finance_year='{$Expense['FinanceYear']}'
            //print_r($provisionArr); exit; 
            
             foreach($provisionArr as $pro)
@@ -3127,8 +3241,8 @@ public function pnl_summary_report()
             /// Getting Sell Invoice as Processed Amount in Gros Salary in p&l report from table table_invoice 
             $InvoiceArr = $this->InitialInvoice->query("SELECT OPBranch,SUM(total) total FROM tbl_invoice ti 
        INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
-       WHERE ti.invoiceType='Revenue' and  ti.finance_year='{$Expense['FinanceYear']}' AND ti.`month`='$month' AND ti.`status`=0 ");
-       
+       WHERE ti.invoiceType='Revenue'  AND ti.`month`='$month' AND ti.`status`=0 ");
+       //and  ti.finance_year='{$Expense['FinanceYear']}'
             //print_r($InvoiceArr); exit; 
             
             foreach($InvoiceArr as $pro)

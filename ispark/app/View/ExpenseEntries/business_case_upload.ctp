@@ -1,3 +1,4 @@
+<?php if(empty($FinanceYear)) {$FinanceYear = $FinanceYearLogin;}  ?>
 <?php echo $this->Form->create('GrnReport',array('enctype'=>'multipart/form-data')); ?>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
@@ -72,6 +73,7 @@
                     </div>
                     <div class="col-sm-2">
                         <input type="Submit" name="Submit" value="Upload" class="btn btn-primary btn-label-left" />
+                        <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                     </div>
 		</div>
                 

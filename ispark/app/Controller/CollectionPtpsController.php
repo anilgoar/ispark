@@ -12,12 +12,12 @@
         	parent::beforeFilter();
 			
 			$this->Auth->allow('get_branch','add_eptp_date','get_eptp_track','report_eptp_tracking','collection_tracking_matrix','getprocessname');
-			$this->Auth->deny('get_client');
-			$this->Auth->deny('get_collectionReport');
-			$this->Auth->deny('Other_Deduction');
-			$this->Auth->deny('delete_other_deduction');
-			$this->Auth->deny('get_bill_amount');
-			$this->Auth->deny('back');
+			$this->Auth->allow('get_client');
+			$this->Auth->allow('get_collectionReport');
+			$this->Auth->allow('Other_Deduction');
+			$this->Auth->allow('delete_other_deduction');
+			$this->Auth->allow('get_bill_amount');
+			$this->Auth->allow('back');
                        
                         
                         
@@ -29,7 +29,7 @@
 			{
 				$role=$this->Session->read("role");
 				$roles=explode(',',$this->Session->read("page_access"));
-				if(in_array('24',$roles)){
+				
                                 $this->Auth->allow('get_branch','index');
                                 $this->Auth->allow('get_client');
                                 $this->Auth->allow('get_collectionReport');
@@ -40,7 +40,7 @@
                                 $this->Auth->allow('collectionDetails');
                                 $this->Auth->allow('view_report');
                                 $this->Auth->allow('view_report_performance');
-                                }
+                                
 			}			
 		
                 $this->Auth->allow('collection_ptp','get_coll_track','add_eptp_date','get_prov_mnt');
@@ -396,7 +396,7 @@ IF(cm.grn='Yes' AND (ti.approve_grn = '' OR ti.approve_grn IS NULL),'GRN Pending
 FROM tbl_invoice ti 
 INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
 INNER JOIN branch_master bm ON ti.branch_name = bm.branch_name and bm.active='1'
-WHERE `status`='0' and ti.bill_no!='' and ti.grnd!=0 and ti.grnd!=1 and ti.finance_year in ('2016-17','2017-18','2018-19','2019-20','2020-21')  $companyName4    $branchName3
+WHERE `status`='0' and ti.bill_no!='' and ti.grnd!=0 and ti.grnd!=1 and ti.finance_year in ('2016-17','2017-18','2018-19','2019-20','2020-21','2021-22')  $companyName4    $branchName3
   group by ti.id ";
             $data_invoice = $this->InitialInvoice->query($query_invoice);
             //print_r($data_invoice); exit;
@@ -1067,7 +1067,7 @@ pay_type_dates FROM `bill_pay_particulars` bpp  GROUP BY bpp.financial_year,bpp.
         $conditions = array('active'=>'1') ;
         $branch = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>$conditions));
         $this->set('branch_master',$branch);
-        $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2019-20','2020-21'),'active'=>'1'))));
+        $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2019-20','2020-21','2021-22'),'active'=>'1'))));
         
         if($this->request->is('POST'))
         {

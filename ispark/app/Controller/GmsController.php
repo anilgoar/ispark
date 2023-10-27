@@ -30,10 +30,11 @@
                             'edit_imprest_branch','edit_imprest_tmp_branch','save_imprest_tmp1_branch','edit_grn_branch','view_imprest_tmp',
                             'edit_grn_tmp_branch','save_grn_tmp1_branch','view_grn','view_grn_tmp','view_imprest','view_imprest_tmp','get_due_date',
                             'approve_grn2','approve_grn_tmp2','approve_imprest2','approve_imprest_tmp2','vendorstatuscode','approve_imprest_tmp21',
-                               'view_reject_imprest_process_head','edit_imprest_process_head','save_imprest_process_head',
+                               'view_reject_imprest_process_head','get_reject_imprest_process_head','edit_imprest_process_head','save_imprest_process_head',
                                 'view_reject_grn_process_head','edit_grn_process_head','save_grn_process_head',
                                 'view_approve_grn_finance_head','save_approve_grn_finance_head',
-                                'view_imprest_approval_finance_head','edit_imprest_approval_finance_head','approve_imprest_approval_finance_head');
+                                'view_imprest_approval_finance_head','get_imprest_approval_finance_head','edit_imprest_approval_finance_head',
+                                'approve_imprest_approval_finance_head','delete_grn_request_approve');
                     }	
                     if ($this->request->is('ajax'))
                     {
@@ -253,6 +254,7 @@ INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
             $data['gst_enable'] = $this->request->data['gst_enable'];
             $data['Vendor_State_Code'] = $this->request->data['Vendor_State_Code'];
             $data['Billing_State_Code'] = $this->request->data['Billing_State_Code'];
+            $data['BranchId'] = $this->request->data['branch_id'];
             
             
             $ExpenseEntryType = $this->request->data['ExpenseEntryType'];
@@ -368,6 +370,9 @@ INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
                         $branchArr = "";
 			$this->layout='home';
 			$userid = $this->Session->read('userid');
+                        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    //$this->set('FinanceYearLogin',$FinanceYearLogin); 
+                        
                         
                         $StateCode=array();
                         $StateCodeArr=$this->StateList->find('list',array('fields'=>array('state_list','state_code'),'order' => array('state_list' => 'asc')));
@@ -379,7 +384,7 @@ INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
                         $this->set('StateCode',$StateCode);
 
                         
-			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
+			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>"active='1'",'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
                         
                         
@@ -401,10 +406,12 @@ INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
                         $this->set('Vendor',$Vendor);
 			$this->set('result',$this->TmpExpenseEntryParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `tmp_expense_entry_particular` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.userid='$userid'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
-			if($data = $this->TmpExpenseEntryMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
-                            'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','multi_month_check','multi_month','gst_enable','due_date','Vendor_State_Code','Billing_State_Code'),'conditions'=>array('userid'=>$userid))))
+			if($data = $this->TmpExpenseEntryMaster->find('first',
+                                array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
+                            'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','multi_month_check','multi_month','gst_enable',
+                                    'due_date','Vendor_State_Code','Billing_State_Code','BranchId'),'conditions'=>array('userid'=>$userid))))
 			{
                                $VendorId = $data['TmpExpenseEntryMaster']['Vendor'];
                                $HeadId = $data['TmpExpenseEntryMaster']['HeadId'];
@@ -493,6 +500,7 @@ INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
             
             $dataX['Vendor_State_Code'] = $data['Vendor_State_Code'];
             $dataX['Billing_State_Code'] = $data['Billing_State_Code'];
+            $dataX['BranchId'] = $data['branch_id'];
             
             $dataX['multi_month_check'] = $data['multi_month_check'];
             $dataX['multi_month'] = $data['multi_month'];
@@ -518,11 +526,16 @@ INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
            $TotalBalanceB = empty($TotalB['ExpenseMaster']['Amount'])?0:$TotalB['ExpenseMaster']['Amount'];
             $ParentB = $TotalB['ExpenseMaster']['Id'];
             
-            $ExpenseB = $this->ExpenseEntryMaster->query("select sum(Amount) `Amount` from expense_entry_master where "
-                    . "BranchId='$branchIdChecksB' AND FinanceYear='$FinanceYear' AND FinanceMonth='$FinanceMonth' AND HeadId='$HeadId' AND SubHeadId='$SubHeadId'");
+            $ExpenseB = $this->ExpenseEntryMaster->query("SELECT SUM(eep.Amount)Amount FROM expense_entry_master eem
+INNER JOIN `expense_entry_particular` eep ON eem.Id = eep.ExpenseEntry
+INNER JOIN `cost_master` cm ON eep.CostCenterId = cm.Id
+INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
+. "eem.FinanceYear='$FinanceYear' AND eem.FinanceMonth='$FinanceMonth' AND bm.Id='$branchIdChecksB' AND eem.HeadId='$HeadId' AND eem.SubHeadId='$SubHeadId'");
             
             $consumeAmountB = empty($ExpenseB['0']['0']['Amount'])?0:$ExpenseB['0']['0']['Amount'];
             $RemainingAmountB = $TotalBalanceB-$consumeAmountB;
+            
+            
            
             if(($RemainingAmountB-$TotalAmountB)>=0 && $TotalAmountB)
             {
@@ -703,7 +716,7 @@ AND eem.SubHeadId='$SubHeadId'");
         public function approve_grn()
         {
             $this->layout="home";
-            $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,vm.vendor,eemApp.Amount FROM `expense_entry_master_approve` eemApp
+            $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,vm.vendor,eemApp.Amount,eemApp.Reject FROM `expense_entry_master_approve` eemApp
             INNER JOIN tbl_vendormaster vm ON eemApp.vendor = vm.Id
             INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
             INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where vm.active=1 and eemApp.ExpenseEntryType='Vendor' and eemApp.reject='1' and ApprovalDate is null")); 
@@ -852,7 +865,7 @@ AND eem.SubHeadId='$SubHeadId'");
         
         public function approve_grn_tmp2()
         {
-
+            //exit;
             $this->layout='home';
             $userid = $this->Session->read('userid');
             $Id = $this->params->query('Id');
@@ -945,6 +958,20 @@ AND eem.SubHeadId='$SubHeadId'");
                     $newDater[1] = $dater1[1];
                     $newDater[2] = $dater1[0];
                     $dataX['ExpenseDate'] = implode('-',$newDater);
+                    
+                    $ExpenBranchId = $this->ExpenseEntryApproveMaster->query("SELECT BranchId FROM expense_entry_master_approve eema where Id='$ExpenseId' limit 1");
+                    //print_r($ExpenBranchId); exit;
+                    
+                    if(!empty($ExpenBranchId['0']['eema']['BranchId']))
+                    {
+                    $dataX['BranchId'] = $ExpenBranchId['0']['eema']['BranchId']; 
+                    }
+                    else
+                    {
+                        $ExpenBranchId = $this->ExpenseEntryApproveMaster->query("SELECT BranchId FROM expense_entry_particular_approve eema where ExpenseEntry='$ExpenseId' limit 1");
+                        $dataX['BranchId'] = $ExpenBranchId['0']['eema']['BranchId']; 
+                    }
+                    
 
                     $FinanceYear = $dataX['FinanceYear'];
                     $HeadId = $dataY['HeadId'];
@@ -982,7 +1009,7 @@ AND eem.SubHeadId='$SubHeadId'");
                          $strzero .='0';
                      }
 
-                    if($FinanceYear=='2019-20' || $FinanceYear=='2020-21')
+                    if($FinanceYear=='2020-21' || $FinanceYear=='2021-22')
                     {    
                         $dataX['uid_auto'] = $auto;
                        $autoVal =$UniqueHead. "/".$FinanceYear.'/'.$strzero.$auto; 
@@ -993,7 +1020,11 @@ AND eem.SubHeadId='$SubHeadId'");
                     $FinanceMonthMulti = $FinanceMonth = $dataX['FinanceMonth'];
                     $CompId =      $dataX['CompId'];
                     $Transaction = $this->ExpenseEntryMaster->getDataSource(); //start transaction
-                    $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
+                    
+                    $CntArr = array();
+                    
+                    
+                    $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE  FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth'");
 
                     if($dataX['multi_month_check']!='1')
                     {
@@ -1031,7 +1062,19 @@ AND eem.SubHeadId='$SubHeadId'");
     //                            {
     //                                $Comp = "IDC";
     //                            }
-                            $GrnNO = $Comp.'/'.$monthArray[$FinanceMonth].'/'.$FinanceYear2."/"."$GrnCnt";
+                                $GrnNO = "";
+                                for($countno=0; $countno<=1000; $countno++)
+                                {
+                                    $GrnNO = $Comp.'/'.$monthArray[$FinanceMonth].'/'.$FinanceYear2."/"."$GrnCnt";
+                                    $grnExist = $this->ExpenseEntryMaster->find('first',array('conditions'=>"GrnNo='$GrnNO'"));
+                                    if(empty($grnExist))
+                                    {
+                                        break;
+                                    }
+                                    $GrnCnt++;
+                                }
+                                
+                            
 
                             if($this->ExpenseEntryMaster->updateAll(array('GrnNo'=> "'". addslashes($GrnNO)."'",'ApprovalDate'=>"'".date('Y-m-d H:i:s')."'",'ApprovedBy'=>"'".$this->Session->read('userid')."'"),array('Id'=>$Id)))
                             {
@@ -1187,9 +1230,19 @@ AND eem.SubHeadId='$SubHeadId'");
 
                             $GrnCnt = intval($CntArr['0']['0']['cnt']); 
                             $GrnCnt = $GrnCnt+1;
+                            //$GrnNO = "";
+                                for($countno=0; $countno<=1000; $countno++)
+                                {
+                                    $GrnNO = $Comp.'/'.$monthArray[$FinanceMonthMulti].'/'.$FinanceYear2."/"."$GrnCnt";
+                                    $grnExist = $this->ExpenseEntryMaster->find('first',array('conditions'=>"GrnNo='$GrnNO'"));
+                                    if(empty($grnExist))
+                                    {
+                                        break;
+                                    }
+                                    $GrnCnt++;
+                                }
 
-
-                            $GrnNO = $Comp.'/'.$monthArray[$FinanceMonthMulti].'/'.$FinanceYear2."/"."$GrnCnt";
+                            //$GrnNO = $Comp.'/'.$monthArray[$FinanceMonthMulti].'/'.$FinanceYear2."/"."$GrnCnt";
 
                             if($this->ExpenseEntryMaster->updateAll(array('GrnNo'=> "'". addslashes($GrnNO)."'",'ApprovalDate'=>"'".date('Y-m-d H:i:s')."'",'ApprovedBy'=>"'".$this->Session->read('userid')."'"),array('Id'=>$DataIds)))
                             {
@@ -1224,7 +1277,7 @@ AND eem.SubHeadId='$SubHeadId'");
                     $ExpenTmp = $this->ExpenseEntryApproveMaster->find('first',array('conditions'=>array('Id'=>$ExpenseId)));
                     $dataY= $ExpenTmp['ExpenseEntryApproveMaster'];
                     $this->ExpenseEntryApproveMaster->updateAll(array('ApprovedBy'=>null,'ApprovalDate'=>null,
-                        'RejectRemarks'=>"'".$RejectRemarks."'",'Reject'=>'0','ApprovalDate'=>null,
+                        'RejectRemarks'=>"'".$RejectRemarks."'",'Reject'=>'2','ApprovalDate'=>null,
                         'RejectDate'=>"'".date('Y-m-d H:i:s')."'",'RejectBy'=>"'".$this->Session->read('userid')."'"),array('Id'=>$ExpenseId));
                     
                     $dataZ = $this->ExpenseEntryApproveParticular->find('first',array('conditions'=>array('ExpenseEntry'=>$ExpenseId)));
@@ -1270,7 +1323,7 @@ AND eem.SubHeadId='$SubHeadId'");
         
         public function save_approve_grn_finance_head()
         {
-
+            //exit;
             $this->layout='home';
             $userid = $this->Session->read('userid');
             $Id = $this->params->query('Id');
@@ -1288,7 +1341,7 @@ AND eem.SubHeadId='$SubHeadId'");
 
             $this->set('ExpenseId',$Id);
             if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
-                'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file','Id','round_off','multi_month_check','multi_month','gst_enable','Vendor_State_Code','Billing_State_Code'),'conditions'=>array('Id'=>$Id))))
+                'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file','Id','round_off','multi_month_check','multi_month','gst_enable','Vendor_State_Code','Billing_State_Code','RejectRemarks'),'conditions'=>array('Id'=>$Id))))
             {
 
                 $this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep 
@@ -1298,6 +1351,8 @@ AND eem.SubHeadId='$SubHeadId'");
                    $VendorId = $data['ExpenseEntryApproveMaster']['Vendor']; 
                    $HeadId = $data['ExpenseEntryApproveMaster']['HeadId'];
                    $SubHeadId = $data['ExpenseEntryApproveMaster']['SubHeadId'];
+                   $RejectRemarks = $data['ExpenseEntryApproveMaster']['RejectRemarks'];
+                   $this->set('RejectRemarks',$RejectRemarks);
 
                     $vend = $this->VendorMaster->find('list',array('fields'=>array('Id','vendor'),'conditions'=>array('Id'=>$VendorId)));
                     $CompId = $data['ExpenseEntryApproveMaster']['CompId'];
@@ -1368,6 +1423,17 @@ AND eem.SubHeadId='$SubHeadId'");
                     $ExpenTmp = $this->ExpenseEntryApproveMaster->find('first',array('conditions'=>array('Id'=>$ExpenseId)));
                     $dataY= $ExpenTmp['ExpenseEntryApproveMaster'];
                     $dataX = Hash::remove($dataY,'Id');
+                    
+                    $ExpenBranchId = $this->ExpenseEntryApproveMaster->query("SELECT BranchId FROM expense_entry_master_approve eema where Id='$ExpenseId' limit 1");
+                    if(!empty($ExpenBranchId['0']['eema']['BranchId']))
+                    {
+                    $dataX['BranchId'] = $ExpenBranchId['0']['eema']['BranchId']; 
+                    }
+                    else
+                    {
+                        $ExpenBranchId = $this->ExpenseEntryApproveMaster->query("SELECT BranchId FROM expense_entry_particular_approve eema where ExpenseEntry='$ExpenseId' limit 1");
+                        $dataX['BranchId'] = $ExpenBranchId['0']['eema']['BranchId']; 
+                    }
 
                     $dater = explode(' ',$dataX['createdate']);
                     $dater1 = explode('-',$dater[0]);
@@ -1412,7 +1478,7 @@ AND eem.SubHeadId='$SubHeadId'");
                          $strzero .='0';
                      }
 
-                    if($FinanceYear=='2019-20' || $FinanceYear=='2020-21')
+                    if($FinanceYear=='2020-21' || $FinanceYear=='2021-22')
                     {    
                         $dataX['uid_auto'] = $auto;
                        $autoVal =$UniqueHead. "/".$FinanceYear.'/'.$strzero.$auto; 
@@ -1423,7 +1489,7 @@ AND eem.SubHeadId='$SubHeadId'");
                     $FinanceMonthMulti = $FinanceMonth = $dataX['FinanceMonth'];
                     $CompId =      $dataX['CompId'];
                     $Transaction = $this->ExpenseEntryMaster->getDataSource(); //start transaction
-                    $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
+                    $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE  FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
 
                     if($dataX['multi_month_check']!='1')
                     {
@@ -1461,7 +1527,17 @@ AND eem.SubHeadId='$SubHeadId'");
     //                            {
     //                                $Comp = "IDC";
     //                            }
-                            $GrnNO = $Comp.'/'.$monthArray[$FinanceMonth].'/'.$FinanceYear2."/"."$GrnCnt";
+                            $GrnNO = "";
+                                for($countno=0; $countno<=1000; $countno++)
+                                {
+                                    $GrnNO = $Comp.'/'.$monthArray[$FinanceMonth].'/'.$FinanceYear2."/"."$GrnCnt";
+                                    $grnExist = $this->ExpenseEntryMaster->find('first',array('conditions'=>"GrnNo='$GrnNO'"));
+                                    if(empty($grnExist))
+                                    {
+                                        break;
+                                    }
+                                    $GrnCnt++;
+                                }
 
                             if($this->ExpenseEntryMaster->updateAll(array('GrnNo'=> "'". addslashes($GrnNO)."'",'ApprovalDate'=>"'".date('Y-m-d H:i:s')."'",'ApprovedBy'=>"'".$this->Session->read('userid')."'"),array('Id'=>$Id)))
                             {
@@ -1635,6 +1711,7 @@ AND eem.SubHeadId='$SubHeadId'");
                     }
                     if($flag)
                     {
+                        //write code here
                         $this->Session->setFlash(__("GRN No. ".$GrnNO." With Unique $autoVal Approved Successfully"));
                     }
                     else
@@ -1677,9 +1754,19 @@ AND eem.SubHeadId='$SubHeadId'");
             $branchArr = "";
             $this->layout='home';
             $userid = $this->Session->read('userid');
+            
+            $find_im = $this->Addbranch->query("SELECT TallyHead FROM `imprest_manager` WHERE UserId='$userid'");
+                        if(empty($find_im))
+                        {
+                            $this->Session->setFlash(__("You are not imprest manager. Please Request Finance Head To Add You as a Imprest Manager."));    
+                            $this->redirect(array("controller"=>"GrnEntries","action"=>"select_entry"));
+                        }
+            
+            
+            
             $role=$this->Session->read("role");
             $EntryType = $this->params->query['entryType'];
-            $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+            $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
                 'order' => array('company_name' => 'asc')))); //provide textbox and view branches
 
             if($role=='admin')
@@ -1703,10 +1790,10 @@ AND eem.SubHeadId='$SubHeadId'");
             $this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'conditions'=>array('EntryBy'=>""),'order'=>array('HeadingDesc'=>'asc'))));
             $this->set('result',$this->TmpExpenseEntryParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `tmp_expense_entry_particular` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
             WHERE teep.userid='$userid'"));
-            $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+            $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
 
             if($data = $this->TmpExpenseEntryMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
-                'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId'),'conditions'=>array('userid'=>$userid))))
+                'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','BranchId'),'conditions'=>array('userid'=>$userid))))
             {
                 $VendorId = $data['TmpExpenseEntryMaster']['Vendor'];
                 $HeadId = $data['TmpExpenseEntryMaster']['HeadId'];
@@ -1764,6 +1851,7 @@ AND eem.SubHeadId='$SubHeadId'");
                 $dataX['bill_date'] = $bill_date = $data['bill_date'];
                 $dataX['Amount'] = $Amount = $data['Amount'];
                 $dataX['Description'] = $description = $data['Description'];
+                $dataX['BranchId'] = $data['BranchId'];
 
                 $dataX['EntryStatus'] = $EntryStatus = $data['EntryStatus'];
                 $dataX['createdate'] = date('Y-m-d H:i:s');
@@ -1785,10 +1873,13 @@ AND eem.SubHeadId='$SubHeadId'");
                $TotalBalanceB = empty($TotalB['ExpenseMaster']['Amount'])?0:$TotalB['ExpenseMaster']['Amount'];
                 $ParentB = $TotalB['ExpenseMaster']['Id'];
 
-                $ExpenseB = $this->ExpenseEntryMaster->query("select sum(Amount) `Amount` from expense_entry_master where "
-                        . "BranchId='$branchIdChecksB' AND FinanceYear='$FinanceYear' AND FinanceMonth='$FinanceMonth' AND HeadId='$HeadId' AND SubHeadId='$SubHeadId'");
+                $ExpenseB = $this->ExpenseEntryMaster->query("SELECT SUM(eep.Amount)Total FROM expense_entry_master eem
+INNER JOIN `expense_entry_particular` eep ON eem.Id = eep.ExpenseEntry
+INNER JOIN `cost_master` cm ON eep.CostCenterId = cm.Id
+INNER JOIN branch_master bm ON cm.branch = bm.branch_name where "
+. "eem.FinanceYear='$FinanceYear' AND eem.FinanceMonth='$FinanceMonth' AND bm.Id='$branchIdChecksB' AND eem.HeadId='$HeadId' AND eem.SubHeadId='$SubHeadId'");
 
-                $consumeAmountB = empty($ExpenseB['0']['0']['Amount'])?0:$ExpenseB['0']['0']['Amount'];
+                $consumeAmountB = empty($ExpenseB['0']['0']['Total'])?0:$ExpenseB['0']['0']['Total'];
                 $RemainingAmountB = $TotalBalanceB-$consumeAmountB;
 
                 if(($RemainingAmountB-$TotalAmountB)>=0 && $TotalAmountB)
@@ -1948,17 +2039,17 @@ AND eem.SubHeadId='$SubHeadId'");
 
                 if($role=='admin')
                 {
-                    $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject,eemApp.ApprovalDate FROM `expense_entry_master_approve` eemApp
-    INNER JOIN tbl_user tu ON eemApp.userid = tu.Id INNER JOIN company_master cm ON eemApp.CompId = cm.Id WHERE eemApp.ExpenseEntryType='Imprest' AND Reject = '0'")); 
+                    $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject,eemApp.ApprovalDate,eemApp.createdate FROM `expense_entry_master_approve` eemApp
+    INNER JOIN tbl_user tu ON eemApp.userid = tu.Id INNER JOIN company_master cm ON eemApp.CompId = cm.Id WHERE eemApp.ExpenseEntryType='Imprest' AND Reject = '1' and eemApp.ApprovalDate is null")); 
                 }
                 else
                 {
-                    $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject,eemApp.ApprovalDate FROM `expense_entry_master_approve` eemApp
+                    $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject,eemApp.ApprovalDate,eemApp.createdate FROM `expense_entry_master_approve` eemApp
         INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
         INNER JOIN company_master cm ON eemApp.CompId = cm.Id
         INNER JOIN `expense_entry_particular_approve` eep ON eemApp.id = eep.ExpenseEntry
         INNER JOIN (SELECT * FROM tbl_grn_access where UserId='$userid' GROUP BY BranchId,UserId) tga ON eep.BranchId = tga.BranchId
-         WHERE eemApp.ExpenseEntryType='Imprest' AND (eemApp.Reject = '0') and eemApp.ApprovalDate is null GROUP BY eemApp.Id")); 
+         WHERE eemApp.ExpenseEntryType='Imprest' AND (eemApp.Reject = '1') and eemApp.ApprovalDate is null and eemApp.ApprovalDate is null GROUP BY eemApp.Id")); 
                 }
             }
         public function approve_imprest_tmp()
@@ -1969,20 +2060,20 @@ AND eem.SubHeadId='$SubHeadId'");
 			$userid = $this->Session->read('userid');
                         $ExpenseId = $this->params->query['Id'];
                         $this->set('ExpenseId',$ExpenseId);
-                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); //provide textbox and view branches
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
-                            'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file'),'conditions'=>array('Id'=>$ExpenseId,'Reject'=>'0'))))
+                            'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file'),'conditions'=>array('Id'=>$ExpenseId,'Reject'=>'1'))))
 			{
                                
                                $HeadId = $data['ExpenseEntryApproveMaster']['HeadId'];
@@ -2026,7 +2117,7 @@ AND eem.SubHeadId='$SubHeadId'");
         {
 
             $userid = $this->Session->read("userid");
-            $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+            $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
                 'order' => array('company_name' => 'asc')))); //provide textbox and view branches
             if($this->request->is('POST'))
                 {
@@ -2076,23 +2167,23 @@ AND eem.SubHeadId='$SubHeadId'");
         
         public function approve_imprest_tmp2()
         {
-                       
+                       //exit;
 			$branchArr = "";
 			$this->layout='home';
 			$userid = $this->Session->read('userid');
                         $ExpenseId = $this->params->query['Id'];
                         $this->set('ExpenseId',$ExpenseId);
-                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); //provide textbox and view branches
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file'),'conditions'=>array('Id'=>$ExpenseId))))
@@ -2140,7 +2231,7 @@ AND eem.SubHeadId='$SubHeadId'");
         {
             $this->layout="home";
         $userid = $this->Session->read("userid");
-        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); //provide textbox and view branches
         if($this->request->is('POST'))
                         {
@@ -2154,8 +2245,17 @@ AND eem.SubHeadId='$SubHeadId'");
                                 $dataX = Hash::remove($dataY,'Id');
                                 $HeadId = $dataY['HeadId'];
                                 $FinanceYear = $dataX['FinanceYear'];
-                    
-                    
+                                $ExpenBranchId = $this->ExpenseEntryApproveMaster->query("SELECT BranchId FROM expense_entry_master_approve eema where Id='$ExpenseId' limit 1");
+                                if(!empty($ExpenBranchId['0']['eema']['BranchId']))
+                                {
+                                $dataX['BranchId'] = $ExpenBranchId['0']['eema']['BranchId']; 
+                                }
+                                else
+                                {
+                                    $ExpenBranchId = $this->ExpenseEntryApproveMaster->query("SELECT BranchId FROM expense_entry_particular_approve eema where ExpenseEntry='$ExpenseId' limit 1");
+                                    $dataX['BranchId'] = $ExpenBranchId['0']['eema']['BranchId']; 
+                                } 
+                                    
                     
                     
                         $UniqueHead = 'Imp';
@@ -2177,7 +2277,7 @@ AND eem.SubHeadId='$SubHeadId'");
                          $strzero .='0';
                      }
                      
-                    if($FinanceYear=='2019-20' || $FinanceYear=='2020-21')
+                    if($FinanceYear=='2020-21' || $FinanceYear=='2021-22')
                     {    
                         $dataX['uid_auto'] = $auto;
                         $autoVal =$UniqueHead. "/".$FinanceYear.'/'.$strzero.$auto; 
@@ -2198,7 +2298,7 @@ AND eem.SubHeadId='$SubHeadId'");
                                 $CompId =      $dataX['CompId'];
                                 
                                 $Transaction = $this->ExpenseEntryMaster->getDataSource(); //start transaction
-                                $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
+                                $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE  FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
                                 if($this->ExpenseEntryMaster->save(array('ExpenseEntryMaster'=>$dataX)))
                                 {
                                     $flag = true;
@@ -2231,7 +2331,17 @@ AND eem.SubHeadId='$SubHeadId'");
 //                                    {
 //                                        $Comp = "IDC";
 //                                    }
+                                    $GrnNO = "";
+                                for($countno=0; $countno<=1000; $countno++)
+                                {
                                     $GrnNO = $Comp.'/'.$monthArray[$FinanceMonth].'/'.$FinanceYear2."/"."$GrnCnt";
+                                    $grnExist = $this->ExpenseEntryMaster->find('first',array('conditions'=>"GrnNo='$GrnNO'"));
+                                    if(empty($grnExist))
+                                    {
+                                        break;
+                                    }
+                                    $GrnCnt++;
+                                }
                                     
                                     if($this->ExpenseEntryMaster->updateAll(array('GrnNo'=> "'". addslashes($GrnNO)."'",'ApprovalDate'=>"'".date('Y-m-d H:i:s')."'",'ApprovedBy'=>"'".$this->Session->read('userid')."'"),array('Id'=>$Id)))
                                     {
@@ -2315,38 +2425,114 @@ AND eem.SubHeadId='$SubHeadId'");
     
     ////////////////////////////
     public function view_imprest_approval_finance_head()
-         {
-             $this->layout="home";
-             $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,tuR.username RejectBy,cm.company_name,eemApp.Amount,eemApp.Reject,eemApp.RejectRemarks 
-                 FROM `expense_entry_master_approve` eemApp
- INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
- INNER JOIN tbl_user tuR ON eemApp.RejectBy = tuR.Id
- INNER JOIN company_master cm ON eemApp.CompId = cm.Id 
- Where eemApp.ExpenseEntryType='Imprest' and (Reject=0 or Reject = 2 or Reject = 3 or Reject = 4) ")); 
-         } 
+    {
+         $this->layout="home";
+         $this->set('branch', $this->Addbranch->find('list',array('conditions'=>array('active'=>'1'),'fields'=>array('id','branch_name'),
+        'order' => array('branch_name' => 'asc'))));
+
+         $this->set('FinanceYear',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'limit'=>"4",
+             'order' => array('id' => 'desc')))); 
+         
+         
+         $branchId_param = $this->params->query['branch'];
+         $year_param = $this->params->query['year'];
+         $this->set('branchId_param',$branchId_param);
+         $this->set('year_param',$year_param);  
+         
+    }
+    
+    public function get_imprest_approval_finance_head()
+    {
+        
+         $this->layout="ajax";
+         $branchId = $this->request->data['branch'];
+         $year = $this->request->data['year'];
+         
+         $data = $this->ExpenseEntryApproveMaster->query("
+             SELECT eemApp.Id,tu.username,tuR.username RejectBy,bm.branch_name,
+            eemApp.Amount,eemApp.Reject,eemApp.RejectRemarks, DATE_FORMAT(eemApp.createdate,'%d-%b-%Y') createdate
+            FROM `expense_entry_master_approve` eemApp
+            INNER JOIN expense_entry_particular_approve eepa ON eemApp.id = eepa.ExpenseEntry 
+            INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
+            INNER JOIN tbl_user tuR ON eemApp.RejectBy = tuR.Id
+            INNER JOIN branch_master bm ON eepa.BranchId = bm.Id
+            WHERE eemApp.FinanceYear='$year' and eepa.BranchId='$branchId' AND eemApp.ExpenseEntryType='Imprest' 
+            AND (Reject=0 OR Reject = 2 OR Reject = 3 OR Reject = 4) group by eemApp.Id ORDER BY  eemApp.createdate");
+         
+            $case=array('primary',''); $i=0;
+         ?>
+         <table class="table  table-bordered table-hover table-heading no-border-bottom responstable" id="table_id">
+    
+            <thead>
+                <tr class="active">
+                    <td>Sr. No.</td>
+                    <td>User </td>
+                    <td>Create Date</td>
+                    <td>Branch</td>
+                    <td>Reject Remarks</td>
+                    <td>Reject By</td>
+                    <td>Amount</td>
+                    <td>Approve</td>
+                </tr>
+            </thead>
+            <tbody>
+                    <?php foreach ($data as $post): ?>
+                    <tr class="<?php  echo $case[$i%4]; $i++;?>">
+                            <td><?php echo $i; ?></td>
+                            <td><?php echo $post['tu']['username']; ?></td>
+                            <td><?php echo $post['0']['createdate']; ?></td>
+                            <td><?php echo $post['bm']['branch_name']; ?></td>
+                            
+                            <td><font color="red"><?php echo $post['eemApp']['RejectRemarks']; ?></font></td>
+                            <td><?php echo $post['tuR']['RejectBy']; ?></td>
+                            <td><?php echo $post['eemApp']['Amount']; ?></td> 
+                            <?php if($post['eemApp']['Reject']=='4') { ?>
+                            <td><code>
+                                <a href="http://mascallnetnorth.in/ispark/Gms/edit_imprest_approval_finance_head?Id=<?php echo $post['eemApp']['Id']; ?>&action=approve&branch=<?php echo $branchId;?>&year=<?php echo $year; ?>">View/Approve</a>
+                            </code></td>    
+                            <?php } ?>
+                            <?php if($post['eemApp']['Reject']=='0' || $post['eemApp']['Reject']=='2' || $post['eemApp']['Reject']=='3') { ?>
+                            <td><code><a href="http://mascallnetnorth.in/ispark/Gms/edit_imprest_approval_finance_head?Id=<?php echo $post['eemApp']['Id']; ?>&action=view&branch=<?php echo $branchId;?>&year=<?php echo $year; ?>">Process Head Approval Waiting</a></code></td>   
+                            <?php } ?>
+                                
+                    </tr>
+                    <?php endforeach; ?> 
+                    <?php unset($data); ?>
+            </tbody>
+        </table>
+    <?php     
+       exit;  
+    }
         
         public function edit_imprest_approval_finance_head()
         {
-                       
+              // exit;        
 			$branchArr = "";
 			$this->layout='home';
+                        
+                        $branchId_param = $this->params->query['branch'];
+                        $year_param = $this->params->query['year'];
+                        $this->set('branchId_param',$branchId_param);
+                        $this->set('year_param',$year_param);
+                        
+                        
 			$userid = $this->Session->read('userid');
                         $ExpenseId = $this->params->query['Id'];
                         $action = $this->params->query['action'];
                         $this->set('action',$action);
                         
                         $this->set('ExpenseId',$ExpenseId);
-                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); //provide textbox and view branches
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file'),'conditions'=>array('Id'=>$ExpenseId))))
@@ -2394,7 +2580,7 @@ AND eem.SubHeadId='$SubHeadId'");
         {
             $this->layout="home";
         $userid = $this->Session->read("userid");
-        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); //provide textbox and view branches
         if($this->request->is('POST'))
                         {
@@ -2431,7 +2617,7 @@ AND eem.SubHeadId='$SubHeadId'");
                          $strzero .='0';
                      }
                      
-                    if($FinanceYear=='2019-20' || $FinanceYear=='2020-21')
+                    if($FinanceYear=='2020-21' || $FinanceYear=='2021-22')
                     {    
                         $dataX['uid_auto'] = $auto;
                         $autoVal =$UniqueHead. "/".$FinanceYear.'/'.$strzero.$auto; 
@@ -2452,7 +2638,7 @@ AND eem.SubHeadId='$SubHeadId'");
                                 $CompId =      $dataX['CompId'];
                                 
                                 $Transaction = $this->ExpenseEntryMaster->getDataSource(); //start transaction
-                                $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
+                                $CntArr = $this->ExpenseEntryMaster->query("SELECT SUBSTRING_INDEX(GrnNo,'/',-1) cnt FROM `expense_entry_master` em WHERE   FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth' AND id IN (SELECT MAX(Id) FROM `expense_entry_master` WHERE FinanceYear='$FinanceYear' AND FinanceMonth = '$FinanceMonth')");
                                 if($this->ExpenseEntryMaster->save(array('ExpenseEntryMaster'=>$dataX)))
                                 {
                                     $flag = true;
@@ -2485,10 +2671,21 @@ AND eem.SubHeadId='$SubHeadId'");
 //                                    {
 //                                        $Comp = "IDC";
 //                                    }
+                                   $GrnNO = "";
+                                for($countno=0; $countno<=1000; $countno++)
+                                {
                                     $GrnNO = $Comp.'/'.$monthArray[$FinanceMonth].'/'.$FinanceYear2."/"."$GrnCnt";
+                                    $grnExist = $this->ExpenseEntryMaster->find('first',array('conditions'=>"GrnNo='$GrnNO'"));
+                                    if(empty($grnExist))
+                                    {
+                                        break;
+                                    }
+                                    $GrnCnt++;
+                                }
                                     
                                     if($this->ExpenseEntryMaster->updateAll(array('GrnNo'=> "'". addslashes($GrnNO)."'",'ApprovalDate'=>"'".date('Y-m-d H:i:s')."'",'ApprovedBy'=>"'".$this->Session->read('userid')."'"),array('Id'=>$Id)))
                                     {
+                                        //write code here
                                         $this->Session->setFlash(__("Grn No $GrnNO with Unique No. $autoVal has been Saved")); 
                                     }
                                     else
@@ -2653,7 +2850,7 @@ AND eem.SubHeadId='$SubHeadId'");
             {
                 $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject FROM `expense_entry_master_approve` eemApp
 INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
-INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where eemApp.ExpenseEntryType='Imprest' and eemApp.userid = '$userid'")); 
+INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where  eemApp.ExpenseEntryType='Imprest' and eemApp.userid = '$userid'")); 
             }
             else
             {
@@ -2663,7 +2860,7 @@ INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
 INNER JOIN company_master cm ON eemApp.CompId = cm.Id
 INNER JOIN `expense_entry_particular_approve` eep ON eemApp.id = eep.ExpenseEntry
 INNER JOIN (SELECT * FROM tbl_grn_access where UserId='$userid' GROUP BY BranchId) tga ON eep.BranchId = tga.BranchId 
- WHERE eemApp.Reject!='0' and eemApp.ExpenseEntryType='Imprest' 
+ WHERE  eemApp.ExpenseEntryType='Imprest' 
  GROUP BY eemApp.Id;")); 
             }
             
@@ -2680,17 +2877,17 @@ INNER JOIN (SELECT * FROM tbl_grn_access where UserId='$userid' GROUP BY BranchI
 			$userid = $this->Session->read('userid');
                         $ExpenseId = $this->params->query['Id'];
                         $this->set('ExpenseId',$ExpenseId);
-                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); 
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file','RejectRemarks'),'conditions'=>array('Id'=>$ExpenseId,'userid'=>$userid))))
@@ -2753,13 +2950,42 @@ INNER JOIN (SELECT * FROM tbl_grn_access where UserId='$userid' GROUP BY BranchI
         }
     }    
     
-    
     public function view_reject_imprest_process_head()
         {
-            $this->layout="home";
+           $this->layout="home";
+           $userid = $this->Session->read('userid');
+           $branch_access_arr = $this->ExpenseEntryApproveMaster->query("SELECT * FROM `tbl_grn_access` tga WHERE UserId='$userid'");
+            
+            $branch_master = array();
+            foreach($branch_access_arr as $branch_det)
+            {
+                $branch_master[] = $branch_det['tga']['BranchId'];
+            }
+           $branch_ids = implode("','",$branch_master);
+           
+         $this->set('branch', $this->Addbranch->find('list',array('conditions'=>"active='1' and id in ('$branch_ids')",'fields'=>array('id','branch_name'),
+        'order' => array('branch_name' => 'asc')))); 
+
+         $this->set('FinanceYear',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'limit'=>"4",
+             'order' => array('id' => 'desc'))));  
+         
+         $branchId_param = $this->params->query['branch'];
+         $year_param = $this->params->query['year'];
+         $this->set('branchId_param',$branchId_param);
+         $this->set('year_param',$year_param);  
+         
+            
+        }
+    
+    public function get_reject_imprest_process_head()
+        {
+            $this->layout="ajax";
             $userid = $this->Session->read('userid');
             $username = $this->Session->read('email');
             $user_type = $this->Session->read('user-type');
+            $branchId = $this->request->data['branch'];
+            $year = $this->request->data['year'];
+            
             
             $branch_access_arr = $this->ExpenseEntryApproveMaster->query("SELECT * FROM `tbl_grn_access` tga WHERE UserId='$userid'");
             
@@ -2771,42 +2997,63 @@ INNER JOIN (SELECT * FROM tbl_grn_access where UserId='$userid' GROUP BY BranchI
             
             $branch_ids = implode("','",$branch_master);
             
-            
-            $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,
-                    eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject,tuR.username RejectBy FROM `expense_entry_master_approve` eemApp
+            $qr = "SELECT eemApp.Id,tu.username,bm.branch_name,
+                    eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject,tuR.username RejectBy,RejectRemarks,DATE_FORMAT(eemApp.createdate,'%d-%b-%Y') createdate 
+                    FROM `expense_entry_master_approve` eemApp
+                    INNER JOIN expense_entry_particular_approve eepa ON eemApp.id = eepa.ExpenseEntry
 INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
 INNER JOIN tbl_user tuR ON eemApp.RejectBy = tuR.Id
-inner join branch_master bm on bm.branch_name=tu.branch_name
-INNER JOIN company_master cm ON eemApp.CompId = cm.Id
+inner join branch_master bm on eepa.branchid=bm.id 
 INNER JOIN `expense_entry_particular_approve` eep ON eemApp.id = eep.ExpenseEntry
 INNER JOIN (SELECT * FROM tbl_grn_access where   BranchId in ('$branch_ids') GROUP BY BranchId) tga ON eep.BranchId = tga.BranchId 
- WHERE ( eemApp.Reject='0' || eemApp.Reject='2' || eemApp.Reject='3' || eemApp.Reject='4') and eemApp.ExpenseEntryType='Imprest' and tu.process_head='$username' 
- GROUP BY eemApp.Id;")); 
+ WHERE eemApp.FinanceYear='$year' and eepa.BranchId='$branchId' AND ( eemApp.Reject='0' || eemApp.Reject='2' || eemApp.Reject='3' || eemApp.Reject='4') and eemApp.ExpenseEntryType='Imprest' and tu.process_head='$username' 
+ GROUP BY eemApp.Id;";
+            $data = $this->ExpenseEntryApproveMaster->query($qr); 
             
-            
-//            if($role=='admin')
-//            {
-//                $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject FROM `expense_entry_master_approve` eemApp
-//                INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
-//                INNER JOIN company_master cm ON eemApp.CompId = cm.Id 
-//                Where eemApp.Reject='0' and eemApp.ExpenseEntryType='Imprest'")); 
-//            }
-//            else
-//            {
-//                $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,
-//                    eemApp.Amount,eemApp.RejectRemarks,eemApp.Reject FROM `expense_entry_master_approve` eemApp
-//INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
-//INNER JOIN company_master cm ON eemApp.CompId = cm.Id
-//INNER JOIN `expense_entry_particular_approve` eep ON eemApp.id = eep.ExpenseEntry
-//INNER JOIN (SELECT * FROM tbl_grn_access where and tu.process_head = '$username' GROUP BY BranchId) tga ON eep.BranchId = tga.BranchId 
-// WHERE eemApp.Reject='0' and eemApp.ExpenseEntryType='Imprest' 
-// GROUP BY eemApp.Id;")); 
-//            }
-            
-            
-            
-            
-        }
+    $case=array('primary',''); $i=0;
+         ?>
+         <table class="table  table-bordered table-hover table-heading no-border-bottom responstable" id="table_id">
+    
+            <thead>
+                <tr class="active">
+                    <td>Sr. No.</td>
+                    <td>User </td>
+                    <td>Create Date</td>
+                    <td>Branch</td>
+                    <td>Reject Remarks</td>
+                    <td>Reject By</td>
+                    <td>Amount</td>
+                    <td>Edit/Approve</td>
+                </tr>
+            </thead>
+            <tbody>
+                    <?php foreach ($data as $post): ?>
+                    <tr class="<?php  echo $case[$i%4]; $i++;?>">
+                            <td><?php echo $i; ?></td>
+                            <td><?php echo $post['tu']['username']; ?></td>
+                            <td><?php echo $post['0']['createdate']; ?></td>
+                            <td><?php echo $post['bm']['branch_name']; ?></td>
+                            
+                            <td><font color="red"><?php echo $post['eemApp']['RejectRemarks']; ?></font></td>
+                            <td><?php echo $post['tuR']['RejectBy']; ?></td>
+                            <td><?php echo $post['eemApp']['Amount']; ?></td>
+                            <?php if($post['eemApp']['Reject']=='0' || $post['eemApp']['Reject']=='2' || $post['eemApp']['Reject']=='3') { ?>
+                            <td><code>
+                                <a href="http://mascallnetnorth.in/ispark/Gms/edit_imprest_process_head?Id=<?php echo $post['eemApp']['Id']; ?>&action=edit&branch=<?php echo $branchId;?>&year=<?php echo $year; ?>">View/Edit</a>
+                            </code></td>    
+                            <?php } ?>
+                            <?php if($post['eemApp']['Reject']=='4') { ?>
+                            <td><code><a href="http://mascallnetnorth.in/ispark/Gms/edit_imprest_process_head?Id=<?php echo $post['eemApp']['Id']; ?>&action=view&branch=<?php echo $branchId;?>&year=<?php echo $year; ?>">Finance Head Approval Waiting</a></code></td>   
+                            <?php } ?>
+                                
+                    </tr>
+                    <?php endforeach; ?> 
+                    <?php unset($data); ?>
+            </tbody>
+        </table>
+    <?php     
+       exit;  
+    }
         
     public function edit_imprest_process_head()
         {
@@ -2816,6 +3063,11 @@ INNER JOIN (SELECT * FROM tbl_grn_access where   BranchId in ('$branch_ids') GRO
 			$userid = $this->Session->read('userid');
                         $username = $this->Session->read('username');
                         
+                        $branchId_param = $this->params->query['branch'];
+                        $year_param = $this->params->query['year'];
+                        $this->set('branchId_param',$branchId_param);
+                        $this->set('year_param',$year_param);
+                        
                         
                         $ExpenseId = $this->params->query['Id'];
                         $this->set('ExpenseId',$ExpenseId);
@@ -2823,17 +3075,17 @@ INNER JOIN (SELECT * FROM tbl_grn_access where   BranchId in ('$branch_ids') GRO
                         $action = $this->params->query['action'];
                         $this->set('action',$action);
                         
-                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),
+                        $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('id','comp_code'),'conditions'=>'id=1',
             'order' => array('company_name' => 'asc')))); 
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file','RejectRemarks'),'conditions'=>array('Id'=>$ExpenseId))))
@@ -2880,6 +3132,8 @@ INNER JOIN (SELECT * FROM tbl_grn_access where   BranchId in ('$branch_ids') GRO
     {
         if($this->request->is('POST'))
         {   
+            
+            $userid = $this->Session->read('userid');
             $Id = $this->request->data['ExpenseId'];
             if(!empty($this->request->data['Gms']['grn_file']['name']))
             {
@@ -2889,7 +3143,10 @@ INNER JOIN (SELECT * FROM tbl_grn_access where   BranchId in ('$branch_ids') GRO
                  $PaymentFile =addslashes($Id.$file['name']);
                  $this->ExpenseEntryApproveMaster->updateAll(array('grn_file'=>"'$PaymentFile'"),array('Id'=>$Id)); 
             }
-              $this->ExpenseEntryApproveMaster->updateAll(array('Reject'=>"4"),array('Id'=>$Id));       
+              $this->ExpenseEntryApproveMaster->updateAll(array('Reject'=>"4"),array('Id'=>$Id));
+              
+              $this->ExpenseEntryApproveMaster->query("UPDATE `expense_entry_master_approve` SET approved_by_ph='$userid',approved_by_ph_date=now() WHERE Id = '$Id'");
+              
              $this->Session->setFlash(__("Imprest Saved and Moved Finance Head Bucket For Approval")); 
              
              $this->redirect(array('action'=>'view_reject_imprest_process_head'));
@@ -2899,14 +3156,14 @@ INNER JOIN (SELECT * FROM tbl_grn_access where   BranchId in ('$branch_ids') GRO
     
     public function edit_grn_branch()
         {
-            $this->layout="home";
+            $this->layout="home"; 
             $userid = $this->Session->read('userid');
             $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,tu.username,cm.company_name,eemApp.Amount,
                 eemApp.RejectRemarks,eemApp.Reject,vm.vendor FROM `expense_entry_master_approve` eemApp
 INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
 left join tbl_vendormaster vm on eemApp.vendor = vm.Id
 INNER JOIN company_master cm ON eemApp.CompId = cm.Id 
-Where eemApp.Reject!='0' and eemApp.ExpenseEntryType='Vendor' and eemApp.userid = '$userid'")); 
+Where  eemApp.ExpenseEntryType='Vendor' and eemApp.userid = '$userid'")); 
             
             
         }
@@ -2938,13 +3195,13 @@ Where eemApp.Reject!='0' and eemApp.ExpenseEntryType='Vendor' and eemApp.userid 
                         
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file','RejectRemarks','round_off','gst_enable','Vendor_State_Code','Billing_State_Code'),'conditions'=>array('Id'=>$ExpenseId,'userid'=>$userid))))
@@ -3003,13 +3260,21 @@ Where eemApp.Reject!='0' and eemApp.ExpenseEntryType='Vendor' and eemApp.userid 
                 $PaymentFile =addslashes($Id.$file['name']);
                 $this->ExpenseEntryApproveMaster->updateAll(array('grn_file'=>"'$PaymentFile'"),array('Id'=>$Id)); 
             }
+
+            #$this->request->data['Gms']['round_off']
+            if(!empty($this->request->data['Gms']['round_off']))
+            {
+                $round_off = $this->request->data['Gms']['round_off'];
+            }else{
+                $round_off =  0;
+            }
            
               $this->ExpenseEntryApproveMaster->updateAll(array('RejectRemarks'=>null,'Reject'=>"1",'HeadId'=>$this->request->data['Gms']['HeadId'],
                   'SubHeadId'=>$this->request->data['Gms']['SubHeadId'],
                   'Bill_No'=>"'".addslashes($this->request->data['Gms']['Bill_No'])."'",
                   'Amount'=>$this->request->data['Gms']['Amount'],
                   'description'=>"'".addslashes($this->request->data['Gms']['description'])."'",
-                  'round_off'=>$this->request->data['Gms']['round_off']),array('Id'=>$Id));       
+                  'round_off'=>$round_off),array('Id'=>$Id));       
              $this->Session->setFlash(__("GRN Saved and Moved Approval Bucket")); 
              
              $this->redirect(array('action'=>'edit_grn_branch'));
@@ -3080,13 +3345,13 @@ Where (eemApp.Reject='0' || eemApp.Reject='2' || eemApp.Reject='3' || eemApp.Rej
                         
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryApproveParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular_approve` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryApproveMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file','RejectRemarks','round_off','gst_enable','Vendor_State_Code','Billing_State_Code'),'conditions'=>array('Id'=>$ExpenseId))))
@@ -3137,6 +3402,8 @@ Where (eemApp.Reject='0' || eemApp.Reject='2' || eemApp.Reject='3' || eemApp.Rej
         if($this->request->is('POST'))
         {   
             $Id = $this->request->data['ExpenseId'];
+            $userid = $this->Session->read('userid');
+            
             if(!empty($this->request->data['Gms']['grn_file']['name']))
             {
                 $file = $this->request->data['Gms']['grn_file'];
@@ -3152,7 +3419,10 @@ Where (eemApp.Reject='0' || eemApp.Reject='2' || eemApp.Reject='3' || eemApp.Rej
                   'Bill_No'=>"'".addslashes($this->request->data['Gms']['Bill_No'])."'",
                   'Amount'=>$this->request->data['Gms']['Amount'],
                   'description'=>"'".addslashes($this->request->data['Gms']['description'])."'",
-                  'round_off'=>$this->request->data['Gms']['round_off']),array('Id'=>$Id));       
+                  'round_off'=>$this->request->data['Gms']['round_off']),array('Id'=>$Id));
+              
+              $this->ExpenseEntryApproveMaster->query("UPDATE `expense_entry_master_approve` SET approved_by_ph='$userid',approved_by_ph_date=now() WHERE Id = '$Id'");
+              
              $this->Session->setFlash(__("GRN Saved and Moved Finance Head Approval Bucket")); 
              
              $this->redirect(array('action'=>'view_reject_grn_process_head'));
@@ -3166,21 +3436,71 @@ Where (eemApp.Reject='0' || eemApp.Reject='2' || eemApp.Reject='3' || eemApp.Rej
             $this->layout="home";
             $userid = $this->Session->read("userid");
             $role=$this->Session->read("role");
+            $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+            $this->set('FinanceYearLogin',$FinanceYearLogin); 
+            
+            if($role=='admin')
+        {    $condition=array('active'=>1);    }
+        else
+        {    $condition=array('active'=>1,'branch_name'=>$this->Session->read("branch_name"));    }
+        
+        $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
+            'order' => array('branch_name' => 'asc')))); //provide textbox and view branches
+        
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>'14-15')))));
+        
+	$this->set('data',$this->ExpenseEntryMaster->query("SELECT eemApp.Id,eemApp.GrnNo,tu.username,cm.company_name,vm.vendor,eemApp.Amount,eemApp.FinanceYear,eemApp.FinanceMonth FROM `expense_entry_master` eemApp
+LEFT JOIN tbl_vendormaster vm ON eemApp.vendor = vm.Id
+left JOIN tbl_user tu ON eemApp.userid = tu.Id
+INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where eemApp.ExpenseEntryType='Vendor' and eemApp.reject='1' "));
+
+
+        if($this->request->is('POST'))
+        {
+            //print_r($this->request->data['Gms']); exit;
+            $data = $this->request->data['Gms'];
+           if(!empty($data['branch_name']))
+        {
+            $qry .= " and eemApp.BranchId='".$data['branch_name']."'";
+            
+            $this->set('branch_name',$data['branch_name']);
+        }
+
+        if(!empty($data['FinanceYear']))
+        {
+            $qry .= " and eemApp.FinanceYear='".$data['FinanceYear']."'";
+            
+            $this->set('FinanceYear',$data['FinanceYear']);
+        }
+
+        if(!empty($data['FinanceMonth']))
+        {
+            $qry .= " and eemApp.FinanceMonth='".$data['FinanceMonth']."'";
+            
+            $this->set('FinanceMonth',$data['FinanceMonth']);
+        }
+        
+        //echo $qry; exit;
+        
+            
             
             if($role=='admin')
             {
                 $this->set('data',$this->ExpenseEntryMaster->query("SELECT eemApp.Id,eemApp.GrnNo,tu.username,cm.company_name,vm.vendor,eemApp.Amount,eemApp.FinanceYear,eemApp.FinanceMonth FROM `expense_entry_master` eemApp
-INNER JOIN tbl_vendormaster vm ON eemApp.vendor = vm.Id
-INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
-INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where eemApp.ExpenseEntryType='Vendor' and eemApp.reject='1'")); 
+LEFT JOIN tbl_vendormaster vm ON eemApp.vendor = vm.Id
+left JOIN tbl_user tu ON eemApp.userid = tu.Id
+INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where eemApp.ExpenseEntryType='Vendor' and eemApp.reject='1' $qry")); 
             }
             else
             {
                 $this->set('data',$this->ExpenseEntryMaster->query("SELECT eemApp.Id,eemApp.GrnNo,tu.username,cm.company_name,vm.vendor,eemApp.Amount,eemApp.FinanceYear,eemApp.FinanceMonth FROM `expense_entry_master` eemApp
-INNER JOIN tbl_vendormaster vm ON eemApp.vendor = vm.Id
-INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
-INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where userid='$userid' and eemApp.ExpenseEntryType='Vendor' and eemApp.reject='1'")); 
+LEFT JOIN tbl_vendormaster vm ON eemApp.vendor = vm.Id
+left JOIN tbl_user tu ON eemApp.userid = tu.Id
+INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where userid='$userid' and eemApp.ExpenseEntryType='Vendor' and eemApp.reject='1' $qry")); 
             }
+        }
+        
+        
             
             
         }
@@ -3250,11 +3570,52 @@ INNER JOIN company_master cm ON eemApp.CompId = cm.Id Where userid='$userid' and
     public function view_imprest()
         {
             $this->layout="home";
+            $role=$this->Session->read("role");
+            $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+            $this->set('FinanceYearLogin',$FinanceYearLogin); 
+            
+            if($role=='admin')
+        {    $condition=array('active'=>1);    }
+        else
+        {    $condition=array('active'=>1,'branch_name'=>$this->Session->read("branch_name"));    }
+        
+        $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
+            'order' => array('branch_name' => 'asc')))); //provide textbox and view branches
+        
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>'14-15')))));
+        
+        if($this->request->is('POST'))
+        {
+            //print_r($this->request->data['Gms']); exit;
+            $data = $this->request->data['Gms'];
+           if(!empty($data['branch_name']))
+        {
+            $qry .= " and eemApp.BranchId='".$data['branch_name']."'";
+            
+            $this->set('branch_name',$data['branch_name']);
+        }
+
+        if(!empty($data['FinanceYear']))
+        {
+            $qry .= " and eemApp.FinanceYear='".$data['FinanceYear']."'";
+            
+            $this->set('FinanceYear',$data['FinanceYear']);
+        }
+
+        if(!empty($data['FinanceMonth']))
+        {
+            $qry .= " and eemApp.FinanceMonth='".$data['FinanceMonth']."'";
+            
+            $this->set('FinanceMonth',$data['FinanceMonth']);
+        }
+            
+            
             $this->set('data',$this->ExpenseEntryApproveMaster->query("SELECT eemApp.Id,eemApp.GrnNo,tu.username,cm.company_name,
                 eemApp.Amount,eemApp.FinanceYear,eemApp.FinanceMonth FROM `expense_entry_master` eemApp
 INNER JOIN tbl_user tu ON eemApp.userid = tu.Id
 INNER JOIN company_master cm ON eemApp.CompId = cm.Id 
-Where eemApp.ExpenseEntryType='Imprest' order by SUBSTRING_INDEX(eemApp.GrnNo,'/',-1)")); 
+Where eemApp.ExpenseEntryType='Imprest' $qry order by SUBSTRING_INDEX(eemApp.GrnNo,'/',-1)")); 
+        }
         }            
       public function view_imprest_tmp()
         {
@@ -3268,13 +3629,13 @@ Where eemApp.ExpenseEntryType='Imprest' order by SUBSTRING_INDEX(eemApp.GrnNo,'/
             'order' => array('company_name' => 'asc')))); //provide textbox and view branches
 			$this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('FinanceYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21','2021-22')))));
                         //$this->set('head',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'order'=>array('HeadingDesc'=>'asc'))));
                         
                         
 			$this->set('result',$this->ExpenseEntryParticular->query("SELECT teep.*,cm.Branch,cm.cost_center FROM `expense_entry_particular` teep INNER JOIN cost_master cm  ON teep.CostCenterId= cm.id
                         WHERE teep.ExpenseEntry='$ExpenseId'"));
-                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+                        $this->set('finance_yearNew',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
                         
 			if($data = $this->ExpenseEntryMaster->find('first',array('fields'=>array('FinanceYear','FinanceMonth','HeadId','SubHeadId','Vendor','bill_no',
                             'bill_date','Amount','Description','ExpenseDate','EntryStatus','CompId','grn_file'),'conditions'=>array('Id'=>$ExpenseId))))
@@ -3323,31 +3684,56 @@ Where eemApp.ExpenseEntryType='Imprest' order by SUBSTRING_INDEX(eemApp.GrnNo,'/
         ini_set('memory_limit', '1024M'); 
         $this->layout="home";
         $page = $this->params->query['page'];
-
+        $data = $this->params->query['data'];
+        $FinanceYear1 = $this->params->query['FinanceYear'];
+        $FinanceYear = $data['FinanceYear'];
+        $fin_qry =" eem.FinanceYear='2022-23' and"; 
+        $fin_qry = "";
         if(empty($page))
         {
             $page1 = $page = 1;
             $limit = 50;
+            if(!empty($FinanceYear1))
+            {
+                $fin_qry =" eem.FinanceYear='$FinanceYear1' and"; 
+                $this->set('FinanceYear',$FinanceYear1);
+            }
         }
         else
         {
             $page1 = ($page-1)*50;
             $limit = 50;
+            if(!empty($FinanceYear1))
+            {
+                $fin_qry =" eem.FinanceYear='$FinanceYear1' and"; 
+                $this->set('FinanceYear',$FinanceYear1);
+            }
         }
+        
+        
+        if($FinanceYear!='')
+        {
+          $fin_qry =" eem.FinanceYear='$FinanceYear' and"; 
+           $this->set('FinanceYear',$FinanceYear);
+        }
+        
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>array('14-15','2014-15','2015-16','2016-17','2017-18','2018-19','2019-20')))))); 
+
+        
             
             $this->set('data',$this->ExpenseEntryMaster->query("SELECT eem.Id,eem.grn_file,eem.GrnNo,bm.branch_name,head.HeadingDesc,subhead.SubHeadingDesc,SUM(eep.total) Total,due_date FROM expense_entry_master eem INNER JOIN (select branchId,ExpenseEntry,sum(total)total from expense_entry_particular group by ExpenseEntry) eep ON eem.Id = eep.ExpenseEntry
 INNER JOIN branch_master bm ON bm.Id = eep.branchId 
 INNER JOIN `tbl_bgt_expenseheadingmaster` head ON head.HeadingId = eem.HeadId
  INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON subhead.SubHeadingId = eem.SubHeadId
- WHERE eem.ExpenseEntryType='vendor' and eem.payment_processing='1' AND due_date IS NOT NULL AND due_date !='' AND due_date!='0000-00-00'  and date(eem.createdate)>'2018-05-31'
-GROUP BY eem.GrnNo,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc limit $page1,$limit")); 
+ WHERE $fin_qry eem.ExpenseEntryType='vendor' and eem.payment_processing='1'   
+GROUP BY eem.GrnNo,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc  limit $page1,$limit")); 
             
-            $this->set('data1',$this->ExpenseEntryApproveMaster->query("SELECT eem.Id,eem.grn_file,bm.branch_name,head.HeadingDesc,subhead.SubHeadingDesc,SUM(eep.total) Total,due_date FROM expense_entry_master_approve eem INNER JOIN (select branchId,ExpenseEntry,sum(total)total from expense_entry_particular_approve group by ExpenseEntry) eep ON eem.Id = eep.ExpenseEntry
+           /* $this->set('data1',$this->ExpenseEntryApproveMaster->query("SELECT eem.Id,eem.grn_file,bm.branch_name,head.HeadingDesc,subhead.SubHeadingDesc,SUM(eep.total) Total,due_date FROM expense_entry_master_approve eem INNER JOIN (select branchId,ExpenseEntry,sum(total)total from expense_entry_particular_approve group by ExpenseEntry) eep ON eem.Id = eep.ExpenseEntry
 INNER JOIN branch_master bm ON bm.Id = eep.branchId 
 INNER JOIN `tbl_bgt_expenseheadingmaster` head ON head.HeadingId = eem.HeadId
  INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON subhead.SubHeadingId = eem.SubHeadId
- WHERE eem.ExpenseEntryType='vendor' and eem.payment_processing='1' AND due_date IS NOT NULL AND due_date !='' AND due_date!='0000-00-00'  
-GROUP BY eem.Id,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc limit $page1,$limit")); 
+ WHERE $fin_qry eem.ExpenseEntryType='vendor' and eem.payment_processing='1'   
+GROUP BY eem.Id,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc  ")); */
             
             $this->set('bank_master',$this->Bank->find('list',array('fields'=>array('bank_name','bank_name'),'order'=>array('bank_name'=>'asc'))));
             $this->set('page',$page);
@@ -3461,7 +3847,7 @@ GROUP BY eem.Id,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc limit $pa
                     $data['DueAmount'] = $dataY['Amount'];
                     $data['DueDate'] = $dataY['due_date'];
                     
-                    if($this->GrnPaymentProcessing->save(array('GrnPaymentProcessing'=>$data)))
+                    if($this->GrnPaymentProcessing->saveAll(array('GrnPaymentProcessing'=>$data)))
                     {
                         $this->ExpenseEntryMaster->updateAll(array('payment_processing'=>0),array('GrnNo'=>$data['GrnNo']));    
                     }
@@ -3528,7 +3914,7 @@ GROUP BY eem.Id,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc limit $pa
       {
         $roles=explode(',',$this->Session->read("page_access"));
         $userid = $this->Session->read('userid');
-        if($this->Session->read("userid")=='' || !in_array('188',$roles))
+        if($this->Session->read("userid")=='')
         {
               return $this->redirect(array('controller'=>'users','action' => 'login'));
         }
@@ -3541,7 +3927,7 @@ GROUP BY eem.Id,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc limit $pa
              $Remarks = $this->request->data['Gms']['remarks'];
              
              $data = $this->ExpenseEntryMaster->find('first',array('conditions'=>"GrnNo='$GrnNo'"));
-             if($this->ExpenseEntryDelete->find('first',array('conditions'=>"GrnNo='$GrnNo'")))
+             if($this->ExpenseEntryDelete->find('first',array('conditions'=>"GrnNo='$GrnNo' and delete_request=1")))
              {
                 $this->Session->setFlash("Record Allready Exist"); 
              }
@@ -3564,7 +3950,7 @@ GROUP BY eem.Id,bm.Id order by head.HeadingDesc,subhead.SubHeadingDesc limit $pa
     public function get_grn()
   {
       $roles=explode(',',$this->Session->read("page_access"));
-    if($this->Session->read("userid")=='' || !in_array('188',$roles))
+    if($this->Session->read("userid")=='' )
     {
           return $this->redirect(array('controller'=>'users','action' => 'login'));
     }
@@ -3617,10 +4003,10 @@ LEFT JOIN tbl_bgt_expensesubheadingmaster subhead ON eem.SubHeadId = subhead.Sub
       {
         $roles=explode(',',$this->Session->read("page_access"));
         $userid = $this->Session->read('userid');
-        if($this->Session->read("userid")=='' || !in_array('188',$roles))
-        {
-            return $this->redirect(array('controller'=>'users','action' => 'login'));
-        }
+//        if($this->Session->read("userid")=='' || !in_array('188',$roles))
+//        {
+//            return $this->redirect(array('controller'=>'users','action' => 'login'));
+//        }
           
         $this->layout="home";
         
@@ -3628,7 +4014,7 @@ LEFT JOIN tbl_bgt_expensesubheadingmaster subhead ON eem.SubHeadId = subhead.Sub
         if($this->request->is('POST'))
         {
              
-            $checkAll = $this->request->data['checkAll'];
+            $checkAll = $this->request->data['checkAll']; 
              
             foreach($checkAll as $chk)
             {

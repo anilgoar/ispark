@@ -41,9 +41,10 @@
 							<td>User </td>
 							<td>Company</td>                                                        
                                                         <td>Amount</td>
+                                                        <td>Create Date</td>
                                                         <td>Approve</td>
-                                                        <td>Status</td>
-                                                        <td>Reject Remarks</td>
+                                                        
+                                                        
 						</tr>
                                         </thead>
                                         <tbody>
@@ -53,9 +54,10 @@
 							<td><?php echo $post['tu']['username']; ?></td>
 							<td><?php echo $post['cm']['company_name']; ?></td>
                                                         <td><?php echo $post['eemApp']['Amount']; ?></td>
+                                                        <td><?php echo $post['eemApp']['createdate']; ?></td>
                                                         <td><code><?php if(empty($post['eemApp']['ApprovalDate'])) { echo $this->Html->link('Approve',array('controller'=>'Gms','action'=>'approve_imprest_tmp','?'=>array('Id'=>$post['eemApp']['Id']),'full_base' => true)); } ?></code></td>
-                                                        <td><?php if($post['eemApp']['Reject']=='1') {echo "New";} else { echo 'Rejected';} ?></td>
-                                                        <td><?php echo $post['eemApp']['RejectRemarks']; ?></td>
+                                                        
+                                                        
                                                          
 						</tr>
 						<?php endforeach; ?>

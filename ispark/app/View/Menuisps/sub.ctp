@@ -53,13 +53,18 @@ $result=array_intersect($listid,$access);
                 <div class="form-group">
                                                 <?php } ?>
 							<?php if($row['pages_master_ispark']['page_url'] =="Menuisps/sub"){?>
-                            <div class="col-sm-3"><input type="radio" name="MENU" onclick="redirect('<?php echo $row['pages_master_ispark']['page_url'] ?>?AX=<?php echo base64_encode($row['pages_master_ispark']['id']);?>')"> <?php echo $row['pages_master_ispark']['page_name'] ?></div>
+                            <div class="col-sm-3"><input type="radio" name="MENU" onclick="redirect('<?php echo $row['pages_master_ispark']['page_url'] ?>?AX=<?php echo base64_encode($row['pages_master_ispark']['id']).'&AY='. base64_encode($back_url);?>')"> <?php echo $row['pages_master_ispark']['page_name'] ?></div>
 							<?php }else{?>   
 							<div class="col-sm-3"><input type="radio" name="MENU" onclick="redirect('<?php echo $row['pages_master_ispark']['page_url'] ?>')"> <?php echo $row['pages_master_ispark']['page_name'] ?></div>
 							<?php }?>  
 							
 						<?php }?>   
                     <?php } ?>     
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <a href="<?php echo "/ispark/$page_url?AX=". base64_encode($parent_id);?>" class="btn btn-primary btn-label-left">Back</a> 
+                    </div>
                 </div>
                 <?php echo $this->Form->end(); ?>
             </div>

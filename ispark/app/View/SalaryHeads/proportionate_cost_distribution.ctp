@@ -28,7 +28,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Year</label>
         <div class="col-sm-3">
-            <?php echo $this->Form->input('Year',array('label' => false,'id'=>'Year','class'=>'form-control','options'=>array('2017-18'=>'2017-18','2018-19'=>'2018-19','2019-20'=>'2019-20'),'required'=>true)); ?>
+            <?php echo $this->Form->input('Year',array('label' => false,'id'=>'Year','class'=>'form-control','options'=>$financeYearArr,'required'=>true)); ?>
         </div>
         <label class="col-sm-2 control-label">Month</label>
         <div class="col-sm-2">

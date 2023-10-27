@@ -25,7 +25,7 @@ class PnlfileuploadReportsController extends AppController {
         
         $branchName = $this->Session->read('branch_name');
         if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
-            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
+            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('pnl_active'=>1),'order'=>array('branch_name')));            
             $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
         }
         else{
@@ -155,7 +155,7 @@ class PnlfileuploadReportsController extends AppController {
         
         $branchName = $this->Session->read('branch_name');
         if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
-            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
+            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('pnl_active'=>1),'order'=>array('branch_name')));            
             $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
         }
         else{
@@ -170,8 +170,10 @@ class PnlfileuploadReportsController extends AppController {
             $ToDate         =   date("Y-m-d",strtotime($request['ToDate']));
             
             $WhereDate      =   "BETWEEN '$FromDate' AND '$ToDate'";
-            $ddBranch       =   $branch_name !="ALL"?"AND dd.branch='$branch_name'":"";
-            $dd1Branch      =   $branch_name !="ALL"?"AND dd1.branch='$branch_name'":"";
+            $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
+        $br_in = implode("','", $branchMaster2);
+            $ddBranch       =   $branch_name !="ALL"?"AND dd.branch='$branch_name'":"AND dd.branch in ('$br_in')";
+            $dd1Branch      =   $branch_name !="ALL"?"AND dd1.branch='$branch_name'":"AND dd1.branch in ('$br_in')";
             $where          =   "$WhereDate $whereBranch";
             
             $data           =   $this->PnlFileUploadRecords->query("

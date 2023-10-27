@@ -31,6 +31,7 @@ class CostCenterMaster extends AppModel {
             )
 		),
         'client' => array(),
+        'dialdesk_client_id' => array(),
         'total_man_date' => array(),
         'shrinkage' => array(),
         'attrition' => array(),

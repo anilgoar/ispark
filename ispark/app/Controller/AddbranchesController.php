@@ -16,8 +16,8 @@
 				$role=$this->Session->read("role");
 				$roles=explode(',',$this->Session->read("page_access"));
 				$this->Auth->allow('edit','view_head','view_expense_head');
-				if(in_array('1',$roles)){$this->Auth->allow('index');$this->Auth->allow('add');$this->Auth->allow('edit','view_head','view_expense_head');}
-                                else{$this->Auth->deny('index');$this->Auth->deny('add');$this->Auth->deny('edit');}
+				$this->Auth->allow('index');$this->Auth->allow('add');$this->Auth->allow('edit','view_head','view_expense_head');
+                                
 			}	
     	}
 		

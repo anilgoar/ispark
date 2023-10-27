@@ -37,7 +37,6 @@ class AttendanceIssueSubmitionsController extends AppController {
           
         if($this->request->is('Post')){
             
-            
             $data           =   $this->request->data;
             $Empcode        =   trim(addslashes($data['EmpCode']));
             $AttenDate      =   date('Y-m-d',strtotime(trim(addslashes($data['AttenDate']))));
@@ -134,6 +133,9 @@ class AttendanceIssueSubmitionsController extends AppController {
             $AttandDate=date('Y-m-d',strtotime(trim($_REQUEST['AttendDate'])));
  
             if($this->Session->read('role')=='admin' && $this->Session->read('branch_name')=="HEAD OFFICE"){
+                // echo $_REQUEST['EmpCode'];
+                // echo $branchName;
+                // echo $AttandDate;die;
                 $data=$this->Masattandance->find('first',array('fields'=>array('Status'),'conditions'=>array('EmpCode'=>trim($_REQUEST['EmpCode']),'BranchName'=>$branchName,'date(AttandDate)'=>$AttandDate)));
             }
             else{
@@ -149,11 +151,14 @@ class AttendanceIssueSubmitionsController extends AppController {
                     $Code_Rights[]=$Access_Rights;  
                 }
                 else if($Access_Type =="CostCentre"){
-                    $Code_Rights = $this->Masjclrentry->find('list',array('fields'=>array('EmpCode'),'conditions'=>array('BranchName'=>$Branch_Name,'CostCenter'=>explode(",",$Access_Rights)),'group' =>array('EmpCode')));     
+                    $Code_Rights = $this->Masjclrentry->find('list',array('fields'=>array('EmpCode'),'conditions'=>array('BranchName'=>$Branch_Name,'CostCenter'=>explode(",",$Access_Rights)),'group' =>array('EmpCode'))); 
+                    // print_r($Code_Rights);die; 
                 }
                 
                 if(in_array($_REQUEST['EmpCode'],$Code_Rights)){
+
                     $data=$this->Masattandance->find('first',array('fields'=>array('Status'),'conditions'=>array('EmpCode'=>trim($_REQUEST['EmpCode']),'BranchName'=>$branchName,'date(AttandDate)'=>$AttandDate)));  
+
                 }  
             }
             

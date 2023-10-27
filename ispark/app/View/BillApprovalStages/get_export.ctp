@@ -15,6 +15,7 @@
     <tr>
         <td align='center'><b>&nbsp;Bill No&nbsp;</b></td>	
         <td align='center'><b>&nbsp;Pending&nbsp;</b></td>	
+        
         <td align='center'><b>&nbsp;Process Code&nbsp;</b></td>	
         <td align='center'><b>&nbsp;Company&nbsp;</b></td>
         <td align='center'><b>&nbsp;Branch&nbsp;</b></td>
@@ -55,6 +56,7 @@
         
          <td align='center'><b>&nbsp;Payment File&nbsp;</b></td>
          <td align='center'><b>&nbsp;Bill No Matched&nbsp;</b></td>
+         <td align='center'><b>&nbsp;Category&nbsp;</b></td>	
     </tr>
     <?php $i=1; $other_disp=array();
             foreach($data as $d):
@@ -154,7 +156,7 @@
                                 
                         }
                         
-                    
+                        echo "<td align='center'>".$d['ti']['category']."</td>";
                 echo "</tr>";
             endforeach;
     ?>

@@ -6,7 +6,7 @@ class MenusController extends AppController {
         parent::beforeFilter(); 
         $this->Auth->allow(
             'attendance','holiday','loan','employeedetails','empcodegenerate','incentivedetails','master','od','changdoj',
-            'docvalidation','processdeduction','lockunlock','processnoc','jclr','leavemanagement','reports','investmentdeclaraton','uploadepfesicuna','sub'
+            'docvalidation','processdeduction','lockunlock','processnoc','jclr','leavemanagement','reports','investmentdeclaraton','uploadepfesicuna','sub','tickets','ticket_alert','business_rule'
         );
         
         if(!$this->Session->check("username")){
@@ -107,6 +107,18 @@ class MenusController extends AppController {
     }
     
     public function uploadepfesicuna(){
+        $this->layout='home';  
+    }
+
+    public function tickets(){
+        $this->layout='home';  
+    }
+
+    public function ticket_alert(){
+        $this->layout='home';  
+    }
+
+    public function business_rule(){
         $this->layout='home';  
     }
     

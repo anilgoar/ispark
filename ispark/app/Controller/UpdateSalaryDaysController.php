@@ -61,6 +61,7 @@ class UpdateSalaryDaysController extends AppController {
 							}
 							else{
 								$this->Masjclrentry->query("UPDATE `Add_Testdata` SET EmpCode='$EmpCode',EmpName='$EmpName',BranchName='$BranchName',CostCenter='$CostCenter',MaxSalDays='$MaxSalDays',SalDays='$SalDays',SalMonth='$SalMonth',UpdateDate=NOW() WHERE EmpCode='$EmpCode' AND SalMonth='$SalMonth'");
+                                                                //$this->Masjclrentry->query("UPDATE `LoanMaster` SET `DeductedAmount`='0',`PendingAmount`=Amount,`LastUpdateDate`='' WHERE EmpCode='$EmpCode' and last_day(StartDate)='$UpdateId'");
 							}
 						}
                         

@@ -1,6 +1,6 @@
 <?php
 class EmployeeDetailsController extends AppController {
-    public $uses = array('Addbranch','Masjclrentry','Masattandance','MasJclrMaster','User');
+    public $uses = array('Addbranch','Masjclrentry','Masattandance','MasJclrMaster','User','ContinuouslyLeave','OnboardLeaveAlert','EmpOnService');
         
     public function beforeFilter(){
         parent::beforeFilter(); 
@@ -43,25 +43,33 @@ class EmployeeDetailsController extends AppController {
         if(isset($_REQUEST['EJEID'])){
             $EJEID = base64_decode($_REQUEST['EJEID']);
             $data=$this->Masjclrentry->find('first',array('conditions'=>array('id'=>$EJEID)));
+            if(empty($data))
+            {
+                $data = $this->Masjclrentry->find('first',array('conditions'=>array('EmpCode'=>$EJEID)));
+            }
             $this->set('data',$data);
         }
         
         if($this->request->is('Post')){
            
+            
             $AuthArr=$this->User->find('first',array('conditions'=>array('id'=>$this->Session->read('userid'))));
             $AuthId=$AuthArr['User']['password'];
             
             $EJEID=$this->request->data['EJEID'];
+
             $ResignationDate=date('Y-m-d',strtotime($this->request->data['ResignationDate']));
             $ResignationMonth=date('Y-m',strtotime($this->request->data['ResignationDate']));
             $AuthenticationCode=$this->request->data['AuthenticationCode'];
             $Reason=$this->request->data['Reason'];
             $Status=0;
-            
-            $emparr=$this->Masjclrentry->find('first',array('fields'=>array('EmpCode','EmpLocation','DOJ'),'conditions'=>array('id'=>$EJEID)));
+            $tic_id = $EJEID;
+            $emparr=$this->Masjclrentry->find('first',array('fields'=>array('EmpCode','EmpLocation','DOJ','BranchName','CostCenter'),'conditions'=>array('id'=>$EJEID)));
             $EmpCode    =   $emparr['Masjclrentry']['EmpCode'];
             $EmpLocation=   $emparr['Masjclrentry']['EmpLocation'];
             $DOJ        =   $emparr['Masjclrentry']['DOJ'];
+            $branch_name        =   $emparr['Masjclrentry']['BranchName'];
+            $cost_center        =   $emparr['Masjclrentry']['CostCenter'];
             
             if($EmpLocation =="InHouse"){
                 $AttendArr=$this->Masjclrentry->query("SELECT MAX(AttandDate) AS LastDate FROM Attandence WHERE EmpCode='$EmpCode' AND `Status` !='A' AND `Status` !='LWP'");
@@ -95,6 +103,60 @@ class EmployeeDetailsController extends AppController {
             }*/
             else{
                 if($this->Masjclrentry->updateAll(array('lastUpdated'=>"'".date('Y-m-d H:i:s')."'",'ResignationDate'=>"'".$ResignationDate."'",'AuthenticationCode'=>"'".$AuthenticationCode."'",'LeftReason'=>"'".$Reason."'",'Status'=>"'".$Status."'"),array('id'=>$EJEID))){
+                    #$exist_emp = $this->ContinuouslyLeave->find('first',array('conditions'=>array('EmpCode'=>$EmpCode,'left_status'=>0)));
+                    
+                    
+                        //echo "select * from emp_onboard_leave_alert where branch='$branch_name' and cost_center ='$cost_center' and trigger_type ='bio_id'";die;
+                            $exist_alert_bio = $this->OnboardLeaveAlert->query("select * from emp_onboard_leave_alert where branch='$branch_name' and cost_center ='$cost_center' and trigger_type ='bio_id'");
+
+                            //print_r($exist_alert_bio);die;
+                            $bio_to = $exist_alert_bio[0]['emp_onboard_leave_alert']['to'];
+                            $bio_cc = $exist_alert_bio[0]['emp_onboard_leave_alert']['cc'];
+                            $bio_bcc = $exist_alert_bio[0]['emp_onboard_leave_alert']['bcc'];
+                            $bio_type = $exist_alert_bio[0]['emp_onboard_leave_alert']['trigger_type'];
+                            $ticket_bio = "Bio$tic_id";
+
+                            $exist_alert_email = $this->OnboardLeaveAlert->query("select * from emp_onboard_leave_alert where branch='$branch_name' and cost_center = '$cost_center' and trigger_type ='email_id'");
+                            $email_to = $exist_alert_email[0]['emp_onboard_leave_alert']['to'];
+                            $email_cc = $exist_alert_email[0]['emp_onboard_leave_alert']['cc'];
+                            $email_bcc = $exist_alert_email[0]['emp_onboard_leave_alert']['bcc'];
+                            $email_type = $exist_alert_email[0]['emp_onboard_leave_alert']['trigger_type'];
+                            $ticket_email = "Email$tic_id";
+
+                            $exist_alert_partner = $this->OnboardLeaveAlert->query("select * from emp_onboard_leave_alert where branch='$branch_name' and cost_center = '$cost_center' and trigger_type ='partner_id_req'");
+                            $partner_to = $exist_alert_partner[0]['emp_onboard_leave_alert']['to'];
+                            $partner_cc = $exist_alert_partner[0]['emp_onboard_leave_alert']['cc'];
+                            $partner_bcc = $exist_alert_partner[0]['emp_onboard_leave_alert']['bcc'];
+                            $partner_type = $exist_alert_partner[0]['emp_onboard_leave_alert']['trigger_type'];
+                            $ticket_partner = "Partner$tic_id";
+
+                            $exist_alert_ad = $this->OnboardLeaveAlert->query("select * from emp_onboard_leave_alert where branch='$branch_name' and cost_center = '$cost_center' and trigger_type ='ad_id'");
+                            $ad_to = $exist_alert_ad[0]['emp_onboard_leave_alert']['to'];
+                            $ad_cc = $exist_alert_ad[0]['emp_onboard_leave_alert']['cc'];
+                            $ad_bcc = $exist_alert_ad[0]['emp_onboard_leave_alert']['bcc'];
+                            $ad_type = $exist_alert_ad[0]['emp_onboard_leave_alert']['trigger_type'];
+                            $ticket_ad = "Ad$tic_id";
+
+                            $create_date = date('Y-m-d H:i:s');
+
+                            $type = 'leaver';
+
+                            $list_value="('".$tic_id."','".$ticket_bio."','".$EmpCode."','".$branch_name."','".$cost_center."','".$type."','".$bio_type."','".$bio_to."','".$bio_cc."','".$bio_bcc."','".$create_date."'),
+                            ('".$tic_id."','".$ticket_email."','".$EmpCode."','".$branch_name."','".$cost_center."','".$type."','".$email_type."','".$email_to."','".$email_cc."','".$email_bcc."','".$create_date."'),
+                            ('".$tic_id."','".$ticket_partner."','".$EmpCode."','".$branch_name."','".$cost_center."','".$type."','".$partner_type."','".$partner_to."','".$partner_cc."','".$partner_bcc."','".$create_date."'),
+                            ('".$tic_id."','".$ticket_ad."','".$EmpCode."','".$branch_name."','".$cost_center."','".$type."','".$ad_type."','".$ad_to."','".$ad_cc."','".$ad_bcc."','".$create_date."')";
+                            //echo "INSERT INTO emp_onboard_trigger_services(`ticket_id`,`ticket_no`,`emp_code`,`branch`,`cost_center`,`type`,`trigger_type`,`to`,`cc`,`bcc`,`created_at`) values $list_value";die;
+                            if($this->EmpOnService->find('first',array('fields'=>array('id'),'conditions'=>array('emp_code'=>$EmpCode,'type'=>'leaver'))))
+                            {
+                                //leaver already exist. array('id')
+                                
+                            }
+                            else
+                            {
+                                $this->EmpOnService->query("INSERT INTO emp_onboard_trigger_services(`ticket_id`,`ticket_no`,`emp_code`,`branch`,`cost_center`,`type`,`trigger_type`,`to`,`cc`,`bcc`,`created_at`) values $list_value"); 
+                            }
+                            
+                    
                     $this->Session->setFlash('<span style="color:green;font-weight:bold;" >Your data save successfully.</span>');
                     $this->redirect(array('action'=>'viewdetails','?'=>array('EJEID'=>base64_encode($EJEID))));
                 }

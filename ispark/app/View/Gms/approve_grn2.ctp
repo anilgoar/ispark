@@ -33,6 +33,8 @@
 			</div>
 			<div class="box-content no-padding">
                             <h4 style="color:green"><?php echo $this->Session->flash(); ?> </h4>
+                            <a href="/ispark/Menuisps/sub?AX=NjA=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
+                            
 				<table class="table  table-bordered table-hover table-heading no-border-bottom responstable" id="table_id">
 				<?php $case=array('primary',''); $i=0; ?>
 					<thead>

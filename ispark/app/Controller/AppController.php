@@ -51,7 +51,47 @@ class AppController extends Controller {
         )
     );
 
+    var $uses = array('PageMaster','LoginLog');
+    
     public function beforeFilter() {
+        $this->getLog(); 
         $this->Auth->allow('index', 'view');
     }
+    
+    function getLog()
+        {
+            
+                $admin_id = $this->Session->read("userid");
+                $role = $this->Session->read("role");
+                $name = $this->Session->read("username");
+                
+                $url = $this->request->here();
+                $url1 = explode("/",$url);
+
+                $pages = $this->PageMaster->find('first',array('conditions'=>array('page_url'=>$url1[2])));
+                $page_name = $pages['PagesMaster1']['page_name'];
+                
+            
+            
+
+            $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+
+            
+
+            $data['user_id'] = $admin_id;
+            $data['type'] = $role;
+            $data['ip_address'] = $ip;
+            $data['user_name'] = $name;
+            $data['page_name'] = $page_name;
+            $data['page_url'] = $url1[2].'/'.$url1[3];
+            $data['hit_time'] = date("Y-m-d H:i:s");
+
+            //print_r($data);die;
+            if(!empty($admin_id) )
+            {
+                $save = $this->LoginLog->save($data);
+            }
+            
+
+        }
 }

@@ -110,7 +110,7 @@
                         
 						<td><?php echo $this->Form->input('Particular.priority' ,array('label' =>false,'placeholder' => 'Priority','options'=>array('Low','Normal','Urgent'),'empty'=>'Select Priority','class' => 'form-control')); ?></td>
 						<td><?php echo $this->Form->input('Particular.requirement_type' ,array('label' =>false,'options'=>array('Upgrade','New','Modification','Error'),'empty'=>'Select type','class' => 'form-control')); ?></td>
-						<td><?php echo $this->Form->input('Particular.requirement_desc' ,array('type' => 'textarea', 'rows' => '1','label' =>false,'placeholder' => 'Description','class' => 'form-control')); ?></td>
+						<td><?php echo $this->Form->input('Particular.requirement_desc' ,array('label' =>false,'placeholder' => 'Description','class' => 'form-control')); ?></td>
 						<td> <?php //echo $this->Form->file('Particular.attach_files', array('label'=>false,'type' => 'file','class' => 'form-control','multiple')); ?></td>
                      	<td><?php echo $this->Form->input('Particular.status' ,array('label' =>false,'placeholder' => 'Status','options'=>array('Open'),'class' => 'form-control')); ?></td>
                         <td><?php echo $this->Form->input('Particular.remarks',array('label'=>false,'placeholder'=>'Remarks','class' => 'form-control')); ?></td>

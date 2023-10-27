@@ -79,7 +79,7 @@ class FinanceReportsController extends AppController {
                 '223'=>array('BillApprovalStages/invoice_image_export',"Invoice View"),
                 ),
                 'Collection Reports'=>array(
-                '24'=>array('CollectionReports/index',"Collection Reports"),
+                '24'=>array('CollectionReports',"Collection Reports"),
                 '39'=>array('CollectionReports/view_report',"Collection Planning"),    
                 '218'=>array('CollectionPtps/collection_ptp',"Collection PTP"),
                 '211'=>array('CollectionReports/report_collection_tracking',"Collection Tracking Report"),

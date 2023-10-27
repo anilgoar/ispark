@@ -111,7 +111,7 @@ $(function () {
                     </div> 
                     
                     <div class="col-sm-3">
-                        <input onclick='return window.location="<?php echo $this->webroot;?>FinanceReports"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
+                        <input onclick='return window.location="<?php echo $this->webroot;?>Menuisps/sub?AX=MTM1"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
                         <input type="submit" name="Submit" value="Export" class="btn pull-right btn-primary btn-new" style="margin-left:5px;" >
                        
                     </div>

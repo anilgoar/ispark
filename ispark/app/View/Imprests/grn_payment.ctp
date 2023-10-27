@@ -67,6 +67,7 @@
                                     <label class="col-sm-2 control-label"></label>
                                     <div class="col-sm-2">
                                         <button type="submit" class="btn btn-info">Save</button>
+                                        <a href="/ispark/Menuisps/sub?AX=NjI=" class="btn btn-primary btn-label-left">Back</a> 
                                     </div>
                                 </div>
                                 <?php echo $this->Form->end(); ?> 

@@ -41,7 +41,7 @@ class APPAttendancesController extends AppController {
             created_at,date(created_at) dater,mas_jclr.CostCenter
             FROM `masjclrentry` mas_jclr  
 INNER JOIN `mas_daily_attndce_tracker` mas_attn ON mas_jclr.EmpCode = mas_attn.Mas_Code
-WHERE date(created_at) BETWEEN STR_TO_DATE('$start_date','%d-%b-%Y')  AND STR_TO_DATE('$end_date','%d-%b-%Y')  AND BranchName='$branch'";
+WHERE date(created_at) BETWEEN STR_TO_DATE('$start_date','%d-%b-%Y')  AND STR_TO_DATE('$end_date','%d-%b-%Y')  AND BranchName='$branch'"; 
         
         $data = $this->Masjclrentry->query($qry);
         
@@ -141,6 +141,7 @@ WHERE date(created_at) BETWEEN STR_TO_DATE('$start_date','%d-%b-%Y')  AND STR_TO
         {
             echo '<th style="text-align: center;">Login</th>';
             echo '<th style="text-align: center;">Logout</th>';
+            echo '<th style="text-align: center;">Login Time</th>';
         }
         echo '</tr>';
         
@@ -155,6 +156,20 @@ WHERE date(created_at) BETWEEN STR_TO_DATE('$start_date','%d-%b-%Y')  AND STR_TO
             {
                 echo '<td style="text-align: center;">'.$emp_master[$emp][$dater]['login_time'].'</td>';
                 echo '<td style="text-align: center;">'.$emp_master[$emp][$dater]['logout_time'].'</td>';
+                // $start  = new DateTime($emp_master[$emp][$dater]['login_time']);
+                // $end  = new DateTime($emp_master[$emp][$dater]['logout_time']);
+                // $interval = $start->diff($end);
+                $st_time    =   strtotime($emp_master[$emp][$dater]['login_time']);
+                $end_time   =   strtotime($emp_master[$emp][$dater]['logout_time']);
+                $log_time = $end_time - $st_time;
+                if($emp_master[$emp][$dater]['login_time'] == '' || $emp_master[$emp][$dater]['logout_time'] == '')
+                {
+                    echo '<td style="text-align: center;"></td>';
+                }else{
+                    
+                    echo '<td style="text-align: center;">'.date('H:i:s', $log_time).'</td>';
+                }
+                
             }
             echo '</tr>';
         }

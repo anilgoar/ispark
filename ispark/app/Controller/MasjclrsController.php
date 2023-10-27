@@ -557,8 +557,8 @@ class MasjclrsController extends AppController{
                                     $this->NewjclrMaster->query("UPDATE `mas_docoments` SET OfferNo='$OfferNo' WHERE Interview_Id='$Interview_Id'");
                                     $InterviewDoc=$this->NewjclrMaster->query("SELECT * FROM mas_docoments WHERE Interview_Id='$Interview_Id'");
                                     
-                                    $oldpath    = "/var/www/html/ispark/app/webroot/Interview_File/".$Interview_Id."/";
-                                    $newpath    = "/var/www/html/ispark/app/webroot/Doc_File/".$OfferNo."/";
+                                    $oldpath    = "/var/www/html/mascallnetnorth.in/ispark/app/webroot/Interview_File/".$Interview_Id."/";
+                                    $newpath    = "/var/www/html/mascallnetnorth.in/ispark/app/webroot/Doc_File/".$OfferNo."/";
                  
                                     if(!file_exists($newpath)){ 
                                         mkdir($newpath); 
@@ -729,7 +729,7 @@ class MasjclrsController extends AppController{
                 $this->NewjclrMaster->query("UPDATE `Interview_master` SET Hrupdates_Status=NULL WHERE Interview_Id='$Interview_Id'");
                 $this->NewjclrMaster->query("UPDATE `mas_docoments` SET OfferNo=NULL WHERE Interview_Id='$Interview_Id'");
                 //$dirPath="/var/www/html/ispark/app/webroot/Doc_File/30174/";
-                $dirPath="/var/www/html/ispark/app/webroot/Doc_File/".$OfferNo."/";
+                $dirPath="/var/www/html/mascallnetnorth.in/ispark/app/webroot/Doc_File/".$OfferNo."/";
                 array_map('unlink', glob("$dirPath/*.*"));
                 rmdir($dirPath);
             }
@@ -1543,7 +1543,7 @@ class MasjclrsController extends AppController{
                     'Status'=>1,
                     'BranchName'=>$_REQUEST['BranchName'],
                     'EmpCode'=>$_REQUEST['EmpCode'],
-                    'EmpLocation'=>'InHouse',
+                    
                     )
                 ));
             

@@ -34,7 +34,7 @@ class AccesController extends AppController {
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow('add', 'view', 'assign_Access', 'view_access', 'edit_User', 'add_date', 'getMessage', 'getMessageDisplay', 'updateMessage', 'user_array', 'puser_array', 'change_password','branch');
+        $this->Auth->allow('view_users','manage_access','create_User','add', 'view', 'assign_Access', 'view_access', 'edit_User', 'add_date', 'getMessage', 'getMessageDisplay', 'updateMessage', 'user_array', 'puser_array', 'change_password','branch');
         $pages = explode(',', $this->Session->read("page_access"));
         if (in_array('40', $pages)) {
             $this->Auth->allow('view_users', 'edit_users');
@@ -123,7 +123,7 @@ class AccesController extends AppController {
 	public function branch(){
 		$this->layout='home';
 
-		$users = $this->User->query("SELECT id,username FROM tbl_user where UserActive='1' AND username is not null AND role !='admin'  group by username order by username ");
+		$users = $this->User->query("SELECT id,username FROM tbl_user where UserActive='1' AND username is not null   group by username order by username ");
         $this->set('users', $users);
         
         $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            

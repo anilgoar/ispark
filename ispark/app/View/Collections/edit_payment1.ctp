@@ -231,12 +231,19 @@ if($payment_master['0']!='') {$flag1 =true;}
                                                                                 <i class="fa fa-circle-o"></i>
                                                                         </label>
                                                                 </div>
+                                                                
                                                                 <div class="radio-inline">
                                                                         <label>
                                                                                 <input type="radio" name="type" value="RTGS" id="type"  onClick="return collection_validate(this.value)" >RTGS
                                                                                 <i class="fa fa-circle-o"></i>
                                                                         </label>
                                                                 </div>                                   
+                                                                <div class="radio-inline">
+                                                                        <label>
+                                                                                <input type="radio" name="type" value = "Cash" id = 'type' onClick="return collection_validate(this.value)" >Cash
+                                                                                <i class="fa fa-circle-o"></i>
+                                                                        </label>
+                                                                </div>
                                 </div>
                       <?php } else { ?>
                                         <label class="col-sm-2 control-label">Select</label>
@@ -247,12 +254,19 @@ if($payment_master['0']!='') {$flag1 =true;}
                                                                                 <i class="fa fa-circle-o"></i>
                                                                         </label>
                                                                 </div>
+                                                                
                                                                 <div class="radio-inline">
                                                                         <label>
                                                                                 <input type="radio" name="type" value="RTGS" id="type"  onClick="return collection_validate(this.value)" <?php if($payment_master['4'] == 'RTGS') { echo "checked"; $pay_type = 'RTGS';}else {echo "disabled";} ?>>RTGS
                                                                                 <i class="fa fa-circle-o"></i>
                                                                         </label>
-                                                                </div>                                   
+                                                                </div>  
+                                                                <div class="radio-inline">
+                                                                        <label>
+                                                                                <input type="radio" name="type" value = "Cash" id = 'type' onClick="collection_validate(this.value)" <?php if($payment_master['4'] == 'Cash') {echo "checked"; $pay_type = 'Cash';} else {echo "disabled";} ?>>Cash
+                                                                                <i class="fa fa-circle-o"></i>
+                                                                        </label>
+                                                                </div>                                 
                                 </div>                              
                      <?php } ?>
 

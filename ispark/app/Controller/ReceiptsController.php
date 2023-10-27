@@ -24,9 +24,9 @@ class ReceiptsController extends AppController
 				//$rdx=$this->Access->find('first',array('fields'=>array('page_access'),'conditions'=>array('user_type'=>$role)));
 				//$roles=explode(',',$rdx['Access']['page_access']);
 				
-				if(in_array('28',$roles)){$this->Auth->allow('index');
+				$this->Auth->allow('index');
 			$this->Auth->allow('get_receipt','edit','update');
-			$this->Auth->allow('add');}
+			$this->Auth->allow('add');
 				
 			}			
 			if ($this->request->is('ajax'))

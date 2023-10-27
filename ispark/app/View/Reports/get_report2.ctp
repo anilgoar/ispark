@@ -1,5 +1,5 @@
 <?php //print_r($qry); ?>
-<?php //print_r($res); ?>
+<?php //print_r($res);exit; ?>
 <?php 
 	$fileName = "$report_name";
 	header("Content-Type: application/vnd.ms-excel; name='excel'");
@@ -35,6 +35,7 @@ if($report == 1)
                 <th>SGST</th>
                 <th>Part Payment</th>
 		<th>G. Total</th>
+		<th>Category</th>
 		<th>Remarks</th>
 		<th>Status</th>
 		<th>Bill Date</th>
@@ -56,7 +57,7 @@ if($report == 1)
 			<td><?= $post['t2']['cost_center'] ?></td>
                         <td><?= $post['t2']['CostCenterName'] ?></td>
             <td><?= $post['t1']['branch_name'] ?></td>
-			<td><? echo $post['t2']['client']; ?></td>
+			<td><?=  $post['t2']['client']; ?></td>
 			<td><?= $post['t1']['bill_no'] ?></td>
 			<td><?= $post['t1']['finance_year'] ?></td>
 			<td><?= "=text(\"".$post['t1']['month']."\",\"mmm-d\")" ?></td>
@@ -67,8 +68,9 @@ if($report == 1)
                         <td><?= $post['t1']['igst'] ?></td>
                         <td><?= $post['t1']['cgst'] ?></td>
                         <td><?= $post['t1']['sgst'] ?></td>
-                        <td><? echo ($post['bpp']['net_amount']+$post['bpp']['tds_ded']); ?></td>
-			<td><?php echo ($post['t1']['grnd']-$post['bpp']['net_amount']-$post['bpp']['tds_ded']); ?></td>
+                        <td><?= ($post['bpp']['net_amount']+$post['bpp']['tds_ded']); ?></td>
+			<td><?= ($post['t1']['grnd']-$post['bpp']['net_amount']-$post['bpp']['tds_ded']); ?></td>
+			<td><?= $post['t1']['category'] ?></td>
 			<td><?= $post['t1']['invoiceDescription'] ?></td>
 			<td></td>
 			<td><?php $date =date_create($post['t1']['invoiceDate']);

@@ -54,7 +54,7 @@ echo $this->Html->css('css/mystyle');
                 <label class="col-sm-2 control-label">
                     <input type="checkbox" id="all_check" name="all_check" onclick="auto_fill_all()" />&nbsp;&nbsp; Auto Fill  
                 </label>
-                <div class="col-sm-2"><a href="http://mascallnetnorth.in/ispark/users/view" class="btn btn-primary">Back</a></div>
+                <div class="col-sm-2"><a href="https://mascallnetnorth.in/ispark/users/view" class="btn btn-primary">Back</a></div>
             </div>
         
         <!-- new content -->
@@ -142,7 +142,7 @@ function auto_fill_all()
         }else{
         $("#main_container input:checkbox").prop("checked", false); 
         
-        $.getJSON("<?php echo 'http://'.$_SERVER['SERVER_NAME'].Router::url('/RideIsparks/index'); ?>", {user: $('#selected_user').val()}, function (data) {
+        $.getJSON("<?php echo 'https://'.$_SERVER['SERVER_NAME'].Router::url('/RideIsparks/index'); ?>", {user: $('#selected_user').val()}, function (data) {
             if(Object.keys(data).length === 0)
             {
                // $("#main_container input:checkbox").prop("checked", true);
@@ -209,7 +209,7 @@ function show_child(id)
         }else{
         $("#main_container input:checkbox").prop("checked", false); 
         
-        $.getJSON("<?php echo 'http://'.$_SERVER['SERVER_NAME'].Router::url('/RideIsparks/index'); ?>", {user: $('#selected_user').val()}, function (data) {
+        $.getJSON("<?php echo 'https://'.$_SERVER['SERVER_NAME'].Router::url('/RideIsparks/index'); ?>", {user: $('#selected_user').val()}, function (data) {
             if(Object.keys(data).length === 0)
             {
                // $("#main_container input:checkbox").prop("checked", true);
@@ -264,7 +264,7 @@ function show_child(id)
         ride = ride.slice(0, ride.length - 1); 
         
         
-        $.get("<?php echo 'http://'.$_SERVER['SERVER_NAME'].Router::url('/RideIsparks/save'); ?>", {rides: ride,user: $('#selected_user').val()}, function (data) {
+        $.get("<?php echo 'https://'.$_SERVER['SERVER_NAME'].Router::url('/RideIsparks/save'); ?>", {rides: ride,user: $('#selected_user').val()}, function (data) {
             console.log(data);
             if (data = "save") {
                 $("#main_container input:checkbox").prop("checked", false);

@@ -1,6 +1,6 @@
 <?php
 class BranchAttandIssueApprovalsController extends AppController {
-    public $uses = array('Addbranch','MasJclrMaster','Masattandance','OdApplyMaster','BranchAttandIssueMaster');
+    public $uses = array('Addbranch','CostCenterMaster','Masjclrentry','AccessPages','MasJclrMaster','Masattandance','OdApplyMaster','BranchAttandIssueMaster');
         
     public function beforeFilter(){
         parent::beforeFilter(); 
@@ -13,7 +13,31 @@ class BranchAttandIssueApprovalsController extends AppController {
     public function index(){
         $this->layout='home';
         $branchName = $this->Session->read('branch_name');
-        $this->set('OdArr',$this->BranchAttandIssueMaster->find('all',array('conditions'=>array('BranchName'=>$branchName,'ApproveFirst'=>NULL),'order'=>"EmpCode,AttandDate")));
+        $userid = $this->Session->read("userid");
+        $costid_list = $this->AccessPages->find('list',array('fields'=>array('cost_id','cost_id'),'conditions'=>array("att_approval='1' and user_id='$userid'")));
+        $cost_list = $this->CostCenterMaster->find('list',array('fields'=>array('cost_center','cost_center'),'conditions'=>array('id'=>$costid_list)));
+        $branch_list = $this->CostCenterMaster->find('list',array('fields'=>array('branch','branch'),'conditions'=>array('id'=>$costid_list)));
+        //print_r($cost_list);die;
+        $OdArr_list = $this->BranchAttandIssueMaster->find('all',array('conditions'=>array('BranchName'=>$branch_list,
+            'ApproveFirst'=>NULL),'order'=>"EmpCode,AttandDate"));
+        $OdArr = array();
+        //print_r($OdArr_list);die;
+        
+        foreach($OdArr_list as $ol)
+        {
+           $emp_code = $ol['BranchAttandIssueMaster']['EmpCode'];
+            $det = $this->Masjclrentry->find('first',array('fields'=>array('CostCenter'),'conditions'=>array('EmpCode'=>$emp_code)));
+            
+            $cost_center = $det['Masjclrentry']['CostCenter'];
+            
+            if(in_array($cost_center,$cost_list))
+            {
+                $OdArr[] = $ol;
+            }
+        }
+        
+        $this->set('OdArr',$OdArr);
+        
         //$this->set('OdArr',$this->BranchAttandIssueMaster->find('all',array('conditions'=>array('ApproveFirst'=>NULL)))); 
         
         if($this->request->is('Post')){

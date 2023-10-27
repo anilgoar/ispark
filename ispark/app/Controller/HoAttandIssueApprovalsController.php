@@ -1,6 +1,6 @@
 <?php
 class HoAttandIssueApprovalsController extends AppController {
-    public $uses = array('Addbranch','MasJclrMaster','Masattandance','OdApplyMaster','BranchAttandIssueMaster');
+    public $uses = array('Addbranch','MasJclrMaster','Masattandance','OdApplyMaster','BranchAttandIssueMaster','AccessPages','CostCenterMaster');
         
     public function beforeFilter(){
         parent::beforeFilter(); 
@@ -31,9 +31,16 @@ class HoAttandIssueApprovalsController extends AppController {
         if($this->request->is('Post')){
             $branch_name=$this->request->data['ho-attendance-approval']['branch_name'];
             $branch_issue=$this->request->data['ho-attendance-approval']['branch_issue'];
+
+            $userid = $this->Session->read("userid");
+            $costid_list = $this->AccessPages->find('list',array('fields'=>array('cost_id','cost_id'),'conditions'=>array("att_approval='1' and user_id='$userid'")));
+            $cost_list = $this->CostCenterMaster->find('list',array('fields'=>array('cost_center','cost_center'),'conditions'=>array('id'=>$costid_list)));
+            $branch_list = $this->CostCenterMaster->find('list',array('fields'=>array('branch','branch'),'conditions'=>array('id'=>$costid_list)));
+
+
             
             if($branch_name !="" && $branch_issue !="" ){
-                $conditoin=array('ApproveFirst'=>'Yes','ApproveSecond'=>NULL);
+                $conditoin=array('year(CreateDate) >='=>'2023','BranchName'=>$branch_list,'ApproveFirst'=>'Yes','ApproveSecond'=>null);
                 if($branch_name !="ALL"){$conditoin['BranchName']=$branch_name;}else{unset($conditoin['BranchName']);}
                 if($branch_issue !="ALL"){$conditoin['IssueType']=$branch_issue;}else{unset($conditoin['IssueType']);}
 
@@ -70,12 +77,12 @@ class HoAttandIssueApprovalsController extends AppController {
                         }
                     }
                 }
-                
-                
+            
+                #print_r($conditoin);die;
                 $this->set('OdArr',$this->BranchAttandIssueMaster->find('all',array('conditions'=>$conditoin,'order'=>"EmpCode,AttandDate")));
             }
             else{
-                $this->Session->setFlash('<span style="color:red;font-weight:bold;" >Please select branch name/issue.</span>');   
+                $this->Session->setFlash('<span style="color:red;font-weight:bold;">Please select branch name/issue.</span>');   
             }
             
             

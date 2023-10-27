@@ -10,10 +10,11 @@
 						</div>
                                                 <label class="col-sm-2 control-label">Expense Type</label>
                                                 <div class="col-sm-2">
-                                                    <?php echo $this->Form->input('Cost',array('label' => false,'options'=>array('D'=>'Direct','I'=>'InDirect'),'empty'=>'Select','class'=>'form-control')); ?>
+                                                    <?php echo $this->Form->input('Cost',array('label' => false,'options'=>array('D'=>'Direct','I'=>'InDirect','C'=>'Capex'),'empty'=>'Select','class'=>'form-control')); ?>
 						</div>
                                                 <div class="col-sm-2">
                                                     <button type="submit" name="submit" value="Add" class="btn btn-primary btn-label-left">Submit</button>
+                                                    <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                                             </div>
 					</div>
 					<div class="clearfix"></div>
@@ -60,7 +61,7 @@
 						<tr>
 							<td><?php echo $i++; ?></td>
 							<td><?php echo $post['Tbl_bgt_expenseheadingmaster']['HeadingDesc']; ?></td>
-                                                        <td><?php echo $this->Form->input('Cost'.$post['Tbl_bgt_expenseheadingmaster']['HeadingId'],array('label' => false,'options'=>array('D'=>'Direct','I'=>'InDirect'),'value'=>$post['Tbl_bgt_expenseheadingmaster']['Cost'],'class'=>'form-control')); ?></td>
+                                                        <td><?php echo $this->Form->input('Cost'.$post['Tbl_bgt_expenseheadingmaster']['HeadingId'],array('label' => false,'options'=>array('D'=>'Direct','I'=>'InDirect','C'=>'Capex'),'value'=>$post['Tbl_bgt_expenseheadingmaster']['Cost'],'class'=>'form-control')); ?></td>
                                                         <td><?php echo $this->Form->input('OrderBy'.$post['Tbl_bgt_expenseheadingmaster']['HeadingId'],array('label' => false,'value'=>$post['Tbl_bgt_expenseheadingmaster']['OrderPriority'],'class'=>'form-control','placeholder'=>'Order')); ?></td>
 						</tr>
                                                 <?php $Arr[] = $post['Tbl_bgt_expenseheadingmaster']['HeadingId']; } ?>

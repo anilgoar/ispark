@@ -501,7 +501,7 @@ foreach($monthMaster as $mnt=>$mntRevenue)
 }
 ?>
 </div>
-
+<?php	echo $this->Form->input('InitialInvoice.category', 	array('label'=>false,'id'=>"category",'value'=>$category,'type'=>'hidden')); ?>
 <?php	echo $this->Form->input('InitialInvoice.revenue', 	array('label'=>false,'id'=>"revenue",'value'=>$revenue,'type'=>'hidden')); ?>
 <?php	echo $this->Form->input('InitialInvoice.invoiceType', 	array('label'=>false,'value'=>$invoiceType,'type'=>'hidden')); ?>
 <?php	echo $this->Form->input('InitialInvoice.branch_name', 	array('label'=>false,'value'=>$hide['branch_name'],'type'=>'hidden')); ?>

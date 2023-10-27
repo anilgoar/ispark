@@ -22,28 +22,28 @@
 
 <div class="box-content">
 <?php //print_r($branch_master); ?>
-<?php $this->Form->create('Add',array('controller'=>'AddInvParticular','action'=>'view')); ?>
+<?php $this->Form->create('Add',array('controller'=>'AddInvParticular','action'=>'view','class'=>'form-horizontal')); ?>
 
-	<div class="form-group has-success has-feedback">
+	<div class="form-group">
 		
 
-		<label class="col-sm-2 control-label"><b style="font-size:14px"> Select Company </b></label>	
-			<div class="col-sm-2">
-				<?php	echo $this->Form->input('company_name', array('label'=>false,'options'=>$data,'empty'=>'Select Company','class'=>'form-control','onChange' => 'get_branch3(this.value)')); ?>
+		<label class="col-sm-1 control-label"><b style="font-size:14px">Company</b></label>	
+			<div class="col-sm-3">
+				<?php	echo $this->Form->input('company_name', array('label'=>false,'options'=>$data,'empty'=>'Select ','class'=>'form-control','onChange' => 'get_branch3(this.value)')); ?>
 			</div>
-			<label class="col-sm-2 control-label"><b style="font-size:14px"> Select Branch </b></label>	
-			<div class="col-sm-2">
+			<label class="col-sm-1 control-label"><b style="font-size:14px">Branch</b></label>	
+			<div class="col-sm-3">
             <div id ="mm">
-				<?php	echo $this->Form->input('branch_name', array('label'=>false,'options'=>$data,'empty'=>'Select Branch','class'=>'form-control','onChange'=>'get_report5(this.value')); ?>
+				<?php	echo $this->Form->input('branch_name', array('label'=>false,'options'=>$data,'empty'=>'Select ','class'=>'form-control','onChange'=>'get_report5(this.value')); ?>
                 </div>
 			</div>			
 		
 		</div>
-		<div class="form-group has-success has-feedback">
+		<div class="form-group">
         <div id="mm"></div>
-        <label class="col-sm-2 control-label"><b style="font-size:14px"> Report Name </b></label>	
-			<div class="col-sm-2">
-				<?php	echo $this->Form->input('Select Report', array('label'=>false,'options'=>array('Bill Initiated Not Approve'=>'Bill Initiated Not Approve','GRN Status'=>'GRN Status','Bill Submission Status'=>'Bill Submission Status','Bill Generate Status'=>'Bill Generate Status','PO Status'=>'PO Status'),'empty'=>'Select Report','class'=>'form-control')); ?>
+        <label class="col-sm-1 control-label"><b style="font-size:14px">Report</b></label>	
+			<div class="col-sm-3">
+				<?php	echo $this->Form->input('Select Report', array('label'=>false,'options'=>array('Bill Initiated Not Approve'=>'Bill Initiated Not Approve','GRN Status'=>'GRN Status','Bill Submission Status'=>'Bill Submission Status','Bill Generate Status'=>'Bill Generate Status','PO Status'=>'PO Status'),'empty'=>'Select','class'=>'form-control')); ?>
 			</div>								
 			<div id="mm"></div>
 			
@@ -56,9 +56,10 @@
 		<div class="form-group">
 			<div class="col-sm-2">
 				<button class="btn btn-info btn-label-left" value = "show" onClick="validate_BillApprovalStages(this.value);">Show</button>
+                                <button class="btn btn-info btn-label-left" value = "export" onClick="validate_BillApprovalStages(this.value);">Export</button>
 			</div>
 			<div class="col-sm-2">
-				<button class="btn btn-info btn-label-left" value = "export" onClick="validate_BillApprovalStages(this.value);">Export</button>
+				
 			</div>
 		</div>
 	<?php echo $this->Form->end(); ?>

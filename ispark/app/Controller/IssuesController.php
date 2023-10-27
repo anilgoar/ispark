@@ -11,9 +11,9 @@
 	 $this->Auth->allow('Check_issue_status','issue_submit','issue_close','user_ticket_close','update_ticket_status','update_it_ticket_status','View_issue','View_user_issue',
 	 'get_process','submit','addIssue','issue_allocate','view','allocate','alloted','delete','user_issue','process_des','submit_allocate',
 	 'report','show_report','export_report','update_issue_status');
-  	 if(in_array('31',$roles)){$this->Auth->allow('issue_submit'); $this->Auth->allow('process_des','get_process','submit','addIssue','delete','View_issue','issue_close','user_ticket_close');}
-	 if(in_array('33',$roles)){$this->Auth->allow('issue_allocate'); $this->Auth->allow('process_des','allocate','alloted','View_issue');}
-	if(in_array('36',$roles)){$this->Auth->allow('View_user_issue','user_issue'); $this->Auth->allow('View_issue','View_user_issue');}
+  	 $this->Auth->allow('issue_submit'); $this->Auth->allow('process_des','get_process','submit','addIssue','delete','View_issue','issue_close','user_ticket_close');
+	 $this->Auth->allow('issue_allocate'); $this->Auth->allow('process_des','allocate','alloted','View_issue');
+	$this->Auth->allow('View_user_issue','user_issue'); $this->Auth->allow('View_issue','View_user_issue');
 		  
         
         
@@ -663,7 +663,7 @@ padding: 3px 10px;border-top: 1px solid #153b6e;
  	public function issue_submit()
 	{ 
 		$this->layout='home';
-		$user_id = $this->Session->read('username');
+		$user_id = $this->Session->read('userid');
 		$roles=explode(',',$this->Session->read("page_access"));
 		$branch_name=$this->Session->read('branch_name'); 
 		 if(in_array('35',$roles))
@@ -934,7 +934,7 @@ $html
   {
   $this->layout='ajax';
   $result = $this->params->query;
-  $result['user_id']=$this->Session->read('username');
+  $result['user_id']=$this->Session->read('userid');
   $this->TmpIssueParticular->save($result);
   $this->set('result',$result);
   }

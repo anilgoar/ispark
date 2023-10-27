@@ -478,10 +478,10 @@ WHERE  sc.IntroApprove=2  $qry $childUser");
                         mkdir(WWW_ROOT."prospect_file_his/$HisId");
                     }
                     
-                    copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment']);
-                    copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment1'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment1']);
-                    copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment2'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment2']);
-                    copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment3'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment3']);
+                    copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment']);
+                    copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment1'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment1']);
+                    copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment2'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment2']);
+                    copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment3'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment3']);
                     $this->ProspectClient->updateAll(array('HisLastId'=>$HisId,'counter'=>'counter+1'),array("Id"=>$Id));
                 }
                 $Lead['to'] =addslashes($this->request->data['prospects']['EmailTo']);
@@ -663,7 +663,7 @@ WHERE  sc.IntroApprove=2  $qry $childUser");
                     $dompdf->render();
                     $output = $dompdf->output();
                     $attachFile = 'attachment_'.date('Ymd_His').".pdf";
-                    $filename="/var/www/html/ispark/app/webroot/prospect_file/$Id/$attachFile";
+                    $filename="/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$Id/$attachFile";
                     file_put_contents($filename, $html);
                     
                 
@@ -681,15 +681,15 @@ WHERE  sc.IntroApprove=2  $qry $childUser");
                     
                     if(!empty($data['ProspectClient']['attachment1']))
                     {
-                        $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$Id/".$data['ProspectClient']['attachment1']; 
+                        $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$Id/".$data['ProspectClient']['attachment1']; 
                     }
                     if(!empty($data['ProspectClient']['attachment2']))
                     {
-                        $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$Id/".$data['ProspectClient']['attachment2']; 
+                        $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$Id/".$data['ProspectClient']['attachment2']; 
                     }
                     if(!empty($data['ProspectClient']['attachment3']))
                     {
-                        $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$Id/".$data['ProspectClient']['attachment3']; 
+                        $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$Id/".$data['ProspectClient']['attachment3']; 
                     }
                     
                     if(empty($to))
@@ -821,9 +821,9 @@ WHERE  sc.IntroApprove=2  $qry $childUser");
                         }
 
                         
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment1'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment1']);
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment2'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment2']);
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment3'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment3']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment1'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment1']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment2'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment2']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment3'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment3']);
                         $this->ProspectClient->updateAll(array('HisLastId'=>$HisId,'counter'=>'counter+1'),array("Id"=>$Id));
                     }
                     
@@ -863,15 +863,15 @@ WHERE  sc.IntroApprove=2  $qry $childUser");
                         
                         if(!empty($data['attachment1']))
                         {
-                            $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$v/".$data['attachment1']; 
+                            $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$v/".$data['attachment1']; 
                         }
                         if(!empty($data['attachment2']))
                         {
-                            $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$v/".$data['attachment2']; 
+                            $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$v/".$data['attachment2']; 
                         }
                         if(!empty($data['attachment3']))
                         {
-                            $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$v/".$data['attachment3']; 
+                            $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$v/".$data['attachment3']; 
                         }
                         
                         $mail = new sendEmailDialdesk();
@@ -1121,10 +1121,10 @@ WHERE  sc.Id = '{$data['0']['sc']['HisLastId']}' ");
                             mkdir(WWW_ROOT."prospect_file_his/$HisId");
                         }
 
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment']);
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment1'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment1']);
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment2'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment2']);
-                        copy("/var/www/html/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment3'],"/var/www/html/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment3']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment1'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment1']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment2'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment2']);
+                        copy("/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/$DataId/".$data2['attachment3'],"/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file_his/$HisId/".$data2['attachment3']);
                         $this->ProspectClient->updateAll(array('HisLastId'=>$HisId,'counter'=>'counter+1'),array("Id"=>$Id));
                     }
                     
@@ -1164,15 +1164,15 @@ WHERE  sc.Id = '{$data['0']['sc']['HisLastId']}' ");
                         
                         if(!empty($data['attachment1']))
                         {
-                            $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$v/".$data['attachment1']; 
+                            $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$v/".$data['attachment1']; 
                         }
                         if(!empty($data['attachment2']))
                         {
-                            $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$v/".$data['attachment2']; 
+                            $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$v/".$data['attachment2']; 
                         }
                         if(!empty($data['attachment3']))
                         {
-                            $attachment[] = '/var/www/html/ispark/app/webroot/prospect_file/'."$v/".$data['attachment3']; 
+                            $attachment[] = '/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect_file/'."$v/".$data['attachment3']; 
                         }
                         
                         $mail = new sendEmailDialdesk();
@@ -1349,7 +1349,7 @@ LEFT JOIN `prospect_follow` sf ON sc.LastId = sf.Id   INNER JOIN tbl_user tu ON 
                     $dompdf->render();
                     $output = $dompdf->output();
                     
-                    $filename="/var/www/html/ispark/app/webroot/prospect/".date('Ymd_His').".pdf";
+                    $filename="/var/www/html/mascallnetnorth.in/ispark/app/webroot/prospect/".date('Ymd_His').".pdf";
                     file_put_contents($filename, $output);
                     //exit;
                     App::uses('sendEmailDialdesk', 'custom/Email');

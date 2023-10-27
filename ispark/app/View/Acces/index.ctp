@@ -27,6 +27,7 @@ echo $this->Html->css('css/mystyle');
                 <div class="box-name">
 					<span><input type='radio' name='Accesstype' checked > User Rights</span>
 					<span style='margin-left:20px;'><input type='radio' name='Accesstype' onclick="return window.location.href='<?php $this->webroot;?>Acces/branch'" > Branch Rights</span>
+                    <span style='margin-left:20px;'><input type='radio' name='Accesstype' onclick="return window.location.href='<?php $this->webroot;?>AccesCostCenterWise'" > Payroll Rights</span>
                 </div>
                 <div class="box-icons">
                     <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -130,7 +131,7 @@ label{font-weight:normal;}
         }else{
         $("#main_container input:checkbox").prop("checked", false);
         
-        $.getJSON("<?php echo 'http://'.$_SERVER['SERVER_NAME'].Router::url('/RideChecks/index'); ?>", {user: $('#selected_user').val()}, function (data) {
+        $.getJSON("<?php echo 'https://'.$_SERVER['SERVER_NAME'].Router::url('/RideChecks/index'); ?>", {user: $('#selected_user').val()}, function (data) {
 
             $.each(data, function (key, val) {
                 $.each(val, function (key1, val1) { 
@@ -173,7 +174,7 @@ label{font-weight:normal;}
 
         });
         ride = ride.slice(0, ride.length - 1);        
-        $.get("<?php echo 'http://'.$_SERVER['SERVER_NAME'].Router::url('/RideChecks/save'); ?>", {rides: ride,user: $('#selected_user').val()}, function (data) {
+        $.get("<?php echo 'https://'.$_SERVER['SERVER_NAME'].Router::url('/RideChecks/save'); ?>", {rides: ride,user: $('#selected_user').val()}, function (data) {
             console.log(data);
             if (data = "save") {
                 $("#main_container input:checkbox").prop("checked", false);

@@ -345,10 +345,10 @@ td#t07
 					
 					<tr><td id = "t06">Pan No</td></tr>
 					<tr><td id = "t06"><b>GRN No</b></td></tr>
-                                        <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
+                                        <?php //if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
                                         <tr><td id = "t06"><b>Place Of Supply</b></td></tr>
                                         <tr><td id = "t06"><b>TAX PAYBLE UNDER RCM</b></td></tr>
-                                        <?php } ?>
+                                        <?php //} ?>
 		  </table>
 		</td>
 		<td height="100" valign="top">
@@ -367,10 +367,10 @@ td#t07
 					
 					<tr><td id = "t06"><?php echo $company['Addcompany']['pan_no'];?>&nbsp;</td></tr>
 					<tr><td id = "t06"><b><?php if($tbl_invoice['InitialInvoice']['approve_grn']=='Yes')echo $tbl_invoice['InitialInvoice']['grn']; ?>&nbsp;</b></td></tr>
-                                        <?php if( strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
+                                        <?php //if( strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
                                         <tr><td width="130"  id = "t07"><?php if(empty($cost_master['CostCenterMaster']['statenamecost'])) { echo $branch_detail['Addbranch']['state']; } else {echo $cost_master['CostCenterMaster']['statenamecost'];} ?>&nbsp;</td></tr>
                                         <tr><td width="130"  id = "t07">NO&nbsp;</td></tr>
-                                         <?php } ?>
+                                         <?php //} ?>
 		  </table>
 
 		</td>

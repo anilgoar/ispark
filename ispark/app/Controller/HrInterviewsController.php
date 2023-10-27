@@ -148,12 +148,14 @@ class HrInterviewsController extends AppController {
 			$user 			= 	$this->Session->read('userid');
 			$Mobile_No		=   $_REQUEST['uploadFile'];
 			$EmailId		=   $_REQUEST['EmailId'];
-			$Url			=	"http://mascallnetnorth.in/hrinterview?XYZ=".base64_encode($Branch);
-							
+			$Url			=	"Ispark
+Please click on below link
+http://mascallnetnorth.in/hrinterview?XYZ=".base64_encode($Branch);
+ 
 			$num['ReceiverNumber'] 	=	$Mobile_No;
 			$num['SmsText'] 		=	$Url;
 							
-			$res = $this->send_sms($num); 
+			echo $res = $this->send_sms($num); 
 							
 			if($res){
 				$status="Send";
@@ -183,11 +185,11 @@ class HrInterviewsController extends AppController {
 	
     
     public function send_sms($smsdata){
-      $ReceiverNumber=$smsdata['ReceiverNumber'];
+    $ReceiverNumber=$smsdata['ReceiverNumber'];
 
 
       $SmsText=$smsdata['SmsText'];
-
+ 
       $postdata = http_build_query(
        array(
         'uname'=>'MasCall',
@@ -208,6 +210,39 @@ class HrInterviewsController extends AppController {
 
       $context  = stream_context_create($opts);
       return $result = file_get_contents('http://www.unicel.in/SendSMS/sendmsg.php', false, $context);
+
+
+
+
+/*$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "http://www.unicel.in/SendSMS/sendmsg.php",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "uname=MasCall&pass=M@sCaLl@234&send=Ispark&dest={$ReceiverNumber}&msg={$SmsText}",
+  CURLOPT_HTTPHEADER => array(
+    "cache-control: no-cache",
+    "content-type: application/x-www-form-urlencoded",
+    "postman-token: 913e602b-a246-f692-0648-81fe6a6617c2"
+  ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  return $response;
+}*/
+
      }
     
     

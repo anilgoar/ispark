@@ -65,8 +65,8 @@
 		echo $this->Html->script('alertify');
 	?>
 	
-<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
-<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
           
@@ -268,11 +268,18 @@ $page_access=explode(',',$this->Session->read("page_access"));
                                     '126'=>'HR Visitors',
                                     '151,152'=>'Approval',
                                     '150'=>'Export Data',
+                                    '183'=>'Employee Transition Manager',
+									 //'195'=>'2GTHR@MAS',
+									 '195'=>'2GTHR@MAS',
                                 );
+
+								//print_r($parrent_level);die;
 								
                                 foreach($parrent_level as $key=>$val){
 									
 									$list_arr   =   explode(",",$key);
+
+									//print_r($list_arr);die;
 									
 									if(count($list_arr) > 1){
 										$sub_url	=	$this->webroot.'Menus/sub?SM='.base64_encode($val);
@@ -280,6 +287,7 @@ $page_access=explode(',',$this->Session->read("page_access"));
 									else{
 										$sub_url	=	"#";
 										$drop_down 	= $this->Session->read('dd');
+										//print_r($drop_down);die;
 										foreach ($drop_down as $key => $value){
 											if (in_array($value['pages_master']['id'],$list_arr)){
 												$sub_url	=	$this->webroot.$value['pages_master']['page_url'].'?'.'AX='.base64_encode($value['pages_master']['id']);

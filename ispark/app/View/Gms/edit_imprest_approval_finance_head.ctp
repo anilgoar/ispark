@@ -94,7 +94,7 @@ else
             <label class="col-sm-2 control-label">&nbsp;</label>
             <div class="col-sm-2">
                 <button onclick="return update_grn()" class="btn btn-primary btn-label-left">Update</button>
-                <a href="view_imprest_approval_finance_head" class="btn btn-info" >Back</a>
+                <a href="view_imprest_approval_finance_head?year=<?php echo $year_param; ?>&branch=<?php echo $branchId_param; ?>" class="btn btn-info" >Back</a>
             </div>
         </div>
         </div>

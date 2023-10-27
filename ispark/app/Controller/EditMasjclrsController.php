@@ -1471,7 +1471,7 @@ class EditMasjclrsController extends AppController{
                     'Status'=>1,
                     'BranchName'=>$_REQUEST['BranchName'],
                     'EmpCode'=>$_REQUEST['EmpCode'],
-                    'EmpLocation'=>'InHouse',
+                    //'EmpLocation'=>'InHouse',
                     )
                 ));
             

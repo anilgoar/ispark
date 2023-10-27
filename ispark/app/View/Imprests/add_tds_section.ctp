@@ -47,6 +47,10 @@
 								Submit
 							</button>
 						</div>
+                                            <div class="col-sm-2">
+                           <button class="btn btn-primary btn-label-left" onclick="return revenue_branch_wise_validate('Export')">Export</button>
+                           <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
+                        </div>
 					</div>
 				<?php echo $this->Form->end(); ?>
 			</div>

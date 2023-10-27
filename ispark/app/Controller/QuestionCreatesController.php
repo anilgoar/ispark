@@ -13,7 +13,7 @@ class QuestionCreatesController extends AppController {
             return $this->redirect(array('controller'=>'users','action' => 'logout'));
 	}
         $this->Auth->allow('index', 'add_question', 'delete_question', 'save_paragraph',
-                'update_para','view_para','view_para_detail','view_user_test_result');
+                'update_para','deactivate_para_detail','view_para','view_para_detail','view_user_test_result');
     }
 
     public function index() {
@@ -297,12 +297,23 @@ class QuestionCreatesController extends AppController {
         
     }
     
+    public function deactivate_para_detail()
+    {
+        $this->layout = 'home';
+        $para_id = $_REQUEST['para_id'];
+        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px>"
+                . "<b style=color:#FF0000>".'Test Paper De-Activated Successfully.'."</b></h4>"));
+        $record_all = $this->QuestList->query("update tbl_quest_paragraph set para_active='0' where id='$para_id' ");
+         return $this->redirect(array('controller'=>'QuestionCreates','action'=>'view_para'));
+    }
+    
     public function view_para()
     {
         $this->layout = 'home';
-        $record_para = $this->QuestList->query("select * from tbl_quest_paragraph tqp ");
+        $record_para = $this->QuestList->query("select * from tbl_quest_paragraph tqp where para_active='1'");
         $this->set('record_para',$record_para);
     }
+    
     
     public function view_para_detail()
     {
@@ -310,7 +321,7 @@ class QuestionCreatesController extends AppController {
         $para_id = $_REQUEST['para_id'];
         
         $record_all = $this->QuestList->query("select * from tbl_quest tqt where para_id='$para_id' ");
-        $record_para = $this->QuestList->query("select * from tbl_quest_paragraph tqp where id='$para_id' ");
+        $record_para = $this->QuestList->query("select * from tbl_quest_paragraph tqp where id='$para_id' and para_active='1'");
         
         $this->set('quest_unique_id',$para_id);
         $this->set('record_all',$record_all);

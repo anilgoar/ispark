@@ -457,7 +457,7 @@ class TrainingQuestionSetsController extends AppController {
                 $video_temp     =   $_FILES['Video_File']['tmp_name']; 
                 $video_info     =   explode(".",$_FILES['Video_File']['name']);
                 $video_file     =   date('dmYhis').$lastid.'.'.$video_info['1'];
-                $video_path     =   "/var/www/html/ispark/app/webroot/training_video/";
+                $video_path     =   "/var/www/html/mascallnetnorth.in/ispark/app/webroot/training_video/";
 
                 if(!file_exists($video_path)){ 
                     mkdir($video_path); 
@@ -597,7 +597,7 @@ class TrainingQuestionSetsController extends AppController {
                 echo '<span style="color:red;font-weight:bold;">This video set already used for question set.</span>';
             }
             else{
-                $video_path =   "/var/www/html/ispark/app/webroot/training_video/$video_file";
+                $video_path =   "/var/www/html/mascallnetnorth.in/ispark/app/webroot/training_video/$video_file";
                 /*
                 if(unlink($video_path)){
                     $this->TrainingVideoSet->query("DELETE FROM `Training_Video_Set` WHERE Id='$Id'");

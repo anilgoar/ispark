@@ -31,7 +31,9 @@
                         <th style="width:300px;">Sr. No.</th>
                         <th>Heading</th>
                         <th>Paragraph</th>
+                        <th style="width:110px;">Status</th>
                         <th style="width:110px;">View</th>
+                        <th style="width:110px;">Action</th>
                         
                     </tr>
                     </thead>
@@ -45,7 +47,9 @@
                                     echo '<td>'.($srno++).'</td>';
                                     echo '<td>'.$record['tqp']['heading_name'].'</td>';
                                     echo '<td>'.$record['tqp']['paragraph'].'</td>';
+                                    echo '<td>'.'Active'.'</td>';
                                     echo '<td>'.'<a href="view_para_detail?para_id='.$record['tqp']['id'].'">view</a>'.'</td>';
+                                    echo '<td>'.'<a href="deactive_para_detail?para_id='.$record['tqp']['id'].'">DeActive</a>'.'</td>';
                                     echo '</tr>';
                                     $total += $record['tqt']['marks'];
                                 }

@@ -17,7 +17,7 @@ class AgreementsController extends AppController
         else
         {   $role=$this->Session->read("role");
             $roles = explode(',',$role);
-            if(in_array('42',$roles)){$this->Auth->allow('index'); }
+            $this->Auth->allow('index'); 
         }
     }
     

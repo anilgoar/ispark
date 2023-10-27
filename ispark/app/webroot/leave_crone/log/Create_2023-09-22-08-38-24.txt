@@ -1,0 +1,56 @@
+
+EventID            : 4720
+MachineName        : DC.mas-noida.com
+Data               : {}
+Index              : 445205
+Category           : (13824)
+CategoryNumber     : 13824
+EntryType          : SuccessAudit
+Message            : A user account was created.
+
+                     Subject:
+                        Security ID:            S-1-5-21-2373504117-2689643630-3100359099-2600
+                        Account Name:           prateeks
+                        Account Domain:         MAS-NOIDA
+                        Logon ID:               0xe1d5326
+
+                     New Account:
+                        Security ID:            S-1-5-21-2373504117-2689643630-3100359099-16064
+                        Account Name:           MAS53875
+                        Account Domain:         MAS-NOIDA
+
+                     Attributes:
+                        SAM Account Name:       MAS53875
+                        Display Name:           VIKRAM SINGH MAS53875
+                        User Principal Name:    MAS53875@mas-noida.com
+                        Home Directory:         -
+                        Home Drive:             -
+                        Script Path:            -
+                        Profile Path:           -
+                        User Workstations:      -
+                        Password Last Set:      %%1794
+                        Account Expires:                %%1794
+                        Primary Group ID:       513
+                        Allowed To Delegate To: -
+                        Old UAC Value:          0x0
+                        New UAC Value:          0x15
+                        User Account Control:
+                                %%2080
+                                %%2082
+                                %%2084
+                        User Parameters:        -
+                        SID History:            -
+                        Logon Hours:            %%1793
+
+                     Additional Information:
+                        Privileges              -
+Source             : Microsoft-Windows-Security-Auditing
+ReplacementStrings : {MAS53875, MAS-NOIDA, S-1-5-21-2373504117-2689643630-3100359099-16064,
+                     S-1-5-21-2373504117-2689643630-3100359099-2600...}
+InstanceId         : 4720
+TimeGenerated      : 9/22/2023 8:35:26 PM
+TimeWritten        : 9/22/2023 8:35:26 PM
+UserName           :
+Site               :
+Container          :
+

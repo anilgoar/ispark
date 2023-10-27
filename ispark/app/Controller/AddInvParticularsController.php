@@ -1,7 +1,8 @@
 <?php
 	class AddInvParticularsController extends AppController 
 	{
-		public $uses=array('AddInvParticular','AddInvDeductParticular','Addprocess','Addclient','InitialInvoice','CostCenterMaster','Addclient','Particular','DeductParticular','Provision');
+		public $uses=array('AddInvParticular','AddInvDeductParticular','Addprocess','Addclient','InitialInvoice',
+		'CostCenterMaster','Addclient','Particular','DeductParticular','Provision','EditAmount');
 		public function beforeFilter()
 		{
 			$this->Auth->allow('deduct');
@@ -40,17 +41,17 @@
 		
                 public function index() 
 		{
- 			$this->layout = 'ajax';
-			$result = $this->request->data['AddInvParticular'];
-			$username = $this->request->data['AddInvParticular']['username'];
-			
-			$result['particulars'] = addslashes($result['particulars']);
-			
-			$this->AddInvParticular->create();
-			if($this->AddInvParticular->save($result))
-			{
-				$this->set('inv_particulars', $this->AddInvParticular->find('all',array('conditions'=>array('username'=>$username))));
-			}
+                    $this->layout = 'ajax';
+                    $result = $this->request->data['AddInvParticular'];
+                    $username = $this->request->data['AddInvParticular']['username'];
+
+                    $result['particulars'] = addslashes($result['particulars']);
+
+                    $this->AddInvParticular->create();
+                    if($this->AddInvParticular->save($result))
+                    {
+                        $this->set('inv_particulars', $this->AddInvParticular->find('all',array('conditions'=>array('username'=>$username))));
+                    }
                 }
 
                 public function add_part() 
@@ -64,7 +65,14 @@
 			//$amount = $this->params->query['amount'];
                         $amount = round($rate*$qty);
 			
-			$this->Session->read('username');
+			$username = $this->Session->read('username');
+			if(empty($username))
+			{
+				return $this->redirect(array('controller'=>'users','action' => 'login'));	
+			}
+
+			$userid = $this->Session->read('userid');
+            $EditAmount = $this->EditAmount->query("insert into edit_inv_after_approval set inv_id='$initial_id',action='add',rate='$rate',qty='$qty',amount='$amount',inv_date=now(),userid='$userid',username='$username'");
 
 			$data = $this->InitialInvoice->find('first',array('fields' => array('branch_name','invoiceDate','cost_center','finance_year','month','total','app_tax_cal','apply_gst','GSTType'),
 														 		'conditions' => array('id' => $initial_id)
@@ -442,8 +450,10 @@
 			$result = $this->params->query;
 			
 			$data = $this->InitialInvoice->find("first",array('fields' => array('total','app_tax_cal','invoiceDate'),'conditions'=> array('id'=>$result['initial_id'])));
-			$amount = $this->Particular->find("first", array( "fields" => array("amount"), "conditions" => $result));
-			
+			$amount = $this->Particular->find("first", array( "fields" => array("amount",'rate','qty'), "conditions" => $result));
+			$rate = $amount['Particular']['rate'];
+			$qty = $amount['Particular']['qty'];
+			$amount1 = $amount['Particular']['amount'];
 			$total = $data['InitialInvoice']['total'] - $amount['Particular']['amount'];
 			$tax = round($total *0.14,0);
 			$sbctax=0;
@@ -467,6 +477,15 @@
 				$this->InitialInvoice->updateAll($dataX,array('id' => $result['initial_id']));
 				$flag = true;
 			}
+
+			if(!$this->Session->check("username"))
+			{
+				return $this->redirect(array('controller'=>'users','action' => 'logout'));
+			}
+			$username = $this->Session->read('username');
+            $userid = $this->Session->read('userid');
+			$initial_id = $result['initial_id'];
+			$EditAmount = $this->EditAmount->query("insert into edit_inv_after_approval set inv_id='$initial_id',action='delete',rate='$rate',qty='$qty',amount='$amount1',inv_date=now(),userid='$userid',username='$username'");
 			
 			if($flag)
 			{

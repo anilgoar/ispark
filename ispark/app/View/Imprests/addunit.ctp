@@ -96,8 +96,9 @@ function getSubHeading()
                     
                     <div class="form-group">
                         <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-1">
+                        <div class="col-sm-2">
                            <button class="btn btn-info btn-label-left">Save</button>
+                           <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                         </div>
                     </div>
                     

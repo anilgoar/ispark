@@ -17,8 +17,8 @@ class PoNumbersController extends AppController
         else
         {   $role=$this->Session->read("role");
             $roles = explode(',',$role);
-            if(in_array('46',$roles)){$this->Auth->allow('index','get_costcenter','item_save','delete_item',
-                    'get_costcenter2','get_client','view','get_po_data','edit'); }
+            $this->Auth->allow('index','get_costcenter','item_save','delete_item',
+                    'get_costcenter2','get_client','view','get_po_data','edit'); 
         }
     }
     
@@ -51,6 +51,7 @@ class PoNumbersController extends AppController
             $periodTo = $data['periodTo'];
             $periodFrom = $data['periodFrom'];
             $b_name = $data['branch_name'];
+            $data['poNumber'] = trim($data['poNumber']);
             $data['periodTo'] = date_format(date_create($data['periodTo']),'Y-m-d'); //converting periodto to sql date format
             $data['periodFrom'] = date_format(date_create($data['periodFrom']),'Y-m-d'); //converting periodfrom sql date format
             $date = date('Y-m-d H:i:s');       //creating system date and time of insertion
@@ -313,6 +314,7 @@ t1.poNumber  FROM po_number_particulars t1 INNER JOIN cost_master t2 ON t1.cost_
             $esc[] = $this->request->data['esc2'];
             $esc[] = $this->request->data['esc3'];
             
+            $data['poNumber'] = trim($data['poNumber']);
             $data['periodFrom'] = date_format(date_create($data['periodFrom']),'Y-m-d'); //converting periodfrom sql date format
             $data['periodTo'] = date_format(date_create($data['periodTo']),'Y-m-d'); //converting periodto to sql date format
             $date = date('Y-m-d H:i:s');       //creating system date and time of insertion

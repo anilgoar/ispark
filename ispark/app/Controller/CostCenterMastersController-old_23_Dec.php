@@ -16,11 +16,11 @@ class CostCenterMastersController extends AppController
             {   $role=$this->Session->read("role");
                 $roles=explode(',',$this->Session->read("page_access"));
                 $this->Auth->deny('index','add','view','edit','update','view_tmp','tmp_edit_cost','tmp_update_cost');
-                if(in_array('3',$roles)){$this->Auth->allow('index');$this->Auth->allow('add');
-                $this->Auth->allow('view');$this->Auth->allow('add_particulars');}
-                if(in_array('30',$roles)){$this->Auth->allow('edit','edit_cost');$this->Auth->allow('update_cost');}
-                if(in_array('53',$roles)){$this->Auth->allow('tmp_view','tmp_edit_cost','tmp_update_cost','delete_particulars');}
-                if(in_array('54',$roles)){$this->Auth->allow('tmp_view','tmp_edit_cost','tmp_update_cost','delete_particulars');}
+                $this->Auth->allow('index');$this->Auth->allow('add');
+                $this->Auth->allow('view');$this->Auth->allow('add_particulars');
+                $this->Auth->allow('edit','edit_cost');$this->Auth->allow('update_cost');
+                $this->Auth->allow('tmp_view','tmp_edit_cost','tmp_update_cost','delete_particulars');
+                $this->Auth->allow('tmp_view','tmp_edit_cost','tmp_update_cost','delete_particulars');
             }
     }
 		

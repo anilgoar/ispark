@@ -16,7 +16,8 @@ class ExpenseEntriesController extends AppController
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 
-            if(in_array('63',$roles) || in_array('64',$roles)||in_array('65',$roles) ||in_array('66',$roles) ||in_array('67',$roles) ||in_array('68',$roles) || in_array('69',$roles))
+            //if(in_array('63',$roles) || in_array('64',$roles)||in_array('65',$roles) ||in_array('66',$roles) ||in_array('67',$roles) ||in_array('68',$roles) || in_array('69',$roles) || in_array('97',$roles))
+            if(1)
         {$this->Auth->allow('index','initial_branch','get_cost_center','get_particular_breakup','get_particular_breakup',
                     'expense_entry','get_sub_heading','get_breakup','get_costcenter_breakup','expense_save','get_his_check','get_his_check2','get_old_delete','expense_final_save',
                     'expense_save_tmp','view_bm','edit_tmp_bm','bm_final_save','view_vh','edit_tmp_vh','vh_final_save','view_fh','edit_tmp_fh','fh_final_save','view','edit_tmp',
@@ -347,14 +348,15 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
            $html = '<table class="table" style="font-size: 12px"><thead><tr><th colspan="4">'.$costName.'</th></tr>'; $i=1;
            $html .='<tr><th>Sr No</th><th>ExpenseUnit</th><th>%</th><th>Amount</th></tr></thead><tbody>';
            $part = array('1'=>'WorkStation','2'=>'Mannual','3'=>'Revenue');
+           
            //print_r(array('ExpenseTypeParent'=>$costcenter,'ExpenseType'=>'Particular','ExpenseTypeId'=>$k,'Parent'=>$parent,'ExpenseId'=>$ExpenseId)); exit;
            foreach($part as $k=>$v)
               { 
                     $particularAmount = $this->TmpExpenseParticular->find('first',array('conditions'=>array('ExpenseTypeParent'=>$costcenter,'ExpenseType'=>'Particular','ExpenseTypeId'=>$k,'Parent'=>$parent,'ExpenseId'=>$ExpenseId)));
-               // print_r($particularAmount); exit;
+                //print_r($particularAmount); 
                     $amount = $particularAmount['TmpExpenseParticular']['Amount'];
                     $perAmount = $particularAmount['TmpExpenseParticular']['AmountPercent'].'%';
-                    
+                  //  continue;
                                         
                     $html .='<tr><td>'.$i++.'</td><td>'.$v.'</td>';
                     $html .='<td>'.'<input type="text" name="particular_amountpercent_'.$costcenter.'_'.$k.'" value="'.$perAmount.'" placeholder="%" class = "form-control" id= "perparticular'.$k.'" readonly=""></td>';
@@ -371,6 +373,8 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
     {
         $role = $this->Session->read('role');
         $userId = $this->Session->read('userid');
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         $this->TmpExpenseParticular->query("DELETE FROM tmp_expense_particular WHERE expenseid IN (SELECT Id FROM tmp_expense_master where userId='$userId' and Active = 0)");
         $this->TmpExpenseMaster->query("delete from tmp_expense_master where userId='$userId' and Active = 0");
         
@@ -380,7 +384,14 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
         }
         else
         {
-            $condition=array('active'=>1,'branch_name'=>$this->Session->read("branch_name"));
+            $branch_access_arr = $this->TmpExpenseMaster->query("SELECT * FROM `tbl_grn_access` tga WHERE UserId='$userId'");
+            
+            $branch_master = array();
+            foreach($branch_access_arr as $branch_det)
+            {
+                $branch_master[] = $branch_det['tga']['BranchId'];
+            }
+            $condition=array('active'=>1,'id'=>$branch_master);
         }
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); //provide textbox and view branches
@@ -456,6 +467,15 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
         $amountArr['3'] = $revenue=$this->request->data['revenue'];
         $cost_center=$this->request->data['cost_center'];
         $unitId=$this->request->data['unitId'];
+        if(!$unitId) $unitId=null;
+        /*if(empty($unitId))
+        {
+            $unitId = null;
+        }
+        else
+        {
+            $unitId= "$unitId";
+        }*/
         $branch=$this->request->data['branch'];
         $financeYear=$this->request->data['financeYear'];
         $financeMonth=$this->request->data['financeMonth'];
@@ -470,7 +490,7 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
         $particular=array('1'=>'workstation','2'=>'mannual','3'=>'revenue');
         $part_ids = array('0');
         
-        $parent_particular = $this->TmpExpenseParticular->find('first',array('fields'=>'Id','conditions'=>array('ExpenseTypeId'=>"$cost_center",'ExpenseTypeParent'=>"$unitId",'ExpenseId'=>$Id)));
+        $parent_particular = $this->TmpExpenseParticular->find('first',array('fields'=>'Id','conditions'=>array('ExpenseTypeId'=>"$cost_center",'ExpenseTypeParent'=>$unitId,'ExpenseId'=>$Id)));
         $parent = $parent_particular['TmpExpenseParticular']['Id'];
         foreach($particular as $k=>$v)
         {
@@ -503,7 +523,7 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
         
         $parent_unit = $this->TmpExpenseParticular->find('first',array('fields'=>'Id','conditions'=>array('ExpenseTypeId'=>"$unitId",'ExpenseId'=>$Id)));
         $parent = $parent_unit['TmpExpenseParticular']['Id'];
-        if(!$unitId) $unitId=null;
+        
         if(!$parent) $parent=null;
         $mainArray = array(
                     'ExpenseId'=>$Id,
@@ -519,7 +539,7 @@ WHERE erm.BranchId='$branchId' AND erm.FinanceYear='$finance_year' AND erm.Finan
                     'Parent' =>$parent
                 );
         //print_r($mainArray); exit;
-        if($unitId) {$unitQuery="and ExpenseTypeParent='$unitId'";}
+        if(!empty($unitId)) {$unitQuery="and ExpenseTypeParent='$unitId'";}
         $cost_parent = $this->updateSave($mainArray,$Total,array('Amount'=>$Total),$Total,$unitId);  
         
         $this->updatePercent($Id,'CostCenter',$ExpenseHead,$ExpenseSubHead,$unitQuery);
@@ -628,7 +648,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
            
            if($checkFlag)
            {
-               $this->TmpExpenseMaster->query("delete from tmp_expense_master where Id = '$ExpenseId'");
+               //$this->TmpExpenseMaster->query("delete from tmp_expense_master where Id = '$ExpenseId'");
                $this->redirect(array('controller'=>'ExpenseEntries','action'=>'initial_branch')); 
            }
            $this->TmpExpenseMaster->updateAll(array('Amount'=>$TotalAmount['0']['0']['Amount'],'objective'=>"'".$objective."'",
@@ -707,6 +727,8 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
     {
         $this->layout="home";
         $role = $this->Session->read('role');
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin); 
         
         if($role=='admin')
         {    $condition=array('active'=>1);    }
@@ -718,7 +740,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
         
         $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>'14-15')))));
         
-        $qry = "Where Active='1' and EXISTS (SELECT expenseId FROM tmp_expense_particular emp WHERE emp.ExpenseId=em.Id)";
+        $qry = "Where Active='1' and DATE(em.createdate)>'2020-12-31'";
         
         
         if($role=='admin')
@@ -782,7 +804,13 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadin
         {
             foreach($this->request->data['check'] as $ExpenseId)
             {
-                $this->TmpExpenseMaster->updateAll(array('Approve1'=>1,'ApproveDate1'=>"'".date('Y-m-d H:i:s')."'"),array('Id'=>$ExpenseId));
+                $TotalAmount = $this->TmpExpenseParticular->query("select sum(Amount) `Amount` from tmp_expense_particular where ExpenseId='$ExpenseId' and ExpenseType='CostCenter'");
+                if(empty($TotalAmount))
+                {
+                    $this->Session->setFlash(__("<font color='green'>Expense has been Not Approved without breakup.</font>"));
+                    break;
+                }
+                    $this->TmpExpenseMaster->updateAll(array('Approve1'=>1,'ApproveDate1'=>"'".date('Y-m-d H:i:s')."'"),array('Id'=>$ExpenseId));
             }
             $this->Session->setFlash(__("<font color='green'>Expense has been Approved and move to VH Bucket</font>"));
         }
@@ -909,8 +937,8 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
            
             if($checkFlag)
             {
-               $this->TmpExpenseMaster->query("delete from tmp_expense_master where Id = '$ExpenseId'");
-               $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp_bm','?'=>array('qry'=>$qry))); 
+               //$this->TmpExpenseMaster->query("delete from tmp_expense_master where Id = '$ExpenseId'");
+               $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp_bm','?'=>array('qry'=>$qry,'id'=>$ExpenseId))); 
             }
             else
             {
@@ -927,6 +955,8 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
         $this->layout="home";
         
         $role = $this->Session->read('role');
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin); 
         
         if($role=='admin')
         {    $condition=array('active'=>1);    }
@@ -938,7 +968,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
         
         $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>'14-15')))));
         
-        $qry = "Where 1=1 ";
+        $qry = "Where 1=1  and DATE(em.createdate)>'2020-12-31'";
         
         $role = $this->Session->read('role');
         
@@ -986,7 +1016,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
             $this->set('FinanceMonth',$data['FinanceMonth']);
         }
         
-        $qry .= " and em.Active=1 and em.Approve1=1 and em.Approve2 is null and em.Approve3 is null and EXISTS (SELECT expenseId FROM tmp_expense_particular emp WHERE emp.ExpenseId=em.Id)";
+        $qry .= " and em.Active=1 and em.Approve1=1 and em.Approve2 is null and em.Approve3 is null ";
         
         $data = $this->TmpExpenseMaster->query("SELECT em.Id,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(Approve1 IS NULL,'BM Pending',IF(Approve2 IS NULL,'VH Pending',IF(Approve3 IS NULL,'FH Pending','Approved'))) 
 `bus_status` FROM tmp_expense_master em 
@@ -1004,6 +1034,12 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadin
         {
            foreach($this->request->data['check'] as $ExpenseId)
             {
+               $TotalAmount = $this->TmpExpenseParticular->query("select sum(Amount) `Amount` from tmp_expense_particular where ExpenseId='$ExpenseId' and ExpenseType='CostCenter'");
+                if(empty($TotalAmount))
+                {
+                    $this->Session->setFlash(__("<font color='green'>Expense has been Not Approved without breakup.</font>"));
+                    break;
+                }
                 $this->TmpExpenseMaster->updateAll(array('Approve2'=>1,'ApproveDate2'=>"'".date('Y-m-d H:i:s')."'"),array('Id'=>$ExpenseId));
             }
             $this->Session->setFlash(__("<font color='green'>Expense has been Approved and move to FH Bucket</font>"));
@@ -1128,7 +1164,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
            
             if($checkFlag)
             {
-                $this->TmpExpenseMaster->query("delete from tmp_expense_particular where Id = '$ExpenseId'");
+                //$this->TmpExpenseMaster->query("delete from tmp_expense_particular where Id = '$ExpenseId'");
                 $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp_vh','?'=>array('id'=>$ExpenseId,'qry'=>$qry))); 
             }
             else
@@ -1144,8 +1180,10 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
     public function view_fh()
     {
         $this->layout="home";
-        $this->layout="home";
+        //$this->layout="home";
         $role = $this->Session->read('role');
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin); 
         
         if($role=='admin')
         {    $condition=array('active'=>1);    }
@@ -1204,7 +1242,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
             $query .= "FinanceMonth=".$data['FinanceMonth']."&";
             $this->set('FinanceMonth',$data['FinanceMonth']);
         }
-         $qry .= " and em.Active=1 and em.Approve1=1 and em.Approve2=1 and em.Approve3 is null and EXISTS (SELECT expenseId FROM tmp_expense_particular emp WHERE emp.ExpenseId=em.Id)";
+         $qry .= " and em.Active=1 and em.Approve1=1 and em.Approve2=1 and em.Approve3 is null ";
         
         $data = $this->TmpExpenseMaster->query("SELECT em.Id,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(Approve1 IS NULL,'BM Pending',IF(Approve2 IS NULL,'VH Pending',IF(Approve3 IS NULL,'FH Pending','Approved'))) 
 `bus_status` FROM tmp_expense_master em 
@@ -1229,6 +1267,15 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadin
             $dataSource = $this->TmpExpenseParticular->getDataSource();
             $dataSource ->begin();
              
+            $Exist = $this->TmpExpenseParticular->query("select sum(Amount) `Amount` from tmp_expense_particular where ExpenseId='$ExpenseId'");
+            if(empty($Exist))
+            {
+                $dataSource->rollback(); 
+                $this->Session->setFlash(__("<font color='green'>Particular not found. please find some.</font>"));
+                $this->redirect(array('controller'=>'ExpenseEntries','action'=>'view_fh','?'=>array('id'=>$ExpenseId,'qry'=>$qry))); 
+            }
+            
+            
             $TotalAmount = $this->TmpExpenseParticular->query("select sum(Amount) `Amount` from tmp_expense_particular where ExpenseId='$ExpenseId' and ExpenseType='Particular'");
             $checkSubHead = $this->TmpExpenseParticular->query("SELECT COUNT(1) counter FROM (SELECT * FROM tmp_expense_particular WHERE expenseid = '$ExpenseId' GROUP BY headId,subheadid)AS tab");
             $partAmountCheck = $this->TmpExpenseMaster->query("SELECT SUM(amount) Amount FROM tmp_expense_particular WHERE expenseType='Particular' AND expenseId='$ExpenseId'");
@@ -1268,7 +1315,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
            
             if($checkFlag)
             {
-                $this->TmpExpenseMaster->query("delete from tmp_expense_particular where ExpenseId = '$ExpenseId'");
+                //$this->TmpExpenseMaster->query("delete from tmp_expense_particular where ExpenseId = '$ExpenseId'");
                 $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp_vh','?'=>array('id'=>$ExpenseId,'qry'=>$qry))); 
             }
             
@@ -1479,6 +1526,14 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
             $objective = addslashes($this->request->data['ExpenseEntries']['objective']);
             $Methodology = addslashes($this->request->data['ExpenseEntries']['Methodology']);
             
+            $Exist = $this->TmpExpenseParticular->query("select sum(Amount) `Amount` from tmp_expense_particular where ExpenseId='$ExpenseId'");
+            if(empty($Exist))
+            {
+                $this->Session->setFlash(__("<font color='green'>Particular not found. please find some.</font>"));
+                $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp_fh','?'=>array('id'=>$ExpenseId,'qry'=>$qry))); 
+            }
+            
+            
             $TotalAmount = $this->TmpExpenseParticular->query("select sum(Amount) `Amount` from tmp_expense_particular where ExpenseId='$ExpenseId' and ExpenseType='Particular'");
             $checkSubHead = $this->TmpExpenseParticular->query("SELECT COUNT(1) counter FROM (SELECT * FROM tmp_expense_particular WHERE expenseid = '$ExpenseId' GROUP BY headId,subheadid)AS tab");
             $partAmountCheck = $this->TmpExpenseMaster->query("SELECT SUM(amount) Amount FROM tmp_expense_particular WHERE expenseType='Particular' AND expenseId='$ExpenseId'");
@@ -1518,7 +1573,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
            
             if($checkFlag)
             {  
-                $this->TmpExpenseMaster->query("delete from tmp_expense_particular where ExpenseId = '$ExpenseId'");
+                //$this->TmpExpenseMaster->query("delete from tmp_expense_particular where ExpenseId = '$ExpenseId'");
                 $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp_vh','?'=>array('id'=>$ExpenseId,'qry'=>$qry))); 
             }
             
@@ -1671,6 +1726,8 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='$ExpenseId' AND tmp2.Active='1' AN
     public function view()
     {
         $this->layout="home";
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>array('active'=>1),'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); //provide textbox and view branches
@@ -1865,7 +1922,7 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='' AND tmp2.Active='1' AND tmp2.Id 
                
             if($checkFlag)
             {
-                $this->TmpExpenseMaster->query("delete from tmp_expense_particular where ExpenseId = '$ExpenseId'");
+                //$this->TmpExpenseMaster->query("delete from tmp_expense_particular where ExpenseId = '$ExpenseId'");
                 $this->redirect(array('controller'=>'ExpenseEntries','action'=>'edit_tmp','?'=>array('id'=>$ExpenseId,'qry'=>$qry))); 
             }
         }
@@ -1875,11 +1932,21 @@ tmp1.SubHeadId =tmp2.SubHeadId WHERE tmp1.id='' AND tmp2.Active='1' AND tmp2.Id 
      public function business_case_ropen()
     {
        $role = $this->Session->read('role');
+       $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         
         if($role=='admin')
         {    $condition=array('active'=>1);    }
         else
-        {    $condition=array('active'=>1,'branch_name'=>$this->Session->read("branch_name"));    }
+        {    $userId = $this->Session->read('userid');
+            $branch_access_arr = $this->TmpExpenseMaster->query("SELECT * FROM `tbl_grn_access` tga WHERE UserId='$userId'");
+            
+            $branch_master = array();
+            foreach($branch_access_arr as $branch_det)
+            {
+                $branch_master[] = $branch_det['tga']['BranchId'];
+            }
+            $condition=array('active'=>1,'id'=>$branch_master);    }
         
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); //provide textbox and view branches
@@ -1952,7 +2019,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
                             . '<img src="http://mascallnetnorth.in/ispark/app/webroot/img/mail_bottom1.jpg" border="0" id="_x0000_i1025">'
                             . '<o:p></o:p></span></p></td><td style="background:#106995;padding:2.25pt 2.25pt 2.25pt 2.25pt"><p class="MsoNormal" align="right" style="text-align:right"><span style="font-size:9.0pt;font-family:&quot;Verdana&quot;,&quot;sans-serif&quot;;color:#295594">'
                             . '<img src="http://mascallnetnorth.in/ispark/app/webroot/img/mail_bottom2.jpg" border="0" id="_x0000_i1026">'
-                            . '<o:p></o:p></span></p></td></tr><tr style="height:15.0pt"><td style="border:none;border-top:solid #153B6E 1.0pt;background:#AFD997;padding:2.25pt 7.5pt 2.25pt 7.5pt;height:15.0pt"><p class="MsoNormal"><b><span style="font-size:9.0pt;font-family:&quot;Verdana&quot;,&quot;sans-serif&quot;;color:#225922">Copyright © Mas Infotainment Pvt. Ltd.<o:p></o:p></span></b></p></td><td style="border:none;border-top:solid #153B6E 1.0pt;background:#AFD997;padding:2.25pt 7.5pt 2.25pt 7.5pt;height:15.0pt"><p class="MsoNormal" align="right" style="text-align:right"><b><span style="font-size:9.0pt;font-family:&quot;Verdana&quot;,&quot;sans-serif&quot;;color:#225922">Website :- '
+                            . '<o:p></o:p></span></p></td></tr><tr style="height:15.0pt"><td style="border:none;border-top:solid #153B6E 1.0pt;background:#AFD997;padding:2.25pt 7.5pt 2.25pt 7.5pt;height:15.0pt"><p class="MsoNormal"><b><span style="font-size:9.0pt;font-family:&quot;Verdana&quot;,&quot;sans-serif&quot;;color:#225922">Copyright ï¿½ Mas Infotainment Pvt. Ltd.<o:p></o:p></span></b></p></td><td style="border:none;border-top:solid #153B6E 1.0pt;background:#AFD997;padding:2.25pt 7.5pt 2.25pt 7.5pt;height:15.0pt"><p class="MsoNormal" align="right" style="text-align:right"><b><span style="font-size:9.0pt;font-family:&quot;Verdana&quot;,&quot;sans-serif&quot;;color:#225922">Website :- '
                             . '<a href="http://mascallnetnorth.in/ispark">http://mascallnetnorth.in/ispark</a><o:p></o:p></span></b></p></td></tr></tbody></table></div></td></tr></tbody></table>'; 
 
                     App::uses('sendEmail', 'custom/Email');
@@ -1969,6 +2036,8 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
     public function view_business_case_ropen() 
     {
         $this->layout="home";
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin); 
         $role = $this->Session->read('role');
         if($role=='admin')
         {
@@ -1976,7 +2045,16 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
         }
         else
         {
-            $condition=array('active'=>1,'branch_name'=>$this->Session->read("branch_name"));
+            $userId = $this->Session->read('userid');
+            $branch_access_arr = $this->TmpExpenseMaster->query("SELECT * FROM `tbl_grn_access` tga WHERE UserId='$userId'");
+            
+            $branch_master = array();
+            foreach($branch_access_arr as $branch_det)
+            {
+                $branch_master[] = $branch_det['tga']['BranchId'];
+            }
+            $condition=array('active'=>1,'id'=>$branch_master);
+            //$condition=array('active'=>1,'branch_name'=>$this->Session->read("branch_name"));
         }
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>$condition,'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); //provide textbox and view branches
@@ -2016,7 +2094,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
                 $this->TmpExpenseMaster->query("INSERT INTO tmp_expense_master(Id,BranchId,Branch,EntryNo,FinanceYear,FinanceMonth,HeadId,SubHeadId,Amount,Approve1,ApproveDate1,Approve2,ApproveDate2,
                 Approve3,ApproveDate3,Approve4,ApproveDate4,Approve5,ApproveDate5,expense_status,Active,userId,createdate,objective,PaymentFile,Methodology)
                 SELECT Id,BranchId,Branch,EntryNo,FinanceYear,FinanceMonth,HeadId,SubHeadId,Amount,Approve1,ApproveDate1,Approve2,ApproveDate2,
-                Approve3,ApproveDate3,Approve4,ApproveDate4,Approve5,ApproveDate5,'Ropen',Active,userId,createdate,objective,PaymentFile,Methodology FROM expense_master WHERE Id='$ExpenseId'");
+                Approve3,ApproveDate3,Approve4,ApproveDate4,Approve5,ApproveDate5,'Ropen',1,userId,createdate,objective,PaymentFile,Methodology FROM expense_master WHERE Id='$ExpenseId'");
                 
                 if(!$this->TmpExpenseMaster->query("select * from tmp_expense_master where Id='$ExpenseId'"))
                 {
@@ -2107,7 +2185,8 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
    {
         ini_set('memory_limit','512M');
         $this->layout = "home";
-        
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         if(empty($this->Session->read("userid")))
         {
             return $this->redirect(array('controller'=>'users','action' => 'login'));
@@ -2115,7 +2194,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
         
         $this->set('branch_master', $this->Addbranch->find('list',array('conditions'=>array('active'=>1),'fields'=>array('id','branch_name'),
             'order' => array('branch_name' => 'asc')))); 
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','2014-15','2015-16')")));
         
         $this->set('activity','upload');
         
@@ -2142,7 +2221,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
                 
                 if(empty($flagExistCheck))
                 {
-                    if(($FileTye=='application/vnd.ms-excel' || $FileTye=='application/octet-stream') && strtolower(end($info)) == "csv")
+                    if(($FileTye=='application/vnd.ms-excel' || $FileTye=='application/octet-stream' || $FileTye=='text/csv') && strtolower(end($info)) == "csv")
                     {
                         $FilePath = $this->request->data['GrnReport']['file']['tmp_name'];
                         $files = fopen($FilePath, "r");
@@ -2244,7 +2323,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
                                        $flagBusinessCaseMadeCheck = false;
                                        $flagCheck = false;
                                     }
-                                    if(!in_array(strtolower($row[6]),array('workstation','mannual','manpower')))
+                                    if(!in_array(strtolower($row[6]),array('workstation','mannual','revenue')))
                                     {
                                         $flagCheckSharingMethod=false;
                                         $flagCheck = false;
@@ -2326,7 +2405,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
                                 WHERE BusinessPartId !=1  ";
                                 $BusinessCaseEntry = $this->BusinessCaseFileUpload->query($BusinessCaseEntry);
                                 $flagGRNCheck = true;
-                                $ParticularArray = array('workstation'=>'1','mannual'=>'2','manpower'=>'3');
+                                $ParticularArray = array('workstation'=>'1','mannual'=>'2','revenue'=>'3');
 
                                 foreach($BusinessCaseEntry as $grn)
                                 {
@@ -2371,6 +2450,7 @@ INNER JOIN `expense_reopen_master` rem ON rem.ExpenseId = em.Id
                                             $ExpenseParticular['ExpenseType'] = 'Particular';
                                             $ExpenseParticular['ExpenseTypeId'] = $ParticularArray[strtolower($grn['bcu']['SharingMethod'])];
                                             $ExpenseParticular['ExpenseTypeName'] = strtolower($grn['bcu']['SharingMethod']);
+                                            $ExpenseParticular['ExpenseTypeParent'] = $CostCenterId['CostCenterMaster']['Id'];
                                             $ExpenseParticular['BranchId'] = $BranchId;
                                             $ExpenseParticular['FinanceYear'] = $FinanceYear;
                                             $ExpenseParticular['FinanceMonth'] = $Month;

@@ -12,14 +12,12 @@
 
 <div class="row">
 	<div class="col-xs-12">
-            <a href="/ispark/Menuisps/sub?AX=NjI=" class="btn btn-info" >Back</a>
+            
 		<div class="box">
-                        
 			<div class="box-header">
 				<div class="box-name">
 					
-					<span>View Reject Imprest(Process Head) </span>
-                                        
+					<span>View Rejected Imprest (Process Head)</span>
 				</div>
 				<div class="box-icons">
 					<a class="collapse-link">
@@ -34,51 +32,81 @@
 				</div>
 				<div class="no-move"></div>
 			</div>
-			<div class="box-content no-padding">
+			<div class="box-content">
                             <h4 style="color:green"><?php echo $this->Session->flash(); ?> </h4>
-				<table class="table  table-bordered table-hover table-heading no-border-bottom responstable" id="table_id">
-				<?php $case=array('primary',''); $i=0; ?>
-					<thead>
-						<tr class="active">
-							<td>Sr. No.</td>
-							<td>User </td>
-							<td>Company</td>
-                                                        <td>Reject At</td>
-                                                        <td>Reject Remarks</td>
-                                                        <td>Reject By</td>
-                                                        <td>Amount</td>
-                                                        <td>Edit</td>
-                                                        
-						</tr>
-                                        </thead>
-                                        <tbody>
-						<?php foreach ($data as $post): ?>
-						<tr class="<?php  echo $case[$i%4]; $i++;?>">
-							<td><?php echo $i; ?></td>
-							<td><?php echo $post['tu']['username']; ?></td>
-							<td><?php echo $post['cm']['company_name']; ?></td>
-                                                        <td><?php  if($post['eemApp']['Reject']=='2') { echo "Reject From Second Level";} else  if($post['eemApp']['Reject']=='0') { echo "Reject From First Level";}  else  if($post['eemApp']['Reject']=='3') { echo "Reject From Finance Head";}?></td>
-                                                        <td><font color="red"><?php echo $post['eemApp']['RejectRemarks']; ?></font></td>
-                                                        <td><?php echo $post['tuR']['RejectBy']; ?></td>
-                                                        <td><?php echo $post['eemApp']['Amount']; ?></td>
-                                                        <td>
-                                                            <?php if($post['eemApp']['Reject']=='0' || $post['eemApp']['Reject']=='2' || $post['eemApp']['Reject']=='3') { ?><code><?php echo $this->Html->link('Edit/View',array('controller'=>'Gms','action'=>'edit_imprest_process_head','?'=>array('Id'=>$post['eemApp']['Id'],'action'=>'edit'),'full_base' => true)); ?></code><?php } ?>
-                                                            <?php if($post['eemApp']['Reject']=='4') { ?><code><?php echo $this->Html->link('Finance Head Approval Waiting',array('controller'=>'Gms','action'=>'edit_imprest_process_head','?'=>array('Id'=>$post['eemApp']['Id'],'action'=>'view'),'full_base' => true)); ?></code><?php } ?>
-                                                        </td>
-						</tr>
-						<?php endforeach; ?>
-						<?php unset($data); ?>
-					</tbody>
-				</table>
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"> Branch</label>
+                                    <div class="col-sm-3">
+                                        <?php	echo $this->Form->input('branch', array('label'=>false,'options'=>$branch,'id'=>'branch','value'=>$branchId_param,'empty'=>'Branch','class'=>'form-control')); ?>
+                                    </div>
+                                    <label class="col-sm-1 control-label"> Year</label>
+                                    <div class="col-sm-2">
+                                        <?php	echo $this->Form->input('year', array('label'=>false,'options'=>$FinanceYear,'id'=>'year','value'=>$year_param,'empty'=>'Year','class'=>'form-control')); ?>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="button" name="Search" value="Search" onclick="return get_reject_imprest_process_head()" class="btn btn-info" />
+                                        <a href="/ispark/Menuisps/sub?AX=NjI=" class="btn btn-info" >Back</a>
+                                    </div>
+                                    
+                                </div>
+                            </div>
 			</div>
+                    
+                    <div class="box-content no-padding" id="get_reject_imprest_record">
+                        
+                    </div>
+
+                    
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
-$(document).ready(function() {
-	// Drag-n-Drop feature
-	WinMove();
-});
+function get_reject_imprest_process_head()
+{
+    var branch = $('#branch').val();
+    var year = $('#year').val();
+    
+    
+    
+    if(branch=='')
+    {
+        alert("Please Select Branch");
+        $('#branch').focus();
+        return false;
+    }
+    else if(year=='')
+    {
+        alert("Please Select Year");
+        $('#year').focus();
+        return false;
+    }
+    
+    
+    
+    $.post("get_reject_imprest_process_head",
+            {
+             branch:branch,
+             year: year
+            },
+            function(data,status){
+               $('#get_reject_imprest_record').html(data);
+            });  
+    
+    return false;
+}
+
+
+<?php
+
+if(!empty($branchId_param) && $year_param)
+{ ?>
+    get_reject_imprest_process_head();
+<?php }
+
+?>
+
+
 </script>
 <script src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">

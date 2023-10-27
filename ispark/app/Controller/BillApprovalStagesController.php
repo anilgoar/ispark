@@ -169,7 +169,7 @@ class BillApprovalStagesController extends AppController
            $companyName = "AND cm.company_name='$company'";
        }
        
-      $sel ="SELECT REPLACE(SUBSTRING_INDEX(ti.bill_no,'/',1),'-','')`BillNo`,ti.bill_no BillTally,IF(bpp.status IS NULL,'Pending',bpp.status)`Pending`,ti.cost_center `ProcessCode`,
+      $sel ="SELECT REPLACE(SUBSTRING_INDEX(ti.bill_no,'/',1),'-','')`BillNo`,ti.category,ti.bill_no BillTally,IF(bpp.status IS NULL,'Pending',bpp.status)`Pending`,ti.cost_center `ProcessCode`,
 cm.company_name,ti.branch_name `branch`,cm.client `client`,ti.finance_year `financialYear`,
 DATE_FORMAT(STR_TO_DATE(CONCAT('1-',ti.`month`),'%d-%M-%Y'),'%m-%Y') `month`,
 ti.po_no `po_no`,ti.grn `grn`,

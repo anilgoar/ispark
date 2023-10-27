@@ -18,9 +18,9 @@ class GrnBranchesController extends AppController
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 
-            if(in_array('1',$roles)){$this->Auth->allow('index','imprest_save','imprest_manager_save','get_user','grn_branch_access','addunit','get_state_gst_code');}
-            else if(in_array('77',$roles)){$this->Auth->allow('index','imprest_save','imprest_manager_save','get_user','grn_branch_access','addunit','get_branch');}
-            else if(in_array('87',$roles)){$this->Auth->allow('grn_branch_access','get_state_gst_code','get_branch');}
+            $this->Auth->allow('index','imprest_save','imprest_manager_save','get_user','grn_branch_access','addunit','get_state_gst_code');
+            $this->Auth->allow('index','imprest_save','imprest_manager_save','get_user','grn_branch_access','addunit','get_branch');
+            $this->Auth->allow('grn_branch_access','get_state_gst_code','get_branch');
         }
     }
     

@@ -84,7 +84,11 @@ else
             </div>
         </div>
         <div class="form-group">
-            
+            <label class="col-sm-2 control-label">Branch</label>
+            <div class="col-sm-4">
+            <?php echo $this->Form->input('branch_id' ,array('label' =>false,'options'=>$branch_master,'empty' => 'Select',
+                'value'=>$ExpenseEntryMaster[12],'class'=>'form-control','id' => 'branch_id',"required"=>true)); ?>
+            </div>
             <div class="col-sm-4" style="display: none">
                    <?php echo $this->Form->input('EntryDate',array('label' => false,
                        'class'=>'form-control','placeholder'=>'Date','value'=>date('d-m-Y'),'id'=>'entry_date','onclick'=>"javascript:NewCssCal ('entry_date','ddMMyyyy','arrow',false,'24',false,'')",'readonly'=>true,'required'=>true,'readonly'=>true)); ?>
@@ -608,7 +612,7 @@ function save_grn()
     var entry_date = $("#entry_date").val();
     var entry_status = $("#entry_status").val();
     var CompId = $("#CompId").val();
-    
+    var branch_id = $("#branch_id").val();
     
     
     
@@ -668,6 +672,15 @@ function save_grn()
         $("#CompId").focus()
         return false;
     }
+    else if(branch_id=='')
+    {
+        alert("Select Branch");
+        $("#branch_id").focus();
+        return false;
+    }
+    
+    
+    
     $.post("add_grn_tmp",
             {
              FinanceYear:FinanceYear,
@@ -681,7 +694,8 @@ function save_grn()
              entry_date:entry_date,
              CompId:CompId,
              entry_status:entry_status,
-             ExpenseEntryType:'Imprest'
+             ExpenseEntryType:'Imprest',
+             branch_id:branch_id
             },
             function(data,status){
                if(data==1)

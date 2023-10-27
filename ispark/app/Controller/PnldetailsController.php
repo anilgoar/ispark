@@ -14,14 +14,9 @@ class PnldetailsController extends AppController
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
             
-            if(in_array('166',$roles))
-            {
+            
                 $this->Auth->allow('index','pnl_records_add','getCostCenter','save_record','get_pnl_branch','get_pnl_process');
-            }
-            else
-            {
-                $this->Auth->deny('index');
-            } 
+             
         }
     }
     function getCostCenter()
@@ -76,6 +71,8 @@ class PnldetailsController extends AppController
     public function pnl_records_add()
     {
         $this->layout='home';
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
         $BranchMaster = $this->Addbranch->find('list',array('fields'=>array('id','branch_name'),'conditions'=>"active=1"));
         $PnlMaster = $this->PnlMaster->find('all',array('conditions'=>"active=1"));
         $this->set('finance_year', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','2014-15','2015-16','2016-17','2017-18')")));

@@ -9,10 +9,10 @@
 		  parent::beforeFilter();
 		  $roles=explode(',',$this->Session->read("page_access"));
 		  $this->Auth->allow('View_issue_report','show_issues_reports','export_issues_reports');
-  		  if(in_array('31',$roles)){$this->Auth->allow('issue_submit'); $this->Auth->allow('process_des','get_process','submit','addIssue','delete','View_issue');}
-		  if(in_array('33',$roles)){$this->Auth->allow('issue_allocate'); $this->Auth->allow('process_des','allocate','alloted','View_issue');}
-		  if(in_array('36',$roles)){$this->Auth->allow('View_user_issue','user_issue'); $this->Auth->allow('View_issue','Submit1');}
-		  if(in_array('37',$roles)){$this->Auth->allow('show_issue_status');}
+  		  $this->Auth->allow('issue_submit'); $this->Auth->allow('process_des','get_process','submit','addIssue','delete','View_issue');
+		  $this->Auth->allow('issue_allocate'); $this->Auth->allow('process_des','allocate','alloted','View_issue');
+		  $this->Auth->allow('View_user_issue','user_issue'); $this->Auth->allow('View_issue','Submit1');
+		  $this->Auth->allow('show_issue_status');
 		  
   if(!$this->Session->check('username'))
   {

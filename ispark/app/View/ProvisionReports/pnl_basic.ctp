@@ -38,25 +38,26 @@
                         <label class="col-sm-1 control-label">Year</label>
                     <div class="col-sm-2">
 			<?php	echo $this->Form->input('finance_year', array('label'=>false,'id'=>'finance_year','class'=>'form-control','options' 
-=> $finance_yearNew,'empty' => 'Select','required'=>true)); ?>
+=> $finance_yearNew,'empty' => 'Select','value'=>$FinanceYearLogin,'required'=>true)); ?>
                     </div>
                     </div>
-                        <label class="col-sm-1 control-label">Month</label>
-                        <div class="col-sm-1">
+                        <label class="col-sm-2 control-label"> Pertaining Month</label>
+                        <div class="col-sm-2">
                             <div id="monthID">
                                 <?php	
                                     echo $this->Form->input('month', array('label'=>false,'class'=>'form-control','options' => $months,'empty' => 'Select','required'=>true));
                                 ?>
                             </div>
                         </div>
-                        <div class="col-sm-1">
+                        
+                        
+                        
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
                             <input type="submit" name="Show" value="Show" onclick="show_pnl_basic(this.value)" class="btn btn-primary" />
-                        </div>
-                        <div class="col-sm-1">
                             <input type="submit" name="Export" value="Export" onclick="show_pnl_basic(this.value)" class="btn btn-primary" />
-                        </div>
-                        <div class="col-sm-1">
-                           <a href="/ispark/FinanceReports" class="btn btn-primary btn-label-left">Back</a> 
+                            <a href="/ispark/Menuisps/sub?AX=MTM1" class="btn btn-primary btn-label-left">Back</a> 
                         </div>
                     </div>
                     

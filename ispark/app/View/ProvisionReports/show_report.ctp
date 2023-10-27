@@ -23,6 +23,7 @@ if($view=='Export')
     ?>
     <tr>
         <th>Branch</th>
+        <th>Company Name</th>
         <th>Month</th>
         <th>Process Name</th>
         <th>Cost Center</th>
@@ -31,6 +32,7 @@ if($view=='Export')
         <th>Provision Balance</th>
         <th>Action Date</th>
         <th>Acton Remarks</th>
+        <th>Invoice Date</th>
     </tr>
     <?php
     $TotalPro = $TotalBill = $TotalProBal = 0;
@@ -38,6 +40,7 @@ if($view=='Export')
     
     echo "<tr>";
         echo "<td>".$d['cm2']['OPBranch']."</td>";
+        echo "<td>".$d['cm2']['company_name']."</td>";
         echo "<td>".$d['pm']['month']."</td>";
         echo "<td>".$d['cm2']['process_name']."</td>";
         echo "<td>".$d['pm']['cost_center']."</td>";
@@ -67,6 +70,16 @@ if($view=='Export')
             echo $v."<BR>";
         }
         echo "</td>";
+        
+        $Arr = explode(',',$d[0]['invoiceDate']);
+        echo "<td>";
+        foreach($Arr as $v)
+        {
+            echo $v."<BR>";
+        }
+        echo "</td>";
+        
+        
     echo "</tr>";    
     
     $TotalPro +=$d[0]['provision'];
@@ -77,6 +90,7 @@ if($view=='Export')
     
     echo "<tr>";
         echo "<td>".$d['cm2']['OPBranch']."</td>";
+        echo "<td>".$d['cm2']['company_name']."</td>";
         echo "<td>".$d['pp']['FinanceMonth']."</td>";
         echo "<td>".$d['cm2']['process_name']."</td>";
         echo "<td>".$d['pp']['Cost_Center_OutSource']."</td>";
@@ -96,6 +110,9 @@ if($view=='Export')
         echo "<td>";
         echo "Branch Out-Source";
         echo "</td>";
+        echo "<td>";
+        
+        echo "</td>";
     echo "</tr>";    
     
     $TotalPro +=$d['0']['outsource_amt'];
@@ -103,12 +120,12 @@ if($view=='Export')
     $TotalProBal += $d['0']['outsource_amt']-$d['0']['processed'];
     endforeach;
     
-    echo "<tr><th colspan='3'></th>";
+    echo "<tr><th colspan='4'></th>";
     echo "<th>Total</th>";
     echo "<th>".$TotalPro."</th>";
     echo "<th>".$TotalBill."</th>";
     echo "<th>".$TotalProBal."</th>";
-    echo "<td colspan='2'></td>";
+    echo "<td colspan='3'></td>";
     echo "</tr>";
     }
     ?>

@@ -63,7 +63,7 @@ else
             <label class="col-sm-2 control-label">Amount</label>
             <div class="col-sm-4">
                    <?php echo $this->Form->input('Amount',array('label' => false,'value'=>'','placeholder'=>'Amount',
-                       'class'=>'form-control','id'=>'Amount','value'=>$ExpenseEntryMaster[7],'onKeypress'=>'return isNumberKey(event)','required'=>true,'readonly'=>$readonly)); ?>
+                       'class'=>'form-control','id'=>'Amount','value'=>$ExpenseEntryMaster[7],'onKeypress'=>'return isNumberKey(event)','required'=>true,'readonly'=>"")); ?>
             </div>
             <label class="col-sm-2 control-label">Description</label>
             <div class="col-sm-4">
@@ -95,7 +95,7 @@ else
                 <?php if($action=='edit') { ?>
                 <button onclick="return update_grn()" class="btn btn-primary btn-label-left">Update</button>
                 <?php } ?>
-                <a href="view_reject_imprest_process_head" class="btn btn-info" >Back</a>
+                <a href="view_reject_imprest_process_head?year=<?php echo $year_param; ?>&branch=<?php echo $branchId_param; ?>" class="btn btn-info" >Back</a>
             </div>
         </div>
         </div>

@@ -14,7 +14,7 @@ class EcrsController extends AppController {
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 
-            if(in_array('90',$roles)){
+            
                 $this->Auth->allow(
                     'index','create_category','update_category','create_type','get_label2','create_sub_type1','get_label3',
                     'create_sub_type2','get_label4','create_sub_type3','delete_ecr','edit_label2','edit_label2_sub1',
@@ -22,12 +22,9 @@ class EcrsController extends AppController {
                 );
                 $this->Auth->allow('add');
                 $this->Auth->allow('edit');
-            }
-            else{
-                $this->Auth->deny('index');
-                $this->Auth->deny('add');
-                $this->Auth->deny('edit');
-            }
+            
+               
+            
         }	
     }
 	

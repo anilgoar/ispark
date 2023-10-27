@@ -15,7 +15,7 @@ class CostCenterActsController extends AppController
         {
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));				
-            if(in_array('59',$roles)){$this->Auth->allow('index');$this->Auth->allow('get_process');$this->Auth->allow('get_tower');$this->Auth->allow('add_process');$this->Auth->allow('get_dash_data');$this->Auth->allow('edit');}				
+            $this->Auth->allow('index');$this->Auth->allow('get_process');$this->Auth->allow('get_tower');$this->Auth->allow('add_process');$this->Auth->allow('get_dash_data');$this->Auth->allow('edit');
         }
     }
 		

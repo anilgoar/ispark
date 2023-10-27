@@ -27,16 +27,31 @@
 						<tr class="active">
 							<td align="center"><b>Sr. No.</b></td>
 							<td align="center"><b>company_name</b></td>
-                                                        <td align="center"><b>Financial Year</b></td>
+                            <td align="center"><b>Financial Year</b></td>
 							<td align="center"><b>Payment Type</b></td>
-                                                        <td align="center"><b>Cheque/RTGS No.</b></td>
-                                                        <td align="center"><b>Bank Name</b></td>
-                                                        <td align="center"><b>Paid Amount</b></td>
-                                                        <td align="center"><b>Edit</b></td>
+                            <td align="center"><b>Cheque/RTGS No.</b></td>
+                            <td align="center"><b>Bank Name</b></td>
+                            <td align="center"><b>Paid Amount</b></td>
+                            <td align="center"><b>Edit</b></td>
+							<td align="center"><b>Adjust</b></td>
 						</tr>
 					</thead>
                                         <tbody>
-
+										<?php foreach ($Data2 as $post): ?>
+						<tr class="<?php  echo $case[$i%4]; $i++;?>">
+							<td align="center"><?php echo $i; ?></td>
+                            <td align="center"><code><?php echo $post['CollectionAdvance']['company_name']; ?></code></td>
+                            <td align="center"><?php echo $post['CollectionAdvance']['financial_year']; ?></td>
+                            <td align="center"><?php echo $post['CollectionAdvance']['pay_type']; ?></td>
+                            <td align="center"><?php echo $post['CollectionAdvance']['pay_no']; ?></td>
+                            <td align="center"><?php echo $post['CollectionAdvance']['bank_name']; ?></td>
+                            <td align="center"><?php echo $post['CollectionAdvance']['bank_name']; ?></td>
+                            <td align="center"><?php echo $post['CollectionAdvance']['pay_amount']; ?></td>
+							<td align="center"><?php echo $this->Html->link('Edit',array('controller'=>'CollectionAdvances','action'=>'edit_payment','?'=>array('id'=>$post['CollectionAdvance']['id']),'full_base' => true)); ?></td>
+							<td align="center"><?php echo $this->Html->link('Adjust',array('controller'=>'Collections','action'=>'index','?'=>array('advance_id'=>$post['CollectionAdvance']['id']),'full_base' => true)); ?></td>
+                                                        
+						</tr>
+						<?php endforeach; ?>
 						<?php foreach ($Data as $post): ?>
 						<tr class="<?php  echo $case[$i%4]; $i++;?>">
 							<td align="center"><?php echo $i; ?></td>
@@ -47,10 +62,11 @@
                                                         <td align="center"><?php echo $post['Collection']['bank_name']; ?></td>
                                                         <td align="center"><?php echo $post['Collection']['bank_name']; ?></td>
                                                         <td align="center"><?php echo $post['Collection']['pay_amount']; ?></td>
-							<td align="center"><?php echo $this->Html->link('Edit',array('controller'=>'Collections','action'=>'edit_payment','?'=>array('id'=>$post['Collection']['id']),'full_base' => true)); ?></td>
-                                                        
+														<td align="center"><?php echo $this->Html->link('Edit',array('controller'=>'Collections','action'=>'edit_payment','?'=>array('id'=>$post['Collection']['id']),'full_base' => true)); ?></td>
+                                                        <td></td>
 						</tr>
 						<?php endforeach; ?>
+						
 						<?php unset($Addbranch); ?>
 					</tbody>
 				</table>

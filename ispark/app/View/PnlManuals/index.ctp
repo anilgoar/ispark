@@ -66,7 +66,7 @@ $(function () {
                     <label class="col-sm-3 control-label"></label>
                     <div class="col-sm-2">
                         <input type="submit" name="Save" value="Save" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="" class="btn btn-primary">Back</a>
+                        <a href="/ispark/Menuisps/sub?AX=MTM1" class="btn btn-primary">Back</a>
                     </div>
                 </div>        
                 <table border="2">

@@ -1,0 +1,825 @@
+Delivered-To: harneet.kaur@teammas.in.test-google-a.com
+Received: by 2002:ab2:6951:0:b0:1ca:b92:2713 with SMTP id r17csp3598875lqo;
+        Wed, 28 Jun 2023 00:35:39 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ48eWbXAohfC4+zfLXpZ69tL9+104svIDuZmx6gZTFENXDBiOpG9nihYglklHwhP7eASXYO
+X-Received: by 2002:ad4:5dc6:0:b0:62f:e1e4:8085 with SMTP id m6-20020ad45dc6000000b0062fe1e48085mr38036654qvh.57.1687937739196;
+        Wed, 28 Jun 2023 00:35:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1687937739; cv=none;
+        d=google.com; s=arc-20160816;
+        b=TySy18sXebW4jNhFFB+bsHcomOBVwrAcpm7PeZRkWI6YE0dht+sGzZu19HpROC9z1V
+         FNe+lUvy5voszER/aojdbSwTJA4Uqs82P/fi2oIIYGrZP4IGhAKiSw7znqmf856UI1Dc
+         A53/GZWVIH7O5Silq2OUTjJWm1w24sq+3O8DCJk66Wtt+X2dDIW4RVSgnIlrVxPrdUQA
+         L1NjS3gxEBo0fbAY5KUp3RI1Gf/bkoWIIVUxbDo2kiWI5IM4rvvvrEtOUTQOGyDCN5iW
+         tWyxETcOTHFx+j4fp40uTg7KcIe9fWhBKhO4zRq78ys1bmntBvuC5CnAVaq9Y2v7pJF4
+         UQoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=e64Y+FS9nUNmU8/taiOFNuiJCAECylZNG61tAAMY0P4=;
+        fh=cIDpMQvzMfR2YwwzpxpfdttkpUWSSprot5aiAVlvZ0s=;
+        b=p9tyekqsigABEWAyNOA1Pk8fULbyCgMvJKyS2zpezyg6U2EFeVitsNRv7DMuTQ0xu7
+         M6l2Qks0YJM0/0xWQ8OOt8kEpVunJBFAllGS5qeBhr0jIpIHZh1lu8Wv6k17PuehWsGK
+         gQNf+YOPrRsCBdO9nvhqob+WkXXGGqp8DL0Om8qTi55ciA0kLD27PbzSNO71VTXUarrE
+         rrnyIZNe6AN9FzUgZFKmgks8xW/6N6saoJ5rhB2BF/g0HdAHPdanrrWAQ9gKfgdJt0cS
+         CSJY4GQHHUVhbCfB4YPBI9WtfhfN5D9MFC3Tea2DYskJFhT2aTwAVdV97Ypq2Dz7jK9S
+         AiGg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@onfido.com header.s=google header.b=Ek3oritw;
+       spf=softfail (google.com: domain of transitioning rahul.gupta@onfido.com does not designate 204.80.91.190 as permitted sender) smtp.mailfrom=rahul.gupta@onfido.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=onfido.com
+Return-Path: <rahul.gupta@onfido.com>
+Received: from mail05.chinetworks.com (mail05.chinetworks.com. [204.80.91.190])
+        by mx.google.com with ESMTPS id kc15-20020a056214410f00b006261fd81908si4333656qvb.92.2023.06.28.00.35.38
+        for <harneet.kaur@teammas.in.test-google-a.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jun 2023 00:35:39 -0700 (PDT)
+Received-SPF: softfail (google.com: domain of transitioning rahul.gupta@onfido.com does not designate 204.80.91.190 as permitted sender) client-ip=204.80.91.190;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@onfido.com header.s=google header.b=Ek3oritw;
+       spf=softfail (google.com: domain of transitioning rahul.gupta@onfido.com does not designate 204.80.91.190 as permitted sender) smtp.mailfrom=rahul.gupta@onfido.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=onfido.com
+Received: from dmf.dz2.da (unknown [192.168.209.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail05.chinetworks.com (Postfix) with ESMTPS id C105815E1703
+	for <harneet.kaur@teammas.in>; Wed, 28 Jun 2023 13:05:38 +0530 (IST)
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	by dmf.dz2.da (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id 35S7ZbMi017348
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <harneet.kaur@teammas.in>; Wed, 28 Jun 2023 02:35:38 -0500
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7659c6cae2cso246418785a.1
+        for <harneet.kaur@teammas.in>; Wed, 28 Jun 2023 00:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=onfido.com; s=google; t=1687937737; x=1690529737;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=e64Y+FS9nUNmU8/taiOFNuiJCAECylZNG61tAAMY0P4=;
+        b=Ek3oritwFqbMJXPaxpaphIgiw6x9IYpzHZjzs3Yh0fCU4oDsOhay9tvvs12+3+excP
+         ++Nf+3IPr+ky9PPhJpojzc3UPTva6bI1gD2zJmk0kRRDycYdwrLTI04oOC7iuzwu0iDX
+         aGR6WGcaUEgRHxQ9prjpbDl+Yjkiz5/3XBYHE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687937737; x=1690529737;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e64Y+FS9nUNmU8/taiOFNuiJCAECylZNG61tAAMY0P4=;
+        b=CZ1J9HqpQisIJj32z0bM7io76FHehVB5uI6OYvhG3TliHM0bkoxmvrHb4vNdtTiNuq
+         LgbCZ2f3bkaK6vru+PhHVIsy/BmOMTsJepqwCe6NgZPFpDm0cDZ0LRjXiwPihJusjsRG
+         E6oxZUeoiEijSOooZQxHgrOB7tW5TMSO3hwxS9Hve5HlMLBh6EiA7D6ILkzAOwZPvuZ7
+         sW30QUasH4zb14SFHOSNAM19IVxYaH2Pi4QOjWRfMLt5yQNpOvEXzumWprDax3L0g0Vd
+         CcbdzTEaiDS3kJB04DQPzFgsAZkK6pMUer9lHb0CZXYMmdq2nYhdFWAj+xAlLy8I7d1g
+         5ynw==
+X-Gm-Message-State: AC+VfDwJ6TxNj163TKtyIxa8pveZ4gUlwrvQY8fbulSC/fKdRCEVV+Yl
+	vKHFVbqdzffinQanJgmCC/lmL1M6ue4q9t81e8bxHI7Su9omlo0mn8A=
+X-Received: by 2002:a05:620a:4484:b0:767:27e1:fcc4 with SMTP id
+ x4-20020a05620a448400b0076727e1fcc4mr154016qkp.22.1687937737080; Wed, 28 Jun
+ 2023 00:35:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <73c9fefd069e061abf3ad03518c1276d@mail.gmail.com>
+In-Reply-To: <73c9fefd069e061abf3ad03518c1276d@mail.gmail.com>
+From: Rahul Gupta <rahul.gupta@onfido.com>
+Date: Wed, 28 Jun 2023 13:05:00 +0530
+Message-ID: <CAFdzCjswriCRbB+PpH6Jc8+yEC8BExqjn4mkywUxmfDg4DHnRg@mail.gmail.com>
+Subject: Re: Enable IDs of batch 172
+To: Harneet Kaur <harneet.kaur@teammas.in>
+Cc: Alka Gupta <alka.gupta@teammas.in>,
+        Shivam Shiv Giri <shivam.giri@teammas.in>, vishnu@teammas.in,
+        Rakesh Mandloi <rakeshkumar.mandloi@teammas.in>,
+        Kamal Singh <kamal.singh@teammas.in>, hitendra.waghela@teammas.in
+Content-Type: multipart/alternative; boundary="00000000000038e24005ff2ba169"
+X-Spam-Score: undef - onfido.com is allowed always.
+X-CanIt-Geo: ip=209.85.222.178; country=US; latitude=37.7510; longitude=-97.8220; http://maps.google.com/maps?q=37.7510,-97.8220&z=6
+X-CanItPRO-Stream: teammas-in:harneet.kaur@teammas.in (inherits from teammas-in:default,base:default)
+Received-SPF: pass (dmf.dz2.da: domain of rahul.gupta@onfido.com
+	designates 209.85.222.178 as permitted sender)
+	receiver=dmf.dz2.da; client-ip=209.85.222.178;
+	envelope-from=<rahul.gupta@onfido.com>; helo=mail-qk1-f178.google.com;
+	identity=mailfrom
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 192.168.209.65
+
+--00000000000038e24005ff2ba169
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+*LOGIN* *PASSWORD* *STATUS*
+foram.panchal172@mas.onfido.partners
+foram.panchal172@mas.onfido.partners98265254 =E2=9C=85
+zaid.shaikh172@mas.onfido.partners
+zaid.shaikh172@mas.onfido.partners01593941 =E2=9C=85
+heet.maurya172@mas.onfido.partners
+heet.maurya172@mas.onfido.partners13975068 =E2=9C=85
+shreya.shah172@mas.onfido.partners
+shreya.shah172@mas.onfido.partners57930417 =E2=9C=85
+sahid.shaikh172@mas.onfido.partners
+sahid.shaikh172@mas.onfido.partners98268930 =E2=9C=85
+bandana.mahto172@mas.onfido.partners
+bandana.mahto172@mas.onfido.partners09418631 =E2=9C=85
+rajal.sutariya172@mas.onfido.partners
+rajal.sutariya172@mas.onfido.partners73464871 =E2=9C=85
+rehan.memon172@mas.onfido.partners
+rehan.memon172@mas.onfido.partners33146502 =E2=9C=85
+shravan.dewasi172@mas.onfido.partners
+shravan.dewasi172@mas.onfido.partners03818939 =E2=9C=85
+parakram.rabari172@mas.onfido.partners
+parakram.rabari172@mas.onfido.partners78344880 =E2=9C=85
+nirmal.goswami172@mas.onfido.partners
+nirmal.goswami172@mas.onfido.partners21838810 =E2=9C=85
+fenil.patel172@mas.onfido.partners
+fenil.patel172@mas.onfido.partners62396232 =E2=9C=85
+dipak.kalal172@mas.onfido.partners
+dipak.kalal172@mas.onfido.partners55862889 =E2=9C=85
+honey.varghese172@mas.onfido.partners
+honey.varghese172@mas.onfido.partners77863432 =E2=9C=85
+jay.patel172@mas.onfido.partners jay.patel172@mas.onfido.partners44500989 =
+=E2=9C=85
+zuber.kazi172@mas.onfido.partners zuber.kazi172@mas.onfido.partners13213007
+=E2=9C=85
+
+On Wed, 28 Jun 2023 at 12:46, Harneet Kaur <harneet.kaur@teammas.in> wrote:
+
+> Hi Sir,
+>
+>
+>
+> Kindly enable the below IDs of batch 172 on immediate basis
+>
+>
+>
+> *S No*
+>
+> *Applicant Name*
+>
+> *Onfido Partners ID*
+>
+> *Current Status*
+>
+> *Batch*
+>
+> 1
+>
+> Panchal foram
+>
+> foram.panchal172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 2
+>
+> Mo.Zaid Shaikh
+>
+> zaid.shaikh172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 3
+>
+> Heet Maurya
+>
+> heet.maurya172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 4
+>
+> Shreya Shah
+>
+> shreya.shah172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 5
+>
+> Shahid Shaikh
+>
+> sahid.shaikh172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 6
+>
+> Bandana Mahto
+>
+> bandana.mahto172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 7
+>
+> Rajal Sutariya
+>
+> rajal.sutariya172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 8
+>
+> Memon Mohmad Rehan
+>
+> rehan.memon172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 9
+>
+> Shravan Dewasi
+>
+> shravan.dewasi172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 10
+>
+> Rabari Parakram kanjibhai
+>
+> parakram.rabari172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 11
+>
+> Nirmal Goswami
+>
+> nirmal.goswami172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 12
+>
+> Patel Fenil Ashwinbhai
+>
+> fenil.patel172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 13
+>
+> Kalal Dipak
+>
+> dipak.kalal172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 14
+>
+> Honey Varghese
+>
+> honey.varghese172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 15
+>
+> Jay Patel
+>
+> jay.patel172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+> 16
+>
+> Kazi Zuber
+>
+> zuber.kazi172@mas.onfido.partners
+>
+> Active
+>
+> Batch 172
+>
+>
+>
+> Regards
+>
+> Harneet
+>
+
+--00000000000038e24005ff2ba169
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><table id=3D"gmail-resultsTable" class=3D"gmail-styled-tab=
+le" style=3D"border-collapse:collapse;margin:25px 0px;font-size:0.9em;font-=
+family:&quot;Courier New&quot;;min-width:400px;width:867.734px;color:rgb(0,=
+0,0)"><tbody><tr style=3D"border-bottom:2px solid rgb(28,19,101)"><td style=
+=3D"padding:12px 15px;text-align:center"><b>LOGIN</b></td><td style=3D"padd=
+ing:12px 15px;text-align:center"><b>PASSWORD</b></td><td style=3D"padding:1=
+2px 15px;text-align:center"><b>STATUS</b></td></tr></tbody><tbody id=3D"gma=
+il-results" style=3D"width:867.734px;height:200px"><tr id=3D"gmail-tres" st=
+yle=3D"border-bottom:thin solid rgb(221,221,221)"><td style=3D"padding:12px=
+ 15px;text-align:center">foram.panchal172@mas.onfido.partners</td><td style=
+=3D"padding:12px 15px;text-align:center">foram.panchal172@mas.onfido.partne=
+rs98265254</td><td id=3D"gmail-status" style=3D"padding:12px 15px;text-alig=
+n:center">=E2=9C=85</td></tr><tr id=3D"gmail-tres" style=3D"border-bottom:t=
+hin solid rgb(221,221,221);background-color:rgb(243,243,243)"><td style=3D"=
+padding:12px 15px;text-align:center">zaid.shaikh172@mas.onfido.partners</td=
+><td style=3D"padding:12px 15px;text-align:center">zaid.shaikh172@mas.onfid=
+o.partners01593941</td><td id=3D"gmail-status" style=3D"padding:12px 15px;t=
+ext-align:center">=E2=9C=85</td></tr><tr id=3D"gmail-tres" style=3D"border-=
+bottom:thin solid rgb(221,221,221)"><td style=3D"padding:12px 15px;text-ali=
+gn:center">heet.maurya172@mas.onfido.partners</td><td style=3D"padding:12px=
+ 15px;text-align:center">heet.maurya172@mas.onfido.partners13975068</td><td=
+ id=3D"gmail-status" style=3D"padding:12px 15px;text-align:center">=E2=9C=
+=85</td></tr><tr id=3D"gmail-tres" style=3D"border-bottom:thin solid rgb(22=
+1,221,221);background-color:rgb(243,243,243)"><td style=3D"padding:12px 15p=
+x;text-align:center">shreya.shah172@mas.onfido.partners</td><td style=3D"pa=
+dding:12px 15px;text-align:center">shreya.shah172@mas.onfido.partners579304=
+17</td><td id=3D"gmail-status" style=3D"padding:12px 15px;text-align:center=
+">=E2=9C=85</td></tr><tr id=3D"gmail-tres" style=3D"border-bottom:thin soli=
+d rgb(221,221,221)"><td style=3D"padding:12px 15px;text-align:center">sahid=
+.shaikh172@mas.onfido.partners</td><td style=3D"padding:12px 15px;text-alig=
+n:center">sahid.shaikh172@mas.onfido.partners98268930</td><td id=3D"gmail-s=
+tatus" style=3D"padding:12px 15px;text-align:center">=E2=9C=85</td></tr><tr=
+ id=3D"gmail-tres" style=3D"border-bottom:thin solid rgb(221,221,221);backg=
+round-color:rgb(243,243,243)"><td style=3D"padding:12px 15px;text-align:cen=
+ter">bandana.mahto172@mas.onfido.partners</td><td style=3D"padding:12px 15p=
+x;text-align:center">bandana.mahto172@mas.onfido.partners09418631</td><td i=
+d=3D"gmail-status" style=3D"padding:12px 15px;text-align:center">=E2=9C=85<=
+/td></tr><tr id=3D"gmail-tres" style=3D"border-bottom:thin solid rgb(221,22=
+1,221)"><td style=3D"padding:12px 15px;text-align:center">rajal.sutariya172=
+@mas.onfido.partners</td><td style=3D"padding:12px 15px;text-align:center">=
+rajal.sutariya172@mas.onfido.partners73464871</td><td id=3D"gmail-status" s=
+tyle=3D"padding:12px 15px;text-align:center">=E2=9C=85</td></tr><tr id=3D"g=
+mail-tres" style=3D"border-bottom:thin solid rgb(221,221,221);background-co=
+lor:rgb(243,243,243)"><td style=3D"padding:12px 15px;text-align:center">reh=
+an.memon172@mas.onfido.partners</td><td style=3D"padding:12px 15px;text-ali=
+gn:center">rehan.memon172@mas.onfido.partners33146502</td><td id=3D"gmail-s=
+tatus" style=3D"padding:12px 15px;text-align:center">=E2=9C=85</td></tr><tr=
+ id=3D"gmail-tres" style=3D"border-bottom:thin solid rgb(221,221,221)"><td =
+style=3D"padding:12px 15px;text-align:center">shravan.dewasi172@mas.onfido.=
+partners</td><td style=3D"padding:12px 15px;text-align:center">shravan.dewa=
+si172@mas.onfido.partners03818939</td><td id=3D"gmail-status" style=3D"padd=
+ing:12px 15px;text-align:center">=E2=9C=85</td></tr><tr id=3D"gmail-tres" s=
+tyle=3D"border-bottom:thin solid rgb(221,221,221);background-color:rgb(243,=
+243,243)"><td style=3D"padding:12px 15px;text-align:center">parakram.rabari=
+172@mas.onfido.partners</td><td style=3D"padding:12px 15px;text-align:cente=
+r">parakram.rabari172@mas.onfido.partners78344880</td><td id=3D"gmail-statu=
+s" style=3D"padding:12px 15px;text-align:center">=E2=9C=85</td></tr><tr id=
+=3D"gmail-tres" style=3D"border-bottom:thin solid rgb(221,221,221)"><td sty=
+le=3D"padding:12px 15px;text-align:center">nirmal.goswami172@mas.onfido.par=
+tners</td><td style=3D"padding:12px 15px;text-align:center">nirmal.goswami1=
+72@mas.onfido.partners21838810</td><td id=3D"gmail-status" style=3D"padding=
+:12px 15px;text-align:center">=E2=9C=85</td></tr><tr id=3D"gmail-tres" styl=
+e=3D"border-bottom:thin solid rgb(221,221,221);background-color:rgb(243,243=
+,243)"><td style=3D"padding:12px 15px;text-align:center">fenil.patel172@mas=
+.onfido.partners</td><td style=3D"padding:12px 15px;text-align:center">feni=
+l.patel172@mas.onfido.partners62396232</td><td id=3D"gmail-status" style=3D=
+"padding:12px 15px;text-align:center">=E2=9C=85</td></tr><tr id=3D"gmail-tr=
+es" style=3D"border-bottom:thin solid rgb(221,221,221)"><td style=3D"paddin=
+g:12px 15px;text-align:center">dipak.kalal172@mas.onfido.partners</td><td s=
+tyle=3D"padding:12px 15px;text-align:center">dipak.kalal172@mas.onfido.part=
+ners55862889</td><td id=3D"gmail-status" style=3D"padding:12px 15px;text-al=
+ign:center">=E2=9C=85</td></tr><tr id=3D"gmail-tres" style=3D"border-bottom=
+:thin solid rgb(221,221,221);background-color:rgb(243,243,243)"><td style=
+=3D"padding:12px 15px;text-align:center">honey.varghese172@mas.onfido.partn=
+ers</td><td style=3D"padding:12px 15px;text-align:center">honey.varghese172=
+@mas.onfido.partners77863432</td><td id=3D"gmail-status" style=3D"padding:1=
+2px 15px;text-align:center">=E2=9C=85</td></tr><tr id=3D"gmail-tres" style=
+=3D"border-bottom:thin solid rgb(221,221,221)"><td style=3D"padding:12px 15=
+px;text-align:center">jay.patel172@mas.onfido.partners</td><td style=3D"pad=
+ding:12px 15px;text-align:center">jay.patel172@mas.onfido.partners44500989<=
+/td><td id=3D"gmail-status" style=3D"padding:12px 15px;text-align:center">=
+=E2=9C=85</td></tr><tr id=3D"gmail-tres" style=3D"border-bottom:2px solid r=
+gb(28,19,101);background-color:rgb(243,243,243)"><td style=3D"padding:12px =
+15px;text-align:center">zuber.kazi172@mas.onfido.partners</td><td style=3D"=
+padding:12px 15px;text-align:center">zuber.kazi172@mas.onfido.partners13213=
+007</td><td id=3D"gmail-status" style=3D"padding:12px 15px;text-align:cente=
+r">=E2=9C=85</td></tr></tbody></table><br class=3D"gmail-Apple-interchange-=
+newline"></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gma=
+il_attr">On Wed, 28 Jun 2023 at 12:46, Harneet Kaur &lt;<a href=3D"mailto:h=
+arneet.kaur@teammas.in">harneet.kaur@teammas.in</a>&gt; wrote:<br></div><bl=
+ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
+t:1px solid rgb(204,204,204);padding-left:1ex"><div class=3D"msg-4149520091=
+109057921"><div lang=3D"EN-US"><div class=3D"m_-4149520091109057921WordSect=
+ion1"><p class=3D"MsoNormal">Hi Sir,</p><p class=3D"MsoNormal">=C2=A0</p><p=
+ class=3D"MsoNormal">Kindly enable the below IDs of batch 172 on immediate =
+basis</p><p class=3D"MsoNormal">=C2=A0</p><table border=3D"0" cellspacing=
+=3D"0" cellpadding=3D"0" width=3D"1029" style=3D"width:514.65pt;border-coll=
+apse:collapse"><tbody><tr style=3D"height:14.5pt"><td width=3D"56" nowrap r=
+owspan=3D"3" style=3D"width:28pt;border:1pt solid windowtext;background:rgb=
+(250,191,143);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><b><span style=3D"color:black">S No=
+</span></b></p></td><td width=3D"237" nowrap rowspan=3D"3" style=3D"width:1=
+18.65pt;border-top:1pt solid windowtext;border-right:1pt solid windowtext;b=
+order-bottom:1pt solid windowtext;border-left:none;background:rgb(250,191,1=
+43);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center=
+" style=3D"text-align:center"><b><span style=3D"color:black">Applicant Name=
+</span></b></p></td><td width=3D"420" nowrap rowspan=3D"3" style=3D"width:2=
+10pt;border-top:1pt solid windowtext;border-right:1pt solid windowtext;bord=
+er-bottom:1pt solid windowtext;border-left:none;background:rgb(250,191,143)=
+;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center" s=
+tyle=3D"text-align:center"><b><span style=3D"color:black">Onfido Partners I=
+D</span></b></p></td><td width=3D"150" nowrap rowspan=3D"3" style=3D"width:=
+75pt;border-top:1pt solid windowtext;border-right:1pt solid windowtext;bord=
+er-bottom:1pt solid windowtext;border-left:none;background:rgb(250,191,143)=
+;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center" s=
+tyle=3D"text-align:center"><b><span style=3D"color:black">Current Status</s=
+pan></b></p></td><td width=3D"166" nowrap rowspan=3D"3" style=3D"width:83pt=
+;border-top:1pt solid windowtext;border-right:1pt solid windowtext;border-b=
+ottom:1pt solid windowtext;border-left:none;background:rgb(250,191,143);pad=
+ding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center" style=
+=3D"text-align:center"><b><span style=3D"color:black">Batch</span></b></p><=
+/td><td style=3D"height:14.5pt;border:none" width=3D"0" height=3D"29"></td>=
+</tr><tr style=3D"height:14.5pt"><td style=3D"height:14.5pt;border:none" wi=
+dth=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td style=3D"=
+height:14.5pt;border:none" width=3D"0" height=3D"29"></td></tr><tr style=3D=
+"height:0.2in"><td width=3D"56" nowrap style=3D"width:28pt;border-right:1pt=
+ solid windowtext;border-bottom:1pt solid windowtext;border-left:1pt solid =
+windowtext;border-top:none;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoN=
+ormal" align=3D"center" style=3D"text-align:center"><span style=3D"color:bl=
+ack">1</span></p></td><td width=3D"237" nowrap valign=3D"bottom" style=3D"w=
+idth:118.65pt;border-top:none;border-left:none;border-bottom:1pt solid wind=
+owtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p=
+ class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span sty=
+le=3D"color:black">Panchal foram</span></p></td><td width=3D"420" nowrap st=
+yle=3D"width:210pt;border-top:none;border-left:none;border-bottom:1pt solid=
+ windowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2i=
+n"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><spa=
+n style=3D"color:black">foram.panchal172@mas.onfido.partners</span></p></td=
+><td width=3D"150" nowrap style=3D"width:75pt;border-top:none;border-left:n=
+one;border-bottom:1pt solid windowtext;border-right:1pt solid windowtext;ba=
+ckground:rgb(198,239,206);padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNo=
+rmal" align=3D"center" style=3D"text-align:center"><span style=3D"color:rgb=
+(0,97,0)">Active</span></p></td><td width=3D"166" nowrap valign=3D"bottom" =
+style=3D"width:83pt;border-top:none;border-left:none;border-bottom:1pt soli=
+d windowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2=
+in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><sp=
+an style=3D"color:black">Batch 172</span></p></td><td style=3D"height:0.2in=
+;border:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:0.2in=
+"><td width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid window=
+text;border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;bo=
+rder-top:none;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:black">2</span=
+></p></td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65p=
+t;border-top:none;border-left:none;border-bottom:1pt solid windowtext;borde=
+r-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"Ms=
+oNormal" align=3D"center" style=3D"text-align:center"><span style=3D"color:=
+black">Mo.Zaid Shaikh</span></p></td><td width=3D"420" nowrap style=3D"widt=
+h:210pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext=
+;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=
+=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"=
+color:black">zaid.shaikh172@mas.onfido.partners</span></p></td><td width=3D=
+"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;border-bo=
+ttom:1pt solid windowtext;border-right:1pt solid windowtext;background:rgb(=
+198,239,206);padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">A=
+ctive</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"wi=
+dth:83pt;border-top:none;border-left:none;border-bottom:1pt solid windowtex=
+t;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p clas=
+s=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D=
+"color:black">Batch 172</span></p></td><td style=3D"height:0.2in;border:non=
+e" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:0.2in"><td width=
+=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowtext;border=
+-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-top:no=
+ne;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" =
+style=3D"text-align:center"><span style=3D"color:black">3</span></p></td><t=
+d width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;border-top=
+:none;border-left:none;border-bottom:1pt solid windowtext;border-right:1pt =
+solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" ali=
+gn=3D"center" style=3D"text-align:center"><span style=3D"color:black">Heet =
+Maurya </span></p></td><td width=3D"420" nowrap style=3D"width:210pt;border=
+-top:none;border-left:none;border-bottom:1pt solid windowtext;border-right:=
+1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal"=
+ align=3D"center" style=3D"text-align:center"><span style=3D"color:black">h=
+eet.maurya172@mas.onfido.partners</span></p></td><td width=3D"150" nowrap s=
+tyle=3D"width:75pt;border-top:none;border-left:none;border-bottom:1pt solid=
+ windowtext;border-right:1pt solid windowtext;background:rgb(198,239,206);p=
+adding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" styl=
+e=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">Active</span></p>=
+</td><td width=3D"166" nowrap valign=3D"bottom" style=3D"width:83pt;border-=
+top:none;border-left:none;border-bottom:1pt solid windowtext;border-right:1=
+pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" =
+align=3D"center" style=3D"text-align:center"><span style=3D"color:black">Ba=
+tch 172</span></p></td><td style=3D"height:0.2in;border:none" width=3D"0" h=
+eight=3D"29"></td></tr><tr style=3D"height:0.2in"><td width=3D"56" nowrap s=
+tyle=3D"width:28pt;border-right:1pt solid windowtext;border-bottom:1pt soli=
+d windowtext;border-left:1pt solid windowtext;border-top:none;padding:0in 5=
+.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-al=
+ign:center"><span style=3D"color:black">4</span></p></td><td width=3D"237" =
+nowrap valign=3D"bottom" style=3D"width:118.65pt;border-top:none;border-lef=
+t:none;border-bottom:1pt solid windowtext;border-right:1pt solid windowtext=
+;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" st=
+yle=3D"text-align:center"><span style=3D"color:black">Shreya Shah</span></p=
+></td><td width=3D"420" nowrap style=3D"width:210pt;border-top:none;border-=
+left:none;border-bottom:1pt solid windowtext;border-right:1pt solid windowt=
+ext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center"=
+ style=3D"text-align:center"><span style=3D"color:black">shreya.shah172@mas=
+.onfido.partners</span></p></td><td width=3D"150" nowrap style=3D"width:75p=
+t;border-top:none;border-left:none;border-bottom:1pt solid windowtext;borde=
+r-right:1pt solid windowtext;background:rgb(198,239,206);padding:0in 5.4pt;=
+height:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:c=
+enter"><span style=3D"color:rgb(0,97,0)">Active</span></p></td><td width=3D=
+"166" nowrap valign=3D"bottom" style=3D"width:83pt;border-top:none;border-l=
+eft:none;border-bottom:1pt solid windowtext;border-right:1pt solid windowte=
+xt;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" =
+style=3D"text-align:center"><span style=3D"color:black">Batch 172</span></p=
+></td><td style=3D"height:0.2in;border:none" width=3D"0" height=3D"29"></td=
+></tr><tr style=3D"height:0.2in"><td width=3D"56" nowrap style=3D"width:28p=
+t;border-right:1pt solid windowtext;border-bottom:1pt solid windowtext;bord=
+er-left:1pt solid windowtext;border-top:none;padding:0in 5.4pt;height:0.2in=
+"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span=
+ style=3D"color:black">5</span></p></td><td width=3D"237" nowrap valign=3D"=
+bottom" style=3D"width:118.65pt;border-top:none;border-left:none;border-bot=
+tom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0in 5.4p=
+t;height:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align=
+:center"><span style=3D"color:black">Shahid Shaikh</span></p></td><td width=
+=3D"420" nowrap style=3D"width:210pt;border-top:none;border-left:none;borde=
+r-bottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0in=
+ 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-=
+align:center"><span style=3D"color:black">sahid.shaikh172@mas.onfido.partne=
+rs</span></p></td><td width=3D"150" nowrap style=3D"width:75pt;border-top:n=
+one;border-left:none;border-bottom:1pt solid windowtext;border-right:1pt so=
+lid windowtext;background:rgb(198,239,206);padding:0in 5.4pt;height:0.2in">=
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:rgb(0,97,0)">Active</span></p></td><td width=3D"166" nowrap v=
+align=3D"bottom" style=3D"width:83pt;border-top:none;border-left:none;borde=
+r-bottom:1pt solid windowtext;border-right:1pt solid windowtext;padding:0in=
+ 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-=
+align:center"><span style=3D"color:black">Batch 172</span></p></td><td styl=
+e=3D"height:0.2in;border:none" width=3D"0" height=3D"29"></td></tr><tr styl=
+e=3D"height:0.2in"><td width=3D"56" nowrap style=3D"width:28pt;border-right=
+:1pt solid windowtext;border-bottom:1pt solid windowtext;border-left:1pt so=
+lid windowtext;border-top:none;padding:0in 5.4pt;height:0.2in"><p class=3D"=
+MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"colo=
+r:black">6</span></p></td><td width=3D"237" nowrap valign=3D"bottom" style=
+=3D"width:118.65pt;border-top:none;border-left:none;border-bottom:1pt solid=
+ windowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2i=
+n"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><spa=
+n style=3D"color:black">Bandana Mahto</span></p></td><td width=3D"420" nowr=
+ap style=3D"width:210pt;border-top:none;border-left:none;border-bottom:1pt =
+solid windowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height=
+:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"=
+><span style=3D"color:black">bandana.mahto172@mas.onfido.partners</span></p=
+></td><td width=3D"150" nowrap style=3D"width:75pt;border-top:none;border-l=
+eft:none;border-bottom:1pt solid windowtext;border-right:1pt solid windowte=
+xt;background:rgb(198,239,206);padding:0in 5.4pt;height:0.2in"><p class=3D"=
+MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"colo=
+r:rgb(0,97,0)">Active</span></p></td><td width=3D"166" nowrap valign=3D"bot=
+tom" style=3D"width:83pt;border-top:none;border-left:none;border-bottom:1pt=
+ solid windowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;heigh=
+t:0.2in"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center=
+"><span style=3D"color:black">Batch 172</span></p></td><td style=3D"height:=
+0.2in;border:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:=
+0.2in"><td width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid w=
+indowtext;border-bottom:1pt solid windowtext;border-left:1pt solid windowte=
+xt;border-top:none;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" a=
+lign=3D"center" style=3D"text-align:center"><span style=3D"color:black">7</=
+span></p></td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118=
+.65pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext;b=
+order-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=
+=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"=
+color:black">Rajal Sutariya</span></p></td><td width=3D"420" nowrap style=
+=3D"width:210pt;border-top:none;border-left:none;border-bottom:1pt solid wi=
+ndowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in">=
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">rajal.sutariya172@mas.onfido.partners</span></p></td><=
+td width=3D"150" nowrap style=3D"width:75pt;border-top:none;border-left:non=
+e;border-bottom:1pt solid windowtext;border-right:1pt solid windowtext;back=
+ground:rgb(198,239,206);padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNorm=
+al" align=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0=
+,97,0)">Active</span></p></td><td width=3D"166" nowrap valign=3D"bottom" st=
+yle=3D"width:83pt;border-top:none;border-left:none;border-bottom:1pt solid =
+windowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in=
+"><p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span=
+ style=3D"color:black">Batch 172</span></p></td><td style=3D"height:0.2in;b=
+order:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:0.2in">=
+<td width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowte=
+xt;border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;bord=
+er-top:none;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D=
+"center" style=3D"text-align:center"><span style=3D"color:black">8</span></=
+p></td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;b=
+order-top:none;border-left:none;border-bottom:1pt solid windowtext;border-r=
+ight:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNo=
+rmal" align=3D"center" style=3D"text-align:center"><span style=3D"color:bla=
+ck">Memon Mohmad Rehan</span></p></td><td width=3D"420" nowrap style=3D"wid=
+th:210pt;border-top:none;border-left:none;border-bottom:1pt solid windowtex=
+t;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p clas=
+s=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D=
+"color:black">rehan.memon172@mas.onfido.partners</span></p></td><td width=
+=3D"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;border=
+-bottom:1pt solid windowtext;border-right:1pt solid windowtext;background:r=
+gb(198,239,206);padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" alig=
+n=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">=
+Active</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"w=
+idth:83pt;border-top:none;border-left:none;border-bottom:1pt solid windowte=
+xt;border-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p cla=
+ss=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=
+=3D"color:black">Batch 172</span></p></td><td style=3D"height:0.2in;border:=
+none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:0.2in"><td wi=
+dth=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowtext;bor=
+der-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-top=
+:none;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"cente=
+r" style=3D"text-align:center"><span style=3D"color:black">9</span></p></td=
+><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;border-=
+top:none;border-left:none;border-bottom:1pt solid windowtext;border-right:1=
+pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" =
+align=3D"center" style=3D"text-align:center"><span style=3D"color:black">Sh=
+ravan Dewasi</span></p></td><td width=3D"420" nowrap style=3D"width:210pt;b=
+order-top:none;border-left:none;border-bottom:1pt solid windowtext;border-r=
+ight:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNo=
+rmal" align=3D"center" style=3D"text-align:center"><span style=3D"color:bla=
+ck">shravan.dewasi172@mas.onfido.partners</span></p></td><td width=3D"150" =
+nowrap style=3D"width:75pt;border-top:none;border-left:none;border-bottom:1=
+pt solid windowtext;border-right:1pt solid windowtext;background:rgb(198,23=
+9,206);padding:0in 5.4pt;height:0.2in"><p class=3D"MsoNormal" align=3D"cent=
+er" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">Active</s=
+pan></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"width:83pt=
+;border-top:none;border-left:none;border-bottom:1pt solid windowtext;border=
+-right:1pt solid windowtext;padding:0in 5.4pt;height:0.2in"><p class=3D"Mso=
+Normal" align=3D"center" style=3D"text-align:center"><span style=3D"color:b=
+lack">Batch 172</span></p></td><td style=3D"height:0.2in;border:none" width=
+=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td width=3D"56"=
+ nowrap style=3D"width:28pt;border-right:1pt solid windowtext;border-bottom=
+:1pt solid windowtext;border-left:1pt solid windowtext;border-top:none;padd=
+ing:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center" style=
+=3D"text-align:center"><span style=3D"color:black">10</span></p></td><td wi=
+dth=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;border-top:non=
+e;border-left:none;border-bottom:1pt solid windowtext;border-right:1pt soli=
+d windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:black">Rabari =
+Parakram kanjibhai</span></p></td><td width=3D"420" nowrap style=3D"width:2=
+10pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext;bo=
+rder-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=
+=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"=
+color:black">parakram.rabari172@mas.onfido.partners</span></p></td><td widt=
+h=3D"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;borde=
+r-bottom:1pt solid windowtext;border-right:1pt solid windowtext;background:=
+rgb(198,239,206);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" al=
+ign=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)=
+">Active</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D=
+"width:83pt;border-top:none;border-left:none;border-bottom:1pt solid window=
+text;border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p =
+class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span styl=
+e=3D"color:black">Batch 172</span></p></td><td style=3D"height:14.5pt;borde=
+r:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td=
+ width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowtext;=
+border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-=
+top:none;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"c=
+enter" style=3D"text-align:center"><span style=3D"color:black">11</span></p=
+></td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;bo=
+rder-top:none;border-left:none;border-bottom:1pt solid windowtext;border-ri=
+ght:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNo=
+rmal" align=3D"center" style=3D"text-align:center"><span style=3D"color:bla=
+ck">Nirmal Goswami</span></p></td><td width=3D"420" nowrap style=3D"width:2=
+10pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext;bo=
+rder-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=
+=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"=
+color:black">nirmal.goswami172@mas.onfido.partners</span></p></td><td width=
+=3D"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;border=
+-bottom:1pt solid windowtext;border-right:1pt solid windowtext;background:r=
+gb(198,239,206);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" ali=
+gn=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)"=
+>Active</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"=
+width:83pt;border-top:none;border-left:none;border-bottom:1pt solid windowt=
+ext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p c=
+lass=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=
+=3D"color:black">Batch 172</span></p></td><td style=3D"height:14.5pt;border=
+:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td =
+width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowtext;b=
+order-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-t=
+op:none;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"ce=
+nter" style=3D"text-align:center"><span style=3D"color:black">12</span></p>=
+</td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;bor=
+der-top:none;border-left:none;border-bottom:1pt solid windowtext;border-rig=
+ht:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNor=
+mal" align=3D"center" style=3D"text-align:center"><span style=3D"color:blac=
+k">Patel Fenil Ashwinbhai</span></p></td><td width=3D"420" nowrap style=3D"=
+width:210pt;border-top:none;border-left:none;border-bottom:1pt solid window=
+text;border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p =
+class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span styl=
+e=3D"color:black">fenil.patel172@mas.onfido.partners</span></p></td><td wid=
+th=3D"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;bord=
+er-bottom:1pt solid windowtext;border-right:1pt solid windowtext;background=
+:rgb(198,239,206);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" a=
+lign=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0=
+)">Active</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=
+=3D"width:83pt;border-top:none;border-left:none;border-bottom:1pt solid win=
+dowtext;border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt">=
+<p class=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span s=
+tyle=3D"color:black">Batch 172</span></p></td><td style=3D"height:14.5pt;bo=
+rder:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt">=
+<td width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowte=
+xt;border-bottom:1pt solid windowtext;border-left:1pt solid windowtext;bord=
+er-top:none;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:black">13</spa=
+n></p></td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65=
+pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext;bord=
+er-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"=
+MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"colo=
+r:black">Kalal Dipak</span></p></td><td width=3D"420" nowrap style=3D"width=
+:210pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext;=
+border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=
+=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"=
+color:black">dipak.kalal172@mas.onfido.partners</span></p></td><td width=3D=
+"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;border-bo=
+ttom:1pt solid windowtext;border-right:1pt solid windowtext;background:rgb(=
+198,239,206);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">A=
+ctive</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"wi=
+dth:83pt;border-top:none;border-left:none;border-bottom:1pt solid windowtex=
+t;border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p cla=
+ss=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=
+=3D"color:black">Batch 172</span></p></td><td style=3D"height:14.5pt;border=
+:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td =
+width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowtext;b=
+order-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-t=
+op:none;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"ce=
+nter" style=3D"text-align:center"><span style=3D"color:black">14</span></p>=
+</td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;bor=
+der-top:none;border-left:none;border-bottom:1pt solid windowtext;border-rig=
+ht:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNor=
+mal" align=3D"center" style=3D"text-align:center"><span style=3D"color:blac=
+k">Honey Varghese</span></p></td><td width=3D"420" nowrap style=3D"width:21=
+0pt;border-top:none;border-left:none;border-bottom:1pt solid windowtext;bor=
+der-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D=
+"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=3D"col=
+or:black">honey.varghese172@mas.onfido.partners</span></p></td><td width=3D=
+"150" nowrap style=3D"width:75pt;border-top:none;border-left:none;border-bo=
+ttom:1pt solid windowtext;border-right:1pt solid windowtext;background:rgb(=
+198,239,206);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">A=
+ctive</span></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"wi=
+dth:83pt;border-top:none;border-left:none;border-bottom:1pt solid windowtex=
+t;border-right:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p cla=
+ss=3D"MsoNormal" align=3D"center" style=3D"text-align:center"><span style=
+=3D"color:black">Batch 172</span></p></td><td style=3D"height:14.5pt;border=
+:none" width=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td =
+width=3D"56" nowrap style=3D"width:28pt;border-right:1pt solid windowtext;b=
+order-bottom:1pt solid windowtext;border-left:1pt solid windowtext;border-t=
+op:none;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"ce=
+nter" style=3D"text-align:center"><span style=3D"color:black">15</span></p>=
+</td><td width=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;bor=
+der-top:none;border-left:none;border-bottom:1pt solid windowtext;border-rig=
+ht:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNor=
+mal" align=3D"center" style=3D"text-align:center"><span style=3D"color:blac=
+k">Jay Patel</span></p></td><td width=3D"420" nowrap style=3D"width:210pt;b=
+order-top:none;border-left:none;border-bottom:1pt solid windowtext;border-r=
+ight:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoN=
+ormal" align=3D"center" style=3D"text-align:center"><span style=3D"color:bl=
+ack">jay.patel172@mas.onfido.partners</span></p></td><td width=3D"150" nowr=
+ap style=3D"width:75pt;border-top:none;border-left:none;border-bottom:1pt s=
+olid windowtext;border-right:1pt solid windowtext;background:rgb(198,239,20=
+6);padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center"=
+ style=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">Active</span=
+></p></td><td width=3D"166" nowrap valign=3D"bottom" style=3D"width:83pt;bo=
+rder-top:none;border-left:none;border-bottom:1pt solid windowtext;border-ri=
+ght:1pt solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNo=
+rmal" align=3D"center" style=3D"text-align:center"><span style=3D"color:bla=
+ck">Batch 172</span></p></td><td style=3D"height:14.5pt;border:none" width=
+=3D"0" height=3D"29"></td></tr><tr style=3D"height:14.5pt"><td width=3D"56"=
+ nowrap style=3D"width:28pt;border-right:1pt solid windowtext;border-bottom=
+:1pt solid windowtext;border-left:1pt solid windowtext;border-top:none;padd=
+ing:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center" style=
+=3D"text-align:center"><span style=3D"color:black">16</span></p></td><td wi=
+dth=3D"237" nowrap valign=3D"bottom" style=3D"width:118.65pt;border-top:non=
+e;border-left:none;border-bottom:1pt solid windowtext;border-right:1pt soli=
+d windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=
+=3D"center" style=3D"text-align:center"><span style=3D"color:black">Kazi Zu=
+ber </span></p></td><td width=3D"420" nowrap style=3D"width:210pt;border-to=
+p:none;border-left:none;border-bottom:1pt solid windowtext;border-right:1pt=
+ solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" a=
+lign=3D"center" style=3D"text-align:center"><span style=3D"color:black">zub=
+er.kazi172@mas.onfido.partners</span></p></td><td width=3D"150" nowrap styl=
+e=3D"width:75pt;border-top:none;border-left:none;border-bottom:1pt solid wi=
+ndowtext;border-right:1pt solid windowtext;background:rgb(198,239,206);padd=
+ing:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" align=3D"center" style=
+=3D"text-align:center"><span style=3D"color:rgb(0,97,0)">Active</span></p><=
+/td><td width=3D"166" nowrap valign=3D"bottom" style=3D"width:83pt;border-t=
+op:none;border-left:none;border-bottom:1pt solid windowtext;border-right:1p=
+t solid windowtext;padding:0in 5.4pt;height:14.5pt"><p class=3D"MsoNormal" =
+align=3D"center" style=3D"text-align:center"><span style=3D"color:black">Ba=
+tch 172</span></p></td><td style=3D"height:14.5pt;border:none" width=3D"0" =
+height=3D"29"></td></tr></tbody></table><p class=3D"MsoNormal">=C2=A0</p><p=
+ class=3D"MsoNormal">Regards</p><p class=3D"MsoNormal">Harneet</p></div></d=
+iv>
+</div></blockquote></div>
+
+--00000000000038e24005ff2ba169--

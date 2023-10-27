@@ -63,6 +63,7 @@ function get_user()
         </div>
         <div class="col-sm-2">
             <button type='submit' class="btn btn-info" value="Save">Add</button>
+            <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
         </div>
     </div>
     <div class="form-group has-info has-feedback">
@@ -76,4 +77,28 @@ function get_user()
     <div class="clearfix"></div>
     
     <?php echo $this->Form->end(); ?>
+
+
+    <table class="table">
+    <tr>
+            <th>Srno.</th>
+<th>Imprest Name</th>
+            <th>EmailId</th>
+            
+            <th>Branch</th>
+    </tr>
+
+   
+        <?php $i=1; foreach($imprest_master as $impr)
+        { 
+            echo '<tr>';
+                echo '<td>'.$i++.'</td>';
+                echo '<td>'.$impr['ImprestManager']['TallyHead'].'</td>';
+                echo '<td>'.$impr['ImprestManager']['EmailId'].'</td>';
+                
+                echo '<td>'.$impr['ImprestManager']['Branch'].'</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
 </div>

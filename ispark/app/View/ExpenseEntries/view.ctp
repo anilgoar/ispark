@@ -1,3 +1,4 @@
+<?php if(empty($FinanceYear)) {$FinanceYear = $FinanceYearLogin;}  ?>
 <div class="row">
 	<div id="breadcrumb" class="col-xs-12">
 		<a href="#" class="show-sidebar">
@@ -66,6 +67,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <button type='submit' class="btn btn-info" value="Submit">View</button>
+                                <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                             </div>
                     </div>  
                     <?php echo $this->Form->end(); ?>

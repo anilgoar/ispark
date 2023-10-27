@@ -1911,6 +1911,52 @@ $cntLoop = "3";
                 
         ?>
         
+        <tr></tr>
+        
+        <tr>
+                <th>Capex</th>
+                <?php
+                    if(!empty($branch_master1)) { foreach($branch_master1 as $cost)
+                    {
+                        
+                        echo '<td>'.round($UnCapex[$cost] - $Capex[$cost]).'</td>';
+                        echo '<td>'.round($Capex[$cost]).'</td>';
+                        $tot_capex += round($Capex[$cost]);
+                        $tot_uncapex += round($UnCapex[$cost]);
+                        echo '<td>'.round($UnCapex[$cost]).'</td>';
+                    }
+                    echo '<th>'.round($tot_uncapex - $tot_capex,2).'</th>';
+                        echo '<th>'.$tot_capex.'</th>';
+                        echo '<th>'.$tot_uncapex.'</th>';
+                ?>
+                <?php
+                    } if(!empty($branch_master2)) { foreach($branch_master2 as $cost)
+                    {
+                       echo '<td>0</td>';
+                        echo '<td>'.round($capex[$cost]).'</td>';
+                        echo '<td>'.round($capex[$cost]).'</td>';
+                        $tot_capex += round($capex[$cost]);
+                    }
+                    echo '<td>0</td>';
+                        echo '<td>'.$tot_capex.'</td>';
+                        echo '<td>'.$tot_capex.'</td>';
+                ?>
+                <?php
+                    } if(!empty($branch_master3)) { foreach($branch_master3 as $cost)
+                    {
+                        echo '<td>0</td>';
+                        echo '<td>'.round($capex[$cost]).'</td>';
+                        echo '<td>'.round($capex[$cost]).'</td>';
+                        $tot_capex += round($capex[$cost]);
+                    }
+                   echo '<td>0</td>';
+                        echo '<td>'.$tot_capex.'</td>';
+                        echo '<td>'.$tot_capex.'</td>';
+                ?>
+        <?php } ?> </tr>
+        
+        <tr></tr>
+        
         <tr>
             <th>OutStanding</th>
             <?php    //UnProcessed Provision For Branch Type A
@@ -2151,47 +2197,7 @@ $cntLoop = "3";
             <th><?php echo round((($TotCostUnProc+$TotCostProc)*100)/($NetDiv+$NetDivProc)); ?>%</th>
         <?php } ?> </tr>
         
-        <tr></tr>
         
-        <tr>
-                <th>Capex</th>
-                <?php
-                    if(!empty($branch_master1)) { foreach($branch_master1 as $cost)
-                    {
-                        echo '<td>0</td>';
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        $tot_capex += round($capex[$cost]);
-                    }
-                    echo '<td>0</td>';
-                        echo '<td>'.$tot_capex.'</td>';
-                        echo '<td>'.$tot_capex.'</td>';
-                ?>
-                <?php
-                    } if(!empty($branch_master2)) { foreach($branch_master2 as $cost)
-                    {
-                       echo '<td>0</td>';
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        $tot_capex += round($capex[$cost]);
-                    }
-                    echo '<td>0</td>';
-                        echo '<td>'.$tot_capex.'</td>';
-                        echo '<td>'.$tot_capex.'</td>';
-                ?>
-                <?php
-                    } if(!empty($branch_master3)) { foreach($branch_master3 as $cost)
-                    {
-                        echo '<td>0</td>';
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        echo '<td>'.round($capex[$cost]).'</td>';
-                        $tot_capex += round($capex[$cost]);
-                    }
-                   echo '<td>0</td>';
-                        echo '<td>'.$tot_capex.'</td>';
-                        echo '<td>'.$tot_capex.'</td>';
-                ?>
-        <?php } ?> </tr>
         
         <tr></tr>
         
@@ -2200,11 +2206,11 @@ $cntLoop = "3";
             <?php $TotCostUnProc = 0; $TotCostProc=0;
             if(!empty($branch_master1)) { foreach($branch_master1 as $cost)
             {
-                 echo "<td>".round($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04))."</td>";
-                echo "<td>".round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04))."</td>";
-                echo "<td>".round(round($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04))+round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)))."</td>";
-                $TotCostUnProc += round($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04));
-                $TotCostProc += round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04));
+                 echo "<td>".round($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost] - $Capex[$cost]))."</td>";
+                echo "<td>".round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)-$Capex[$cost])."</td>";
+                echo "<td>".round(round($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost] - $Capex[$cost]))+round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)-$Capex[$cost]))."</td>";
+                $TotCostUnProc += round($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost] - $Capex[$cost]));
+                $TotCostProc += round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)-$Capex[$cost]);
             }
             ?>
             <th><?php echo round((($TotCostUnProc))); ?></th>
@@ -2242,13 +2248,13 @@ $cntLoop = "3";
             <?php $TotCostUnProc = 0; $TotCostProc=0;$NetDiv=0; $NetDivProc = 0;
             if(!empty($branch_master1)) { foreach($branch_master1 as $cost)
             {
-                echo "<td>".round((($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04))/($NetRev_br[$cost]))*100)."%</td>";
-                echo "<td>".round((($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04))/($NetRevProc_br[$cost]))*100)."%</td>";
-                echo "<td>".round(((($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04))+($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)))*100)/($NetRev_br[$cost]+$NetRevProc_br[$cost]))."%</td>";
-                $TotCostUnProc += ($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04));
-                $TotCostProc += ($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04));
+                echo "<td>".round((($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost] - $Capex[$cost]))/($NetRev_br[$cost]))*100)."%</td>";
+                echo "<td>".round((($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)-round( $Capex[$cost]))/($NetRevProc_br[$cost]))*100)."%</td>";
+                echo "<td>".round(((($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost] - $Capex[$cost]))+($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04)-round($Capex[$cost])))*100)/($NetRev_br[$cost]+$NetRevProc_br[$cost]))."%</td>";
+                $TotCostUnProc += ($NetRev_br[$cost]-$TotalCostUnProc_br[$cost]-round($outstand_unproc_data[$cost]*0.04)-round($UnCapex[$cost] - $Capex[$cost]));
                 $NetDiv += $NetRev_br[$cost];
                 $NetDivProc += $NetRevProc_br[$cost];
+                $TotCostProc += round($NetRevProc_br[$cost]-$TotalCostProc_br[$cost]-round($outstand_proc_data[$cost]*0.04));
             }
             ?>
             <th><?php echo round((($TotCostUnProc/$NetDiv)*100)); ?>%</th>

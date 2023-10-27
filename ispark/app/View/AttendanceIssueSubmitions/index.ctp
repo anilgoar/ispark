@@ -136,6 +136,7 @@ function validateAttendIssue(){
                             <option value="DH">DH</option>
                             <option value="F">F</option>
                             <option value="OD">OD</option>
+                            <!-- <option value="WFH">WFH</option> -->
                         </select>
                     </div>
                     <div class="col-sm-2">Reason</div>
@@ -147,6 +148,7 @@ function validateAttendIssue(){
                             <option value="Others">Others</option>
                             <option value="Power Failure">Power Failure</option>
                             <option value="Skin Problem">Skin Problem</option>
+                            <option value="Work From Home">Work From Home</option>
                         </select>
                     </div>
                     <div id="othres"></div>

@@ -108,7 +108,7 @@ function downloadHoAttendApprovalReport(){
                     <span><?php echo $this->Session->flash(); ?></span>
                     </div>
                 </div>
-                <?php if(!empty($OdArr)){ ?>
+                <?php  if(!empty($OdArr)){ ?>
                 <table class = "table table-striped table-hover  responstable"  >     
                     <thead>
                         <tr>
@@ -124,7 +124,7 @@ function downloadHoAttendApprovalReport(){
                         </tr>
                     </thead>
                     <tbody>         
-                    <?php foreach ($OdArr as $val){?>
+                    <?php  foreach ($OdArr as $val){?>
                     <tr>
                         <td><center><input class="checkbox" type="checkbox" value="<?php echo $val['BranchAttandIssueMaster']['Id'];?>" name="check[]"></center></td>
                         <td style="text-align: center;"><?php echo $val['BranchAttandIssueMaster']['EmpCode'];?></td>

@@ -5,6 +5,7 @@ class WorkHomeAttendancesController extends AppController {
     public function beforeFilter(){
         parent::beforeFilter();  
         $this->Auth->allow('index','markfield','savefieldmark','check_date');
+        $this->Auth->allow('del_markfield','del_attn');
         if(!$this->Session->check("username")){
             return $this->redirect(array('controller'=>'users','action' => 'login'));
         }
@@ -81,7 +82,7 @@ class WorkHomeAttendancesController extends AppController {
         if(isset($_REQUEST['CSN']) || isset($_REQUEST['SFD'])){
             $cosc = base64_decode($_REQUEST['CSN']);
             if(isset($_REQUEST['SFD']) && $_REQUEST['SFD'] !=""){
-                $search = base64_decode($_REQUEST['SFD']);
+                $search = base64_decode($_REQUEST['SFD']); 
             }
             else{
                 $search="";
@@ -234,5 +235,123 @@ class WorkHomeAttendancesController extends AppController {
         return $this->Masjclrentry->find('count', array('conditions' => array('EmpLocation'=>'OnSite','BranchName'=>$branchName,'CostCenter'=>$CostCenter,'Status'=>1)));
     }
     
+    
+    
+    public function del_markfield()
+    {
+        $this->layout='home';
+        $branchName =   "NOIDA-2";
+        $CostCenter = "";
+        if(!empty($_REQUEST['CSN']))
+        {
+            $CostCenter = base64_decode($_REQUEST['CSN']);
+        }
+        else
+        {
+            $CostCenter = "BSS/BO/NOIDA-2/576";
+        }
+        
+        
+        $dt1        =   array();
+        
+		
+        
+        $end_day = date("Y-m-t");
+        $start_day = date('Y-m-01', strtotime($start_day . " -1 month")); 
+        $dt2    =   $this->WorkHomeAttandenceMaster->find('list',array('fields'=>array('Attanddate'),
+            'conditions'=>array('BranchName'=>$branchName,'CostCenter'=>$CostCenter,'Attanddate !='=>'',"DATE(AttandDate)>='$start_day' and DATE(AttandDate)<='$end_day'"),'group' =>array('Attanddate')));
+        
+        
+        
+        while(strtotime($start_day)<=strtotime($end_day))
+        {
+            $dt1[] = $start_day;
+            $start_day = date('Y-m-d', strtotime($start_day . " +1 day"));
+        }
+        
+        
+       
+
+        
+        
+        $this->set('dateArr',$dt2);
+
+        $fieldArr=array();
+        
+        if(!$this->request->is('Post') || isset($_REQUEST['SFD'])){
+            $cosc = $CostCenter;
+            if(isset($_REQUEST['SFD']) && $_REQUEST['SFD'] !=""){
+                $search = base64_decode($_REQUEST['SFD']); 
+            }
+            else{
+                $search="";
+            }
+            
+            if($search !=""){
+                $data=$this->Masjclrentry->find('all',array('conditions' => array('Status'=>1,'EmpLocation'=>'OnSite','BranchName'=>$branchName,'CostCenter' =>$cosc,'or' => array('EmpCode' =>$search,'EmpName LIKE' =>$search.'%'))));
+            }
+            else{
+                $data = $this->Masjclrentry->find('all',array('conditions'=>array('EmpLocation'=>'OnSite','BranchName'=>$branchName,'CostCenter'=>$cosc,'Status'=>1))); 
+            }
+            
+            
+            $emparr = array('BranchName'=>$branchName,'cost_center'=>$cosc,'TotalEmp'=>$this->total_employees($cosc,$branchName));
+            $this->set('fieldArr',$data);
+            $this->set('empArr',$emparr);
+            //print_r($emparr); exit;
+            
+            $EmpMarkStatus =   array();
+            if(isset($_REQUEST['mark_date']) && $_REQUEST['mark_date'] !=""){
+                
+                $MarkDate       =   date("Y-m-d",strtotime($_REQUEST['mark_date']));
+                $this->Set('mark_date',$_REQUEST['mark_date']);
+                
+                $AttendanceList =   $this->WorkHomeAttandenceMaster->find('all',array('conditions'=>array('BranchName'=>$branchName,'CostCenter'=>$CostCenter,'date(Attanddate)'=>$MarkDate))); 
+                
+                foreach($AttendanceList as $row){
+                    $EmpMarkStatus[$row['WorkHomeAttandenceMaster']['EmpCode']]=$row['WorkHomeAttandenceMaster']['Status'];
+                }                
+            }
+            
+            $this->set('EmpMarkStatus',$EmpMarkStatus); 
+            
+        }
+        
+        else if($this->request->is('Post')){
+            $this->set('search','search');
+            $cosc       =   $this->request->data['CostCenter'];
+            $SearchData =   trim($this->request->data['SearchData']);
+            $this->redirect(array('action'=>'markfield','?'=>array('CSN'=>base64_encode($cosc),'SFD'=>base64_encode($SearchData),'STP'=>'search')));   
+        }
+           
+    }
+    
+    public function del_attn(){ 
+        if($this->request->is('Post')){
+            
+            $branchName = $this->request->data['BranchName'];
+            $CostCenter = $this->request->data['CostCenter'];
+            $mark_date  =   $this->request->data['MarkDate'];
+            $MarkDate   = date("Y-m-d",strtotime($this->request->data['MarkDate']));
+                        
+            if(!empty($mark_date) && !empty($branchName) && !empty($CostCenter)){
+                
+                if($this->WorkHomeAttandenceMaster->deleteAll(array('BranchName'=>$branchName,'CostCenter'=>$CostCenter,'AttandDate'=>$MarkDate)))
+                {
+                    $this->Session->setFlash('<span style="color:green;" >Your work home attendance discard successfully.</span>'); 
+                    $this->redirect(array('action'=>'del_markfield','?'=>array('CSN'=>base64_encode($CostCenter)))); 
+                }
+                else
+                {
+                    $this->Session->setFlash('<span style="color:green;" >Your work home attendance not found.</span>'); 
+                    $this->redirect(array('action'=>'del_markfield','?'=>array('CSN'=>base64_encode($CostCenter),'mark_date'=>$mark_date))); 
+                }                
+            }
+            else{
+                $this->Session->setFlash('<span style="color:red;" >Please Select Valid Records.</span>'); 
+                $this->redirect(array('action'=>'del_markfield','?'=>array('CSN'=>base64_encode($CostCenter),'mark_date'=>$mark_date)));   
+            }
+        }
+    }
 }
 ?>

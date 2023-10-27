@@ -66,7 +66,7 @@ function getSubHeading()
                         <label class="col-sm-1 control-label">Year</label>
                         <div class="col-sm-3">
                                 <?php	
-                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => array_merge(array('All'=>'All'),$financeYearArr),'empty' => 'Select Year','required'=>true));
+                                    echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control','options' => array_merge(array('All'=>'All'),$financeYearArr),'empty' => 'Select Year','value'=>$FinanceYearLogin,'required'=>true));
                                 ?>
                         </div>
                         <label class="col-sm-1 control-label">Month</label>
@@ -117,7 +117,7 @@ function getSubHeading()
                            <button class="btn btn-primary btn-label-left" onClick="return imrest_validate13('Export');">Export</button>
                         </div>
                         <div class="col-sm-1">
-                           <a href="/ispark/FinanceReports" class="btn btn-primary btn-label-left">Back</a> 
+                           <a href="/ispark/Menuisps/sub?AX=MTMx&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OUSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a>  
                         </div>
                     </div>
                     
@@ -162,6 +162,8 @@ function getSubHeading()
                             <th>Grn Date</th>
                             <th>Approval Date</th>
                             <th>Due Date</th>
+                            <th>Payment Date</th>
+                            <th>TDS</th>
                             <th>status</th>
                             <th>username</th>
                         </tr>
@@ -190,6 +192,8 @@ function getSubHeading()
                                         echo "<td>".round($exp['eep']['Amount'],2)."</td>";
                                         echo "<td>".$exp['em']['ExpenseDate']."</td>";
                                         echo "<td>".$exp['0']['ApprovalDate']."</td>";
+                                        echo "<td>".$exp['0']['grn_payment_date']."</td>";
+                                        echo "<td>".$exp['0']['Tax']."</td>";
                                         echo "<td>".$exp['em']['due_date']."</td>";
                                         echo "<td>".$exp['em']['EntryStatus']."</td>";
                                         echo "<td>".$exp['tu']['emp_name']."</td>";

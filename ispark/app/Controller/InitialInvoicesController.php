@@ -23,7 +23,7 @@ public function beforeFilter()
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 
-            $this->Auth->deny('index','view','add','billApproval','branch_viewbill','view_bill','genrate_bill','genrate_bill','edit_bill','update_bill','update_bill',
+            $this->Auth->allow('index','view','add','billApproval','branch_viewbill','view_bill','genrate_bill','genrate_bill','edit_bill','update_bill','update_bill',
             'branch_view','branch_viewbill','edit_bill','update_bill','view_pdf1','view_pdf','download','view_admin','dashboard','check_po','view_grn','check_grn',
             'approve_ahmd','view_ahmd','view_invoice','edit_invoice','download_grn','approve_grn','edit_forgrn','approve_po','view_forpo','view_pdf','billApproval',
             'reject_invoice','update_invoice','update_po','update_grn','billApproval','view_pdfgrn','view_pdfgrn1','view_pdfgrn2','get_costcenter','get_gst_type',
@@ -376,18 +376,21 @@ public function add()
     $cost_no = $this->request->data['InitialInvoice']['cost_center'];
     $fin_year = $this->request->data['InitialInvoice']['finance_year'];
     $month    =   $this->request->data['InitialInvoice']['month'];
-    $arr =explode('-',$fin_year);
     $invoiceType = $this->request->data['InitialInvoice']['invoiceType'];
+    $category = $this->request->data['InitialInvoice']['category'];
+    $arr =explode('-',$fin_year);
+    
 
     if(in_array($month,array('Jan','Feb','Mar')))
     {
         if($arr[0]==date('Y') || $arr[1]==date('y'))
         {
-            $month=$month."-".date('y');
+            //$month=$month."-".date('y');
+            $month=$month."-".$arr[1];
         }
         else
         {
-            $month=$month."-".$arr[1];
+            $month=$month."-".$arr[1]; 
         }
         
     }
@@ -452,6 +455,7 @@ public function add()
         return $this->redirect(array('controller'=>'CostCenterMasters','action' => 'index'));
     }
 
+    $this->set('category',$category);
     $this->set('invoiceType',$invoiceType);
     $this->set('cost_master',$dataX);
     $this->set('tmp_particulars',$this->AddInvParticular->find('all',array('conditions'=>array('username' => $username))));
@@ -467,11 +471,13 @@ public function billApproval()
     $username=$this->Session->read("username");
     $userid = $this->Session->read("userid");
     $roles=explode(',',$this->Session->read("page_access"));
+    $role=$this->Session->read("role");
     
     if ($this->request->is('post')) 
     {		
         $checkTotal = 0;	
         $result=$this->request->data['InitialInvoice'];
+        //print_r($result);exit;
         $Revenue = $result['revenue'];
         $RevenueMonthArr = $result['revenue_arr'];
         
@@ -803,7 +809,7 @@ public function billApproval()
 //
 //                }
 //            }
-            if(in_array('5',$roles))
+            if($role=='admin')
             {
                 return $this->redirect(array('controller'=>'InitialInvoices','action' => 'view'));
             }
@@ -822,140 +828,143 @@ public function billApproval()
     }
 }
 		
-                public function download_proforma()
-                {	
-                            $this->layout='home';
-                            $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
-                            
-                            $role = $this->Session->read("role");
-                            if($role=='admin')
-                            {
-                            $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1),'order'=>array('branch_name'=>'asc'))));
-                            }
-                            else
-                            {
-                                $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1,'branch_name'=>$branch_name),'order'=>array('branch_name'=>'asc'))));
-                            }
-                            
-                            $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('company_name','company_name'))));
-                            
-                           if($this->request->is('Post'))
-                            {
-                                $branch_name=$this->Session->read("branch_name");
-                                $roles=explode(',',$this->Session->read("page_access"));
-                                $data = $this->request->data['InitialInvoice'];
+    public function download_proforma()
+    {	
+                $this->layout='home';
+                $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
 
-                                $condition = array("status"=>"0","or"=>array('bill_no'=>''),"not"=>array('proforma_bill_no'=>''),'proforma_approve'=>'0');
-                                if($data['company_name'] !='')
-                                    $condition['CostCenterMaster.company_name'] =  $data['company_name'];
-                                if($data['finance_year'] !='')
-                                    $condition['InitialInvoice.finance_year'] =  $data['finance_year'];
-                                if($data['branch_name'] !='')
-                                    $condition['InitialInvoice.branch_name'] =  $data['branch_name'];
-                                if($data['bill_no'] !='')
-                                    $condition["SUBSTRING_INDEX(InitialInvoice.proforma_bill_no,'/','1')"] =  $data['proforma_bill_no'];
-                                if(!in_array('18',$roles))
-                                        $condition['InitialInvoice.branch_name'] =  $branch_name;
-                                 //print_r($condition); exit;
-                                $data = $this->InitialInvoice->find('all',array('fields'=>array('id','branch_name','proforma_bill_no','total','po_no','grn','invoiceDescription'),
-                                    'joins'=>array(array('table'=>'cost_master',
-                                    'type'=>'inner','alias'=>'CostCenterMaster',
-                                    'conditions'=>array('InitialInvoice.cost_center = CostCenterMaster.cost_center'))),'conditions'=>$condition));
-                                $this->set('tbl_invoice',$data);                           
-                                //print_r($data); die;
-                            }     
+                $role = $this->Session->read("role");
+                if($role=='admin')
+                {
+                $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1),'order'=>array('branch_name'=>'asc'))));
                 }
-                
-                public function download_proforma_branch()
-                {	
-                            $this->layout='home';
-                            $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
-                            
-                            $role = $this->Session->read("role");
-                            if($role=='admin')
-                            {
-                            $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1),'order'=>array('branch_name'=>'asc'))));
-                            }
-                            else
-                            {
-                                $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1,'branch_name'=>$branch_name),'order'=>array('branch_name'=>'asc'))));
-                            }
-                            
-                            
-                           if($this->request->is('Post'))
-                            {
-                                $branch_name=$this->Session->read("branch_name");
-                                $roles=explode(',',$this->Session->read("page_access"));
-                                $data = $this->request->data['InitialInvoice'];
+                else
+                {
+                    $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1,'branch_name'=>$branch_name),'order'=>array('branch_name'=>'asc'))));
+                }
 
-                                $condition = array("not"=>array('proforma_bill_no'=>''),'proforma_approve'=>'0');
-                                if($data['company_name'] !='')
-                                    $condition['CostCenterMaster.company_name'] =  $data['company_name'];
-                                if($data['finance_year'] !='')
-                                    $condition['InitialInvoice.finance_year'] =  $data['finance_year'];
-                                if($data['branch_name'] !='')
-                                    $condition['InitialInvoice.branch_name'] =  $data['branch_name'];
-                                if($data['bill_no'] !='')
-                                    $condition["SUBSTRING_INDEX(InitialInvoice.proforma_bill_no,'/','1')"] =  $data['proforma_bill_no'];
-                                if(!in_array('18',$roles))
-                                        $condition['InitialInvoice.branch_name'] =  $branch_name;
-                                $data = $this->InitialInvoice->find('all',array('fields'=>array('id','branch_name','proforma_bill_no','total','po_no','grn','invoiceDescription'),
-                                    'joins'=>array(array('table'=>'cost_master',
-                                    'type'=>'inner','alias'=>'CostCenterMaster',
-                                    'conditions'=>array('InitialInvoice.cost_center = CostCenterMaster.cost_center'))),'conditions'=>$condition));
-                                $this->set('tbl_invoice',$data);                           
-                                //print_r($data); die;
-                            }     
+                $this->set('company_master', $this->Addcompany->find('list',array('fields'=>array('company_name','company_name'))));
+
+               if($this->request->is('Post'))
+                {
+                    $branch_name=$this->Session->read("branch_name");
+                    $roles=explode(',',$this->Session->read("page_access"));
+                    $data = $this->request->data['InitialInvoice'];
+
+                    $condition = array("status"=>"0","or"=>array('bill_no'=>''),"not"=>array('proforma_bill_no'=>''),'proforma_approve'=>'0');
+                    if($data['company_name'] !='')
+                        $condition['CostCenterMaster.company_name'] =  $data['company_name'];
+                    if($data['finance_year'] !='')
+                        $condition['InitialInvoice.finance_year'] =  $data['finance_year'];
+                    if($data['branch_name'] !='')
+                        $condition['InitialInvoice.branch_name'] =  $data['branch_name'];
+                    if($data['bill_no'] !='')
+                        $condition["SUBSTRING_INDEX(InitialInvoice.proforma_bill_no,'/','1')"] =  $data['proforma_bill_no'];
+                    if($role!='admin')
+                            $condition['InitialInvoice.branch_name'] =  $branch_name;
+                     //print_r($condition); exit;
+                    $data = $this->InitialInvoice->find('all',array('fields'=>array('id','branch_name','proforma_bill_no','total','po_no','grn','invoiceDescription'),
+                        'joins'=>array(array('table'=>'cost_master',
+                        'type'=>'inner','alias'=>'CostCenterMaster',
+                        'conditions'=>array('InitialInvoice.cost_center = CostCenterMaster.cost_center'))),'conditions'=>$condition));
+                    $this->set('tbl_invoice',$data);                           
+                    //print_r($data); die;
+                }     
+    }
+
+    public function download_proforma_branch()
+    {	
+                $this->layout='home';
+                $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
+
+                $role = $this->Session->read("role");
+                if($role=='admin')
+                {
+                $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1),'order'=>array('branch_name'=>'asc'))));
                 }
-		public function edit_proforma()
-		{
-                    $username=$this->Session->read("username");
-			$branch_name=$this->Session->read("branch_name");
-			
-			$roles=explode(',',$this->Session->read("page_access"));
-			
-			$id  = base64_decode($this->request->query['id']);
-			$this->layout='home';
-			if(in_array('5',$roles))
-			{
-				$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id,'bill_no'=>'')));
-			}
-			elseif(!$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id,'bill_no'=>'','branch_name'=>$branch_name))))
-			{return $this->redirect(array('controller'=>'Users','action' => 'login'));}
-			
-                         $prov_deduction = $this->ProvisionPartDed->query("Select * from provision_master_month_deductions pmmd where InvoiceId= '$id'");
-                    $ActualRevenue = array(); 
-                    foreach($prov_deduction as $pd)
-                    {
-                        $ProvisionId = $pd['pmmd']['ProvisionId'];
-                        $revenue += round($pd['pmmd']['ProvisionBalanceUsed'],2);
-                        $monthMaster[$pd['pmmd']['Provision_Finance_Month']] = round($pd['pmmd']['ProvisionBalanceUsed'],2);
-                        $ActualProvArr = $this->Provision->find('first',array('conditions'=>"Id='$ProvisionId'"));
-                        $ActualRevenue[$pd['pmmd']['Provision_Finance_Month']]=  round($ActualProvArr['Provision']['provision_balance'],2) + round($pd['pmmd']['ProvisionBalanceUsed'],2);
-                    }
-                        
-                        
-			$b_name=$data['InitialInvoice']['branch_name'];
-			$c_center=$data['InitialInvoice']['cost_center'];
-			
-                        
-                        
-			$this->set('roles',$roles);
-                         $this->set('revenue',$revenue);
-                    $this->set('monthMaster',$monthMaster);
-                    $this->set('ActualRevenue',$ActualRevenue);
-                    $this->set('branch_master', $this->Addbranch->find('all',array('fields'=>array('branch_name'))));
-			$this->set('tbl_invoice', $this->InitialInvoice->find('all',array('conditions'=>array('id'=>$id))));
-			$this->set('cost_master', $this->CostCenterMaster->find('first',array('conditions'=>array('branch'=>$b_name,'cost_center'=>$c_center))));
-			$this->set('inv_particulars', $this->Particular->find('all',array('conditions'=>array('initial_id'=>$id))));
-			$this->set('inv_deduct_particulars', $this->DeductParticular->find('all',array('conditions'=>array('initial_id'=>$id))));
-                        $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2018-19','2019-20','2020-21')))));
-			
-		}
+                else
+                {
+                    $this->set('branch_master', $this->Addbranch->find('all',array('conditions'=>array('active'=>1,'branch_name'=>$branch_name),'order'=>array('branch_name'=>'asc'))));
+                }
+
+
+               if($this->request->is('Post'))
+                {
+                    $branch_name=$this->Session->read("branch_name");
+                    $roles=explode(',',$this->Session->read("page_access"));
+                    $data = $this->request->data['InitialInvoice'];
+
+                    $condition = array("not"=>array('proforma_bill_no'=>''),'proforma_approve'=>'0');
+                    if($data['company_name'] !='')
+                        $condition['CostCenterMaster.company_name'] =  $data['company_name'];
+                    if($data['finance_year'] !='')
+                        $condition['InitialInvoice.finance_year'] =  $data['finance_year'];
+                    if($data['branch_name'] !='')
+                        $condition['InitialInvoice.branch_name'] =  $data['branch_name'];
+                    if($data['bill_no'] !='')
+                        $condition["SUBSTRING_INDEX(InitialInvoice.proforma_bill_no,'/','1')"] =  $data['proforma_bill_no'];
+                    if($role!='admin')
+                            $condition['InitialInvoice.branch_name'] =  $branch_name;
+                    $data = $this->InitialInvoice->find('all',array('fields'=>array('id','branch_name','proforma_bill_no','total','po_no','grn','invoiceDescription'),
+                        'joins'=>array(array('table'=>'cost_master',
+                        'type'=>'inner','alias'=>'CostCenterMaster',
+                        'conditions'=>array('InitialInvoice.cost_center = CostCenterMaster.cost_center'))),'conditions'=>$condition));
+                    $this->set('tbl_invoice',$data);                           
+                    //print_r($data); die;
+                }     
+    }
+    public function edit_proforma()
+    {
+        $username=$this->Session->read("username");
+            $branch_name=$this->Session->read("branch_name");
+
+            $roles=explode(',',$this->Session->read("page_access"));
+            $role=$this->Session->read("role");
+
+            $id  = base64_decode($this->request->query['id']);
+            $this->layout='home';
+            if($role=='admin')
+            {
+                    $data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id,'bill_no'=>'')));
+            }
+            elseif(!$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id,'bill_no'=>'','branch_name'=>$branch_name))))
+            {return $this->redirect(array('controller'=>'Users','action' => 'login'));}
+
+             $prov_deduction = $this->ProvisionPartDed->query("Select * from provision_master_month_deductions pmmd where InvoiceId= '$id'");
+        $ActualRevenue = array(); 
+        foreach($prov_deduction as $pd)
+        {
+            $ProvisionId = $pd['pmmd']['ProvisionId'];
+            $revenue += round($pd['pmmd']['ProvisionBalanceUsed'],2);
+            $monthMaster[$pd['pmmd']['Provision_Finance_Month']] = round($pd['pmmd']['ProvisionBalanceUsed'],2);
+            $ActualProvArr = $this->Provision->find('first',array('conditions'=>"Id='$ProvisionId'"));
+            $ActualRevenue[$pd['pmmd']['Provision_Finance_Month']]=  round($ActualProvArr['Provision']['provision_balance'],2) + round($pd['pmmd']['ProvisionBalanceUsed'],2);
+        }
+
+
+            $b_name=$data['InitialInvoice']['branch_name'];
+            $c_center=$data['InitialInvoice']['cost_center'];
+
+
+
+            $this->set('roles',$roles);
+             $this->set('revenue',$revenue);
+            $this->set('monthMaster',$monthMaster);
+            $this->set('ActualRevenue',$ActualRevenue);
+            $this->set('branch_master', $this->Addbranch->find('all',array('fields'=>array('branch_name'))));
+            $this->set('tbl_invoice', $this->InitialInvoice->find('all',array('conditions'=>array('id'=>$id))));
+            $this->set('cost_master', $this->CostCenterMaster->find('first',array('conditions'=>array('branch'=>$b_name,'cost_center'=>$c_center))));
+            $this->set('inv_particulars', $this->Particular->find('all',array('conditions'=>array('initial_id'=>$id))));
+            $this->set('inv_deduct_particulars', $this->DeductParticular->find('all',array('conditions'=>array('initial_id'=>$id))));
+            $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
+
+    }
+    
 public function update_proforma()
 {
     $this->layout='home';
     $roles=explode(',',$this->Session->read("page_access"));
+    $role=$this->Session->read("role");
 
     if ($this->request->is('post'))
     {
@@ -1248,7 +1257,9 @@ public function update_proforma()
 
                             $msg .= "<br><strong><b style=color:#FF0000>Kindly update your Records </b></strong>";
 
-                            $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
+                            $emailid = $this ->User->find("all",
+                    array('fields' => array('email','id','branch_name'),
+                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 
 //                            $nofifyArr = array(); $notifyLoop=0;
 //
@@ -1276,7 +1287,7 @@ public function update_proforma()
                                                             }
                                                         }				
 
-                            if(in_array('5',$roles))
+                            if($role=='admin')
                             {return $this->redirect(array('controller'=>'InitialInvoices','action' => 'download_proforma'));}
                             else
                             {return $this->redirect(array('controller'=>'InitialInvoices','action' => 'download_proforma'));}
@@ -1353,7 +1364,9 @@ public function update_proforma()
 
                                 $msg = "Hi<br> Proforma Has Approved ".$branch_name." branch Proforma No. ".$proforma_bill_no." for ".$dataX['InitialInvoice']['invoiceDescription']." with value of ".$dataX['InitialInvoice']['grnd']." on ".date("F j, Y, g:i a");
                                 $msg .= "<br><strong><b style=color:#FF0000> Move To Tax Invoice </b></strong>";
-                                $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $branch_name),'role' => 'admin'))));
+                                $emailid = $this ->User->find("all",
+                    array('fields' => array('email','id','branch_name'),
+                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 
                                 $nofifyArr = array(); $notifyLoop=0;
 
@@ -1477,8 +1490,9 @@ public function update_proforma()
 			$branch_name=$this->Session->read("branch_name");
                         
 			$roles=explode(',',$this->Session->read("page_access"));
+                        $role=$this->Session->read("role");
 			$data='';
-			if(in_array('18',$roles))
+			if($role=='admin')
 			{
                             $data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id)));
 			}
@@ -1510,8 +1524,9 @@ public function update_proforma()
 			$username=$this->Session->read("username");
 			$branch_name=$this->Session->read("branch_name");
 			$roles=explode(',',$this->Session->read("page_access"));
-
-			if(in_array('18',$roles))
+                        $role=$this->Session->read("role");
+                        
+			if($role=='admin')
 			{
 				$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id)));
 			}
@@ -1639,12 +1654,12 @@ public function update_proforma()
                         $cost_center = $this->InitialInvoice->find('first',array('fields'=>array('cost_center'),'conditions'=>array('id'=>$id)));
 
 
-                        $company = $this->CostCenterMaster->find('first',array('fields'=>array('company_name'),
+                        $company = $this->CostCenterMaster->find('first',array(
                             'conditions'=>array('cost_center'=>$cost_center['InitialInvoice']['cost_center'])));
                         $companyName = $company['CostCenterMaster']['company_name'];
 
                         $selT = "SELECT MAX(BillNoChange) BillNoChange FROM tbl_invoice ti INNER JOIN cost_master cm ON ti.cost_center =cm.cost_center
-                WHERE finance_year='$f_year1' AND ti.state_code = '$state_code' AND company_name ='$companyName' and ti.id!='$id'"; 
+                        WHERE finance_year='$f_year1' AND ti.state_code = '$state_code' AND company_name ='$companyName' and ti.id!='$id'"; 
                         
                         $bill = $this->BillMaster->query($selT);
 
@@ -1672,6 +1687,29 @@ public function update_proforma()
                         $data=array('bill_no'=>"'".$bill_no."'",'BillNoChange'=>"$idx",'state_code'=>"'".$state_code."'");
 
                         //if($po != ''){$data=array('bill_no'=>"'".$bill_no."'",'approve_po'=>"'Yes'");}
+                        
+                        //for storing cost master details from cost center.
+                        $column_from_cost = array(
+                            'cost_company_name'=>'company_name','cost_branch'=>'branch','cost_OPBranch'=>'OPBranch',
+                            'cost_stream'=>'stream','cost_process'=>'process','cost_process_name'=>'process_name',
+                            'cost_TallyHead'=>'TallyHead','cost_client'=>'client','cost_bill_to'=>'bill_to',
+                            'cost_as_client'=>'as_client','cost_b_Address1'=>'b_Address1','cost_b_Address2'=>'b_Address2',
+                            'cost_b_Address3'=>'b_Address3','cost_b_Address4'=>'b_Address4','cost_b_Address5'=>'b_Address5',
+                            'cost_ship_to'=>'ship_to','cost_as_bill_to'=>'as_bill_to','cost_a_address1'=>'a_address1',
+                            'cost_a_address2'=>'a_address2','cost_a_address3'=>'a_address3','cost_a_address4'=>'a_address4',
+                            'cost_a_address5'=>'a_address5','cost_GSTType'=>'GSTType','cost_ServiceTaxNo'=>'ServiceTaxNo',
+                            'cost_VendorGSTNo'=>'VendorGSTNo','cost_HSNCode'=>'HSNCode','cost_SACCode'=>'SACCode',
+                            'cost_VendorHSNCode'=>'VendorHSNCode','cost_VendorSACCode'=>'VendorSACCode',
+                            'cost_VendorGSTState'=>'VendorGSTState','cost_VendorStateCode'=>'VendorStateCode',
+                            'cost_OwnerName'=>'OwnerName','cost_statecodecost'=>'statecodecost',
+                            'cost_statenamecost'=>'statenamecost','cost_client_tally_name'=>'client_tally_name',
+                            'cost_group_cost_center'=>'group_cost_center','cost_cost_center_type'=>'cost_center_type');
+                        
+                        foreach($column_from_cost as $ti_cost=>$cost)
+                        {
+                            $data[$ti_cost] ="'". addslashes($company['CostCenterMaster'][$cost])."'";
+                        }
+                        
 
                         if ($this->InitialInvoice->updateAll($data,array('id'=>$id))) 
                         {   
@@ -1699,7 +1737,9 @@ public function update_proforma()
 
                                 $msg = "Hi<br> ADMIN Has Approved ".$branch_name." branch Initial Invoice ".$bill_no." for ".$dataX['InitialInvoice']['invoiceDescription']." with value of ".$dataX['InitialInvoice']['grnd']." on ".date("F j, Y, g:i a");
                                 $msg .= "<br><strong><b style=color:#FF0000> Approved </b></strong>";
-                                $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $branch_name),'role' => 'admin'))));
+                                $emailid = $this ->User->find("all",
+                                array('fields' => array('email','id','branch_name'),
+                                'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 
                                 $nofifyArr = array(); $notifyLoop=0;
 
@@ -1780,10 +1820,11 @@ public function update_proforma()
 			$branch_name=$this->Session->read("branch_name");
 			
 			$roles=explode(',',$this->Session->read("page_access"));
+                        $role=$this->Session->read("role");
 			
 			$id  = $this->request->query['id'];
 			$this->layout='home';
-			if(in_array('5',$roles))
+			if($role=='admin')
 			{
                             $data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id,'bill_no'=>'')));
 			}
@@ -1815,388 +1856,394 @@ public function update_proforma()
 			$this->set('inv_deduct_particulars', $this->DeductParticular->find('all',array('conditions'=>array('initial_id'=>$id))));
 			
 		}
-public function update_bill()
-{
-$this->layout='home';
-$roles=explode(',',$this->Session->read("page_access"));
+                public function update_bill()
+                {
+                $this->layout='home';
+                $roles=explode(',',$this->Session->read("page_access"));
+                $role=$this->Session->read("role");
 
-if ($this->request->is('post'))
-{
-     $id = $this->request->data['InitialInvoice']['id']; 
-    if(!empty($this->request->data['Reject']))
-    {
-        $Transaction = $this->InitialInvoice->getDataSource(); $flag = true;
-                    $Transaction->begin();
-                    
-                    if ($this->InitialInvoice->updateAll(array('status'=>"'1'",'InvoiceRejectBy'=>$this->Session->read('userid'),'InvoiceRejectDate'=>"'".date('Y-m-d H:i:s')."'"),array('id'=>$id)))
+                if ($this->request->is('post'))
+                {
+                     $id = $this->request->data['InitialInvoice']['id']; 
+                    if(!empty($this->request->data['Reject']))
                     {
-                       $prov_deduction = $this->ProvisionPartDed->query("Select * from provision_master_month_deductions pmmd where InvoiceId='$id' ");
-                       
-                        foreach($prov_deduction as $pd)
+                        $Transaction = $this->InitialInvoice->getDataSource(); $flag = true;
+                                    $Transaction->begin();
+
+                                    if ($this->InitialInvoice->updateAll(array('status'=>"'1'",'InvoiceRejectBy'=>$this->Session->read('userid'),'InvoiceRejectDate'=>"'".date('Y-m-d H:i:s')."'"),array('id'=>$id)))
+                                    {
+                                       $prov_deduction = $this->ProvisionPartDed->query("Select * from provision_master_month_deductions pmmd where InvoiceId='$id' ");
+
+                                        foreach($prov_deduction as $pd)
+                                        {
+                                             $ProvisionId= $pd['pmmd']['ProvisionId']; 
+                                            $bal_used = round($pd['pmmd']['ProvisionBalanceUsed'],2);
+
+                                            $ProvisionFetch = $this->Provision->find('first',array('conditions'=>"id='$ProvisionId'"));
+                                            $bal_used += round($ProvisionFetch['Provision']['provision_balance']);
+
+                                            if ($this->Provision->updateAll(array('provision_balance'=>$bal_used),array('id'=>$ProvisionId)))
+                                            {
+                                                if (!$this->ProvisionPartDed->updateAll(array('deduction_status'=>"0",'ProvisionBalanceUsed'=>'0'),array('ProvisionMonthId'=>$pd['pmmd']['ProvisionMonthId'])))
+                                                {
+                                                    $flag=false;
+                                                    $Transaction->rollback();
+                                                }
+                                                else
+                                                {
+                                                    $flag = true;
+                                                    echo "success<br/>"; 
+                                                    $Transaction->commit();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                $flag=false;
+                                                $Transaction->rollback();
+                                            }
+                                        } 
+                                    }
+                                    else
+                                    {
+                                        $Transaction->rollback();
+                                        $flag=false;
+                                    }
+
+                                    if($flag)
+                                    {
+                                        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Invoice Rejected Successfully.'."</b></h4>"));
+                                        return $this->redirect(array('controller'=>'InitialInvoices','action' => 'view'));
+                                    }
+                                    else
+                                    {
+                                        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Invoice  Reject Request Failed. Please Contact To Admin'."</b></h4>"));
+                                        return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                                    }
+                    }
+                    else
+                    {
+                    $checkTotal = 0;
+                    $id=$this->request->data['InitialInvoice']['id'];
+
+                    $findData = $this->InitialInvoice->find('first',array('conditions'=>array('Id'=>$id)));
+
+                    $findCostCenter     = $findData['InitialInvoice']['cost_center'];
+                    $findFinanceYear    = $findData['InitialInvoice']['finance_year'];
+                    $findMonth          = $findData['InitialInvoice']['month'];
+                    $branch_name = $findData['InitialInvoice']['branch_name']; 
+                    //$Revenue = $this->request->data['InitialInvoice']['revenue'];
+                    $RevenueMonthArr = $this->request->data['InitialInvoice']['revenue_arr'];
+                    $arr =explode('-',$findFinanceYear);
+
+                        foreach($RevenueMonthArr as $Nmonth=>$mntValue)
                         {
-                             $ProvisionId= $pd['pmmd']['ProvisionId']; 
-                            $bal_used = round($pd['pmmd']['ProvisionBalanceUsed'],2);
-                            
-                            $ProvisionFetch = $this->Provision->find('first',array('conditions'=>"id='$ProvisionId'"));
-                            $bal_used += round($ProvisionFetch['Provision']['provision_balance']);
-                            
-                            if ($this->Provision->updateAll(array('provision_balance'=>$bal_used),array('id'=>$ProvisionId)))
+                            $amt = 0;
+
+                            $prov_ = $this->Provision->find('first',array('conditions'=>"finance_year='$findFinanceYear' and month='$Nmonth' and branch_name='$branch_name' and cost_center='$findCostCenter'"));
+                            if(!empty($prov_))
                             {
-                                if (!$this->ProvisionPartDed->updateAll(array('deduction_status'=>"0",'ProvisionBalanceUsed'=>'0'),array('ProvisionMonthId'=>$pd['pmmd']['ProvisionMonthId'])))
-                                {
-                                    $flag=false;
-                                    $Transaction->rollback();
-                                }
-                                else
-                                {
-                                    $flag = true;
-                                    echo "success<br/>"; 
-                                    $Transaction->commit();
-                                }
+                                $amt = $prov_['Provision']['provision'];
+                                $ProvisionId = $prov_['Provision']['id'];
+                            }
+
+                            $out_source_master = $this->ProvisionPart->query("Select * from provision_particulars pp where FinanceYear='$findFinanceYear' and FinanceMonth='$Nmonth' and Branch_OutSource='$branch_name' and Cost_Center_OutSource='$findCostCenter' ");
+                            foreach($out_source_master as $osm)
+                            {
+                                $amt += round($osm['pp']['outsource_amt'],2); 
+                            }
+
+
+                            $prov_deduction = $this->ProvisionPartDed->query("Select * from provision_master_month_deductions pmmd where Provision_Finance_Year='$findFinanceYear' and Provision_Finance_Month='$Nmonth' and Provision_Branch_Name='$branch_name' and Provision_Cost_Center='$findCostCenter' and deduction_status='1' and InvoiceId!='$id'");
+                            foreach($prov_deduction as $pd)
+                            {
+                                $amt -= round($pd['pmmd']['ProvisionBalanceUsed'],2);
+                            }
+
+
+
+                            if($amt<$mntValue)
+                            {
+                                //echo "Revenue For $Nmonth($mntValue) More Then Provision ($amt) Can't Not Edited"; exit;
+                                $this->Session->setFlash(__("Revenue For $Nmonth($mntValue) More Then Provision ($amt) Can't Not Edited"));
+                                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                                break;
                             }
                             else
                             {
-                                $flag=false;
-                                $Transaction->rollback();
+                                $ProvisionArray[$Nmonth] = $ProvisionId;
+                                $ProvisionBalArray[$Nmonth] = $amt-$mntValue;
                             }
-                        } 
-                    }
-                    else
-                    {
-                        $Transaction->rollback();
+                            $Revenue +=$mntValue;
+                        }
+
+
+                        ////////////////  Getting All Amount Of Created Bill Ends Here /////////
+
+                        $Transaction = $this->User->getDataSource();
+                        $Transaction->begin();
+
+                        $particular = $this->params['data']['Particular'];
+                        $k=array_keys($particular);$i=0;
+
+                        foreach($particular as $post){
+                            $dataX['particulars']="'".addslashes($post['particulars'])."'";
+                            $dataX['qty']="'".$post['qty']."'";
+                            $dataX['rate']="'".$post['rate']."'";
+                            $dataX['amount']="'".$post['amount']."'";
+                            $checkTotal += $post['amount'];
+                            if(!$this->Particular->updateAll($dataX,array('id'=>$k[$i++])))
+                            {
+                                $Transaction->rollback(); 
+                                $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Particulars Not Added Please Try Again'."</b></h4>"));
+                                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                            }
+
+                        }
+                        unset($dataX);
+
+                        //print_r($particular); exit;
                         $flag=false;
-                    }
-                    
-                    if($flag)
-                    {
-                        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Invoice Rejected Successfully.'."</b></h4>"));
-                        return $this->redirect(array('controller'=>'InitialInvoices','action' => 'view'));
-                    }
+                        if(!isset($this->params['data']['DeductParticular']))
+                        {
+
+                        }
+                        else
+                        {
+                            $deductparticular = $this->params['data']['DeductParticular'];
+                            $flag=true;
+                        }
+                        if($flag)
+                        {
+                            $k=array_keys($deductparticular);$i=0;
+
+                            foreach($deductparticular as $post):
+                                $dataX['particulars']="'".addslashes($post['particulars'])."'";
+                                $dataX['qty']="'".$post['qty']."'";
+                                $dataX['rate']="'".$post['rate']."'";
+                                $dataX['amount']="'".$post['amount']."'";
+                                $checkTotal -= $post['amount'];
+                                if(!$this->DeductParticular->updateAll($dataX,array('id'=>$k[$i++])))
+                                {
+                                   $Transaction->rollback(); 
+                                   $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Particulars Not Added Please Try Again'."</b></h4>"));
+                                   return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                                }
+                            endforeach;
+                        }
+
+
+                        $findInvAmt = $this->InitialInvoice->query("select sum(amount) total from inv_particulars where initial_id='$id'");
+                        $findSumPrv = $findInvAmt['0']['0']['total'];
+
+                        $findDInvAmt = $this->InitialInvoice->query("select sum(amount) total from inv_deduct_particulars where initial_id='$id'");
+                        $findSumDPrv = round($findDInvAmt['0']['0']['total']);
+
+                        $findTotalProvAmt = $this->InitialInvoice->query("select sum(total)total from tbl_invoice where id!='$id' and cost_center='$findCostCenter' and finance_year='$findFinanceYear' and `month`='$findMonth' and `status`='0'");
+                        $findTotalBillMade = round($findSumPrv,2)-round($findSumDPrv,2);
+
+
+                        if($Revenue==$findTotalBillMade)
+                        {
+
+                           foreach($RevenueMonthArr as $Nmonth=>$mntValue)
+                            {
+
+                                if(!$this->ProvisionPartDed->updateAll(array('ProvisionBalanceUsed'=>$mntValue),array('Provision_Finance_Month'=>$Nmonth,'Provision_UsedBy_Month'=>$findMonth,'InvoiceId'=>$id)))
+                                {
+                                    $Transaction->rollback();
+                                    $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Provision Not Updated. Please Try Again'."</b></h4>"));
+                                    return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                                }
+
+                                /////  Updating Provision Balance Starts From Here /////////////////
+                                if(!$this->Provision->updateAll(array('provision_balance'=>"'{$ProvisionBalArray[$mnt]}'"),array('cost_center'=>$findCostCenter,'month'=>$Nmonth,'finance_year'=>$findFinanceYear)))
+                                { 
+                                    $Transaction->rollback();
+                                    //echo "<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Provision Not Updated. Please Try Again'."</b></h4>"; exit;
+                                    $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Provision Not Updated. Please Try Again'."</b></h4>"));
+                                    return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                                }
+                                //// Updating Provision Balance Ends Here  /////////////////////////////
+                            } 
+
+                        $invoiceDate = $this->params['data']['InitialInvoice']['invoiceDate'];
+                        $data=Hash::remove($this->params['data']['InitialInvoice'],'id');
+                        $data=Hash::remove($data,'revenue_arr');
+                        $data=Hash::remove($data,'revenue_str');
+                        $data=Hash::remove($data,'revenue');
+
+                        $b_name=$data['branch_name'];
+                        $amount=$data['total'];
+                        $data=Hash::remove($data,'branch_name');
+
+
+                        $date = $data['invoiceDate'];
+                        $date = date_create($date);
+                        $date = date_format($date,"Y-m-d");
+
+                        $data['jcc_no']="'".addslashes($data['jcc_no'])."'";
+                        $data['grn']="'".addslashes($data['grn'])."'";
+                        $data['bill_no']="'".$data['bill_no']."'";
+                        $data['po_no']="'".addslashes($data['po_no'])."'";
+                        $krishi_tax = $data['apply_krishi_tax'];
+                        $data['invoiceDescription']="'".addslashes($data['invoiceDescription'])."'";
+                        $data['month']="'".addslashes($data['month'])."'";
+                        $data['cost_center']="'".addslashes($data['cost_center'])."'";
+                        $data['finance_year']="'".addslashes($data['finance_year'])."'";
+                        $data['invoiceDate'] = "'".addslashes($date)."'";
+                        $data['GSTType'] = "'".addslashes($data['GSTType'])."'";
+                        $apply_gst = $data['apply_gst'];
+                        $data['apply_gst'] = "'".$data['apply_gst']."'";
+                        $data['apply_service_tax'] = "'".$data['apply_service_tax']."'";
+                        $data['apply_krishi_tax'] = "'".$data['apply_krishi_tax']."'";
+                //print_r($data); exit;
+
+                        $dataA = $this->InitialInvoice->find('first',array('fields'=>array('total','cost_center','month','finance_year'),'conditions'=>array('id'=>$id)));
+                        $dataY = $this->InitialInvoice->find('first',array('fields'=>array('app_tax_cal','total','bill_no'),'conditions'=>array('id' => $id)));
+                        $tax_call = $dataY['InitialInvoice']['app_tax_cal'];
+
+                        if($dataY['InitialInvoice']['total'] != $data['total'])
+                        {
+                            $dataZ['initial_id'] = $id;
+                            $dataZ['bill_no'] = $dataY['InitialInvoice']['bill_no'];
+                            $dataZ['old_amount'] = $dataY['InitialInvoice']['total'];
+                            $dataZ['new_amount'] = $data['total'];
+                            $dataZ['createdate'] = date('Y-m-d H:i:s');
+                            $this->EditAmount->save($dataZ);
+                        }
+
+                        if ($this->InitialInvoice->updateAll($data,array('id'=>$id)))
+                        {
+
+                            $total = $checkTotal;
+                            $total = round($checkTotal,0);
+                            $tax = 0;
+                            $sbctax = 0;
+                            $krishiTax = 0;
+                            $igst = 0;
+                            $cgst = 0;
+                            $sgst = 0;
+
+                            if($tax_call == '1')
+                            {
+                                if($apply_gst && strtotime($invoiceDate) > strtotime("2017-06-30"))
+                                {
+                                    $tax=0;$krishiTax=0;$sbctax=0;
+                                    if($this->params['data']['InitialInvoice']['GSTType']=='Integrated')
+                                    {
+                                        $igst = round($checkTotal*0.18,0);
+                                    }
+                                    else
+                                    {
+                                        $cgst = round($checkTotal*0.09,0);
+                                        $sgst = round($checkTotal*0.09,0);
+                                    }
+                                }
+                                else 
+                                {
+                                    $total = round($checkTotal,0);
+                                    $tax = round($checkTotal*0.14,0);
+                                    $sbctax = 0;
+                                    if(strtotime($date) > strtotime("2015-11-14"))
+                                    {
+                                        $sbctax = round($checkTotal*0.005,0);
+                                    }
+                                    if($krishi_tax == "1")
+                                    {
+                                        $krishiTax = round($checkTotal*0.005,0);
+                                    }
+                                }
+                            }
+                            $grnd = round($total + $tax + $krishiTax + $sbctax+$igst+$sgst+$cgst,0);
+                            $dataY = array('total'=>$total,'tax'=>$tax,'krishi_tax'=>$krishiTax,'sbctax'=>$sbctax,'grnd'=>$grnd);
+                            //print_r($dataY); exit;
+                            $total2 = 0;
+                           // if($dataA['InitialInvoice']['cost_center'] == str_replace("'", "", $data['cost_center']) && $dataA['InitialInvoice']['month'] == str_replace("'", "", $data['month']) && $dataA['InitialInvoice']['finance_year'] == str_replace("'", "", $data['finance_year']) )
+                          //  {
+                                $total2 = $dataA['InitialInvoice']['total'] -$total;
+                        //    }
+                         //   else
+                        //    {
+                      //          $total2 = $total - 2 *$total; 
+                      //          $total3 = $dataA['InitialInvoice']['total'];
+                                //$this->Provision->updateAll(array('provision_balance'=>"provision_balance+$total3"),array('cost_center'=>  $dataA['InitialInvoice']['cost_center'],'finance_year'=>$dataA['InitialInvoice']['finance_year'],'month'=>$dataA['InitialInvoice']['month']));
+                       //     }
+
+                        //$this->Provision->updateAll(array('provision_balance'=>"provision_balance+$total2"),array('cost_center'=>  str_replace("'", "", $data['cost_center']),'finance_year'=>str_replace("'", "", $data['finance_year']),'month'=>str_replace("'", "", $data['month'])));
+
+                            if($this->InitialInvoice->updateAll($dataY,array('id'=>$id)))
+                            {
+                                $Transaction->commit();
+                            }
+
+                            $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Invoice to branch '.$b_name.' for Amount '.$amount.' Updated Successfully.'."</b></h4>"));
+
+                            App::uses('sendEmail', 'custom/Email');
+
+                            $dataX = $this ->InitialInvoice-> find('first',array('fields' => array('bill_no','grnd','invoiceDescription'),'conditions'=>array('id' => $id)));
+
+                            $msg = "Hi<br>".$b_name." branch Invoice No.".$dataX['InitialInvoice']['bill_no'].' has been Edited. '.date("F j, Y, g:i a");
+
+                            $msg .= "<br><strong><b style=color:#FF0000>Kindly update your Records </b></strong>"; 
+
+                            $emailid = $this ->User->find("all",
+                                    array('fields' => array('email','id','branch_name'),
+                                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
+
+                //            $nofifyArr = array(); $notifyLoop=0;
+                //
+                //            foreach($emailid as $email1):
+                //                $email2[] = trim($email1['User']['email']);
+                //                $nofifyArr[$notifyLoop]['userid'] = $email1['User']['id'];
+                //                $nofifyArr[$notifyLoop]['branch'] = $email1['User']['branch_name'];
+                //                $nofifyArr[$notifyLoop]['msg'] = addslashes($msg);
+                //                $nofifyArr[$notifyLoop++]['createdate'] = date('Y-m-d H:i:s');
+                //            endforeach;
+
+                        //$this->NotificationMaster->saveAll($nofifyArr);
+
+                            $sub = "Initial Invoice - ".$b_name." Edited";
+                            $mail = new sendEmail();
+
+
+                                     if(!empty($email2))
+                                                    {
+                                                        try
+                                                        {
+                                                           // $mail-> to($email2,$msg,$sub);		
+                                                        }
+                                                        catch(Exception $e)
+                                                        {
+
+                                                        }
+                                                    }		
+                            $username=$this->Session->read("username");
+                            if($role=='admin')
+                            {
+                                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'view'));
+                            }
+                            else
+                            {
+                                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'branch_view'));}
+                            }
+                            else
+                            {
+                                $Transaction->rollback(); 
+                                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
+                            }
+
+                    }    
                     else
                     {
-                        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Invoice  Reject Request Failed. Please Contact To Admin'."</b></h4>"));
+                        $Transaction->rollback(); 
+                        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Provision  for Amount '.$amount.' is Less'."</b></h4>"));
                         return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
                     }
-    }
-    else
-    {
-    $checkTotal = 0;
-    $id=$this->request->data['InitialInvoice']['id'];
 
-    $findData = $this->InitialInvoice->find('first',array('conditions'=>array('Id'=>$id)));
-
-    $findCostCenter     = $findData['InitialInvoice']['cost_center'];
-    $findFinanceYear    = $findData['InitialInvoice']['finance_year'];
-    $findMonth          = $findData['InitialInvoice']['month'];
-    $branch_name = $findData['InitialInvoice']['branch_name']; 
-    //$Revenue = $this->request->data['InitialInvoice']['revenue'];
-    $RevenueMonthArr = $this->request->data['InitialInvoice']['revenue_arr'];
-    $arr =explode('-',$findFinanceYear);
-        
-        foreach($RevenueMonthArr as $Nmonth=>$mntValue)
-        {
-            $amt = 0;
-
-            $prov_ = $this->Provision->find('first',array('conditions'=>"finance_year='$findFinanceYear' and month='$Nmonth' and branch_name='$branch_name' and cost_center='$findCostCenter'"));
-            if(!empty($prov_))
-            {
-                $amt = $prov_['Provision']['provision'];
-                $ProvisionId = $prov_['Provision']['id'];
-            }
-            
-            $out_source_master = $this->ProvisionPart->query("Select * from provision_particulars pp where FinanceYear='$findFinanceYear' and FinanceMonth='$Nmonth' and Branch_OutSource='$branch_name' and Cost_Center_OutSource='$findCostCenter' ");
-            foreach($out_source_master as $osm)
-            {
-                $amt += round($osm['pp']['outsource_amt'],2); 
-            }
-            
-            
-            $prov_deduction = $this->ProvisionPartDed->query("Select * from provision_master_month_deductions pmmd where Provision_Finance_Year='$findFinanceYear' and Provision_Finance_Month='$Nmonth' and Provision_Branch_Name='$branch_name' and Provision_Cost_Center='$findCostCenter' and deduction_status='1' and InvoiceId!='$id'");
-            foreach($prov_deduction as $pd)
-            {
-                $amt -= round($pd['pmmd']['ProvisionBalanceUsed'],2);
-            }
-            
-            
-            
-            if($amt<$mntValue)
-            {
-                //echo "Revenue For $Nmonth($mntValue) More Then Provision ($amt) Can't Not Edited"; exit;
-                $this->Session->setFlash(__("Revenue For $Nmonth($mntValue) More Then Provision ($amt) Can't Not Edited"));
-                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
-                break;
-            }
-            else
-            {
-                $ProvisionArray[$Nmonth] = $ProvisionId;
-                $ProvisionBalArray[$Nmonth] = $amt-$mntValue;
-            }
-            $Revenue +=$mntValue;
-        }
-        
-        
-        ////////////////  Getting All Amount Of Created Bill Ends Here /////////
-                                                
-        $Transaction = $this->User->getDataSource();
-        $Transaction->begin();
-
-        $particular = $this->params['data']['Particular'];
-        $k=array_keys($particular);$i=0;
-        
-        foreach($particular as $post){
-            $dataX['particulars']="'".addslashes($post['particulars'])."'";
-            $dataX['qty']="'".$post['qty']."'";
-            $dataX['rate']="'".$post['rate']."'";
-            $dataX['amount']="'".$post['amount']."'";
-            $checkTotal += $post['amount'];
-            if(!$this->Particular->updateAll($dataX,array('id'=>$k[$i++])))
-            {
-                $Transaction->rollback(); 
-                $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Particulars Not Added Please Try Again'."</b></h4>"));
-                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
-            }
-            
-        }
-        unset($dataX);
-        
-        //print_r($particular); exit;
-        $flag=false;
-        if(!isset($this->params['data']['DeductParticular']))
-        {
-
-        }
-        else
-        {
-            $deductparticular = $this->params['data']['DeductParticular'];
-            $flag=true;
-        }
-        if($flag)
-        {
-            $k=array_keys($deductparticular);$i=0;
-
-            foreach($deductparticular as $post):
-                $dataX['particulars']="'".addslashes($post['particulars'])."'";
-                $dataX['qty']="'".$post['qty']."'";
-                $dataX['rate']="'".$post['rate']."'";
-                $dataX['amount']="'".$post['amount']."'";
-                $checkTotal -= $post['amount'];
-                if(!$this->DeductParticular->updateAll($dataX,array('id'=>$k[$i++])))
-                {
-                   $Transaction->rollback(); 
-                   $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Particulars Not Added Please Try Again'."</b></h4>"));
-                   return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
                 }
-            endforeach;
-        }
-        
-        
-        $findInvAmt = $this->InitialInvoice->query("select sum(amount) total from inv_particulars where initial_id='$id'");
-        $findSumPrv = $findInvAmt['0']['0']['total'];
-
-        $findDInvAmt = $this->InitialInvoice->query("select sum(amount) total from inv_deduct_particulars where initial_id='$id'");
-        $findSumDPrv = round($findDInvAmt['0']['0']['total']);
-
-        $findTotalProvAmt = $this->InitialInvoice->query("select sum(total)total from tbl_invoice where id!='$id' and cost_center='$findCostCenter' and finance_year='$findFinanceYear' and `month`='$findMonth' and `status`='0'");
-        $findTotalBillMade = round($findSumPrv,2)-round($findSumDPrv,2);
-        
-        
-        if($Revenue==$findTotalBillMade)
-        {
-        
-           foreach($RevenueMonthArr as $Nmonth=>$mntValue)
-            {
-
-                if(!$this->ProvisionPartDed->updateAll(array('ProvisionBalanceUsed'=>$mntValue),array('Provision_Finance_Month'=>$Nmonth,'Provision_UsedBy_Month'=>$findMonth,'InvoiceId'=>$id)))
-                {
-                    $Transaction->rollback();
-                    $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Provision Not Updated. Please Try Again'."</b></h4>"));
-                    return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
                 }
 
-                /////  Updating Provision Balance Starts From Here /////////////////
-                if(!$this->Provision->updateAll(array('provision_balance'=>"'{$ProvisionBalArray[$mnt]}'"),array('cost_center'=>$findCostCenter,'month'=>$Nmonth,'finance_year'=>$findFinanceYear)))
-                { 
-                    $Transaction->rollback();
-                    //echo "<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Provision Not Updated. Please Try Again'."</b></h4>"; exit;
-                    $this->Session->setFlash(__("<h4 class=bg-active align=center style='font-size:14px'><b style=color:'#FF0000'>".'Provision Not Updated. Please Try Again'."</b></h4>"));
-                    return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
                 }
-                //// Updating Provision Balance Ends Here  /////////////////////////////
-            } 
-            
-        $invoiceDate = $this->params['data']['InitialInvoice']['invoiceDate'];
-        $data=Hash::remove($this->params['data']['InitialInvoice'],'id');
-        $data=Hash::remove($data,'revenue_arr');
-        $data=Hash::remove($data,'revenue_str');
-        $data=Hash::remove($data,'revenue');
-        
-        $b_name=$data['branch_name'];
-        $amount=$data['total'];
-        $data=Hash::remove($data,'branch_name');
-
-
-        $date = $data['invoiceDate'];
-        $date = date_create($date);
-        $date = date_format($date,"Y-m-d");
-
-        $data['jcc_no']="'".addslashes($data['jcc_no'])."'";
-        $data['grn']="'".addslashes($data['grn'])."'";
-        $data['bill_no']="'".$data['bill_no']."'";
-        $data['po_no']="'".addslashes($data['po_no'])."'";
-        $krishi_tax = $data['apply_krishi_tax'];
-        $data['invoiceDescription']="'".addslashes($data['invoiceDescription'])."'";
-        $data['month']="'".addslashes($data['month'])."'";
-        $data['cost_center']="'".addslashes($data['cost_center'])."'";
-        $data['finance_year']="'".addslashes($data['finance_year'])."'";
-        $data['invoiceDate'] = "'".addslashes($date)."'";
-        $data['GSTType'] = "'".addslashes($data['GSTType'])."'";
-        $apply_gst = $data['apply_gst'];
-        $data['apply_gst'] = "'".$data['apply_gst']."'";
-
-
-        $dataA = $this->InitialInvoice->find('first',array('fields'=>array('total','cost_center','month','finance_year'),'conditions'=>array('id'=>$id)));
-        $dataY = $this->InitialInvoice->find('first',array('fields'=>array('app_tax_cal','total','bill_no'),'conditions'=>array('id' => $id)));
-        $tax_call = $dataY['InitialInvoice']['app_tax_cal'];
-
-        if($dataY['InitialInvoice']['total'] != $data['total'])
-        {
-            $dataZ['initial_id'] = $id;
-            $dataZ['bill_no'] = $dataY['InitialInvoice']['bill_no'];
-            $dataZ['old_amount'] = $dataY['InitialInvoice']['total'];
-            $dataZ['new_amount'] = $data['total'];
-            $dataZ['createdate'] = date('Y-m-d H:i:s');
-            $this->EditAmount->save($dataZ);
-        }
-
-        if ($this->InitialInvoice->updateAll($data,array('id'=>$id)))
-        {
-            
-            $total = $checkTotal;
-            $total = round($checkTotal,0);
-            $tax = 0;
-            $sbctax = 0;
-            $krishiTax = 0;
-            $igst = 0;
-            $cgst = 0;
-            $sgst = 0;
-
-            if($tax_call == '1')
-            {
-                if($apply_gst && strtotime($invoiceDate) > strtotime("2017-06-30"))
-                {
-                    $tax=0;$krishiTax=0;$sbctax=0;
-                    if($this->params['data']['InitialInvoice']['GSTType']=='Integrated')
-                    {
-                        $igst = round($checkTotal*0.18,0);
-                    }
-                    else
-                    {
-                        $cgst = round($checkTotal*0.09,0);
-                        $sgst = round($checkTotal*0.09,0);
-                    }
-                }
-                else 
-                {
-                    $total = round($checkTotal,0);
-                    $tax = round($checkTotal*0.14,0);
-                    $sbctax = 0;
-                    if(strtotime($date) > strtotime("2015-11-14"))
-                    {
-                        $sbctax = round($checkTotal*0.005,0);
-                    }
-                    if($krishi_tax == "1")
-                    {
-                        $krishiTax = round($checkTotal*0.005,0);
-                    }
-                }
-            }
-            $grnd = round($total + $tax + $krishiTax + $sbctax+$igst+$sgst+$cgst,0);
-            $dataY = array('total'=>$total,'tax'=>$tax,'krishi_tax'=>$krishiTax,'sbctax'=>$sbctax,'grnd'=>$grnd);
-
-            $total2 = 0;
-           // if($dataA['InitialInvoice']['cost_center'] == str_replace("'", "", $data['cost_center']) && $dataA['InitialInvoice']['month'] == str_replace("'", "", $data['month']) && $dataA['InitialInvoice']['finance_year'] == str_replace("'", "", $data['finance_year']) )
-          //  {
-                $total2 = $dataA['InitialInvoice']['total'] -$total;
-        //    }
-         //   else
-        //    {
-      //          $total2 = $total - 2 *$total; 
-      //          $total3 = $dataA['InitialInvoice']['total'];
-                //$this->Provision->updateAll(array('provision_balance'=>"provision_balance+$total3"),array('cost_center'=>  $dataA['InitialInvoice']['cost_center'],'finance_year'=>$dataA['InitialInvoice']['finance_year'],'month'=>$dataA['InitialInvoice']['month']));
-       //     }
-
-        //$this->Provision->updateAll(array('provision_balance'=>"provision_balance+$total2"),array('cost_center'=>  str_replace("'", "", $data['cost_center']),'finance_year'=>str_replace("'", "", $data['finance_year']),'month'=>str_replace("'", "", $data['month'])));
-
-            if($this->InitialInvoice->updateAll($dataY,array('id'=>$id)))
-            {
-                $Transaction->commit();
-            }
-
-            $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Invoice to branch '.$b_name.' for Amount '.$amount.' Updated Successfully.'."</b></h4>"));
-
-            App::uses('sendEmail', 'custom/Email');
-
-            $dataX = $this ->InitialInvoice-> find('first',array('fields' => array('bill_no','grnd','invoiceDescription'),'conditions'=>array('id' => $id)));
-
-            $msg = "Hi<br>".$b_name." branch Invoice No.".$dataX['InitialInvoice']['bill_no'].' has been Edited. '.date("F j, Y, g:i a");
-
-            $msg .= "<br><strong><b style=color:#FF0000>Kindly update your Records </b></strong>";
-
-            $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
-
-//            $nofifyArr = array(); $notifyLoop=0;
-//
-//            foreach($emailid as $email1):
-//                $email2[] = trim($email1['User']['email']);
-//                $nofifyArr[$notifyLoop]['userid'] = $email1['User']['id'];
-//                $nofifyArr[$notifyLoop]['branch'] = $email1['User']['branch_name'];
-//                $nofifyArr[$notifyLoop]['msg'] = addslashes($msg);
-//                $nofifyArr[$notifyLoop++]['createdate'] = date('Y-m-d H:i:s');
-//            endforeach;
-
-        //$this->NotificationMaster->saveAll($nofifyArr);
-
-            $sub = "Initial Invoice - ".$b_name." Edited";
-            $mail = new sendEmail();
-
-
-                     if(!empty($email2))
-                                    {
-                                        try
-                                        {
-                                           // $mail-> to($email2,$msg,$sub);		
-                                        }
-                                        catch(Exception $e)
-                                        {
-
-                                        }
-                                    }		
-            $username=$this->Session->read("username");
-            if(in_array('5',$roles))
-            {
-                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'view'));
-            }
-            else
-            {
-                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'branch_view'));}
-            }
-            else
-            {
-                $Transaction->rollback(); 
-                return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
-            }
-    }    
-    else
-    {
-        $Transaction->rollback(); 
-        $this->Session->setFlash(__("<h4 class=bg-active align=center style=font-size:14px><b style=color:#FF0000>".'Provision  for Amount '.$amount.' is Less'."</b></h4>"));
-        return $this->redirect(array('controller'=>'InitialInvoices','action' => 'edit_bill','?'=>array('id'=>$id)));
-    }
-
-}
-}
-			
-}
 			//edit po on branch side		
 		public function view_admin()
 		{	
@@ -2204,8 +2251,8 @@ if ($this->request->is('post'))
 			$username=$this->Session->read("username");
 			$branch_name=$this->Session->read("branch_name");
 			$roles=explode(',',$this->Session->read("page_access"));
-			
-			if(in_array('19',$roles))
+			$role=$this->Session->read("role");
+			if($role=='admin')
 			{
 				$this->set('tbl_invoice', $this->InitialInvoice->find('all',array('conditions'=>array('not'=>array('bill_no'=>''),'po_no'=>'','status'=>0))));
 			}
@@ -2222,9 +2269,10 @@ if ($this->request->is('post'))
 			$this->layout='home';
 			
 			$roles=explode(',',$this->Session->read("page_access"));
+                        $role=$this->Session->read("role");
 			$data = array();
 			
-			if(in_array('19',$roles))
+			if($role=='admin')
 			{
 				if(!$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id))))
 				{return $this->redirect(array('controller'=>'Users','action' => 'login'));}
@@ -2281,7 +2329,9 @@ if ($this->request->is('post'))
 					
 					$msg .= "<br><strong><b style=color:#FF0000>Kindly Approve </b></strong>";
 					
-					$emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
+					$emailid = $this ->User->find("all",
+                                        array('fields' => array('email','id','branch_name'),
+                                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 					
                                         $nofifyArr = array(); $notifyLoop=0;
 					
@@ -2357,17 +2407,19 @@ if ($this->request->is('post'))
                         $month = $cost_month['InitialInvoice']['month'];
                         $cost_month['InitialInvoice']['Total'];
                         $poArr = explode(',',$po_no);
-
+                        #print_r($poArr);exit;
 
                         foreach($poArr as $po)
                         {
             //                $po_balance = $this->POParticulars->query("SELECT poAmountBalance FROM po_number_particulars WHERE cost_center = '$cost_center'
             //AND STR_TO_DATE(CONCAT('1-','$month'),'%d-%b-%y') BETWEEN periodTo AND periodFrom");
-
-                            $po_balance = $this->PONumber->query("SELECT sum(pn.balAmount) `poAmount` FROM po_number_particulars pnp
+                            $po_qry = "SELECT sum(pn.balAmount) `poAmount` FROM po_number_particulars pnp
             INNER JOIN po_number pn ON pnp.data_id = pn.id
             WHERE pn.balAmount !=0 AND pnp.poNumber = '$po' AND STR_TO_DATE(CONCAT('1-','$month'),'%d-%b-%y') 
-            BETWEEN pnp.periodTo AND pnp.periodFrom");
+            BETWEEN pnp.periodTo AND pnp.periodFrom";
+                            //echo $po_qry;exit;
+                            
+                            $po_balance = $this->PONumber->query($po_qry);
 
                            //print_r($po_balance); 
 
@@ -2415,7 +2467,9 @@ if ($this->request->is('post'))
 
                                 $msg .= "<br><strong><b style=color:#FF0000> Approved </b></strong>";
 
-                                $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
+                                $emailid = $this ->User->find("all",
+                                        array('fields' => array('email','id','branch_name'),
+                                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 
 
                                 $nofifyArr = array(); $notifyLoop=0;
@@ -2480,6 +2534,7 @@ if ($this->request->is('post'))
                         {
                             $branch_name=$this->Session->read("branch_name");
                             $roles=explode(',',$this->Session->read("page_access"));
+                            $role = $this->Session->read("role");
                             $data = $this->request->data['InitialInvoice'];
                             
                             $condition = array();
@@ -2491,7 +2546,7 @@ if ($this->request->is('post'))
                                 $condition['InitialInvoice.branch_name'] =  $data['branch_name'];
                             if($data['bill_no'] !='')
                                 $condition["SUBSTRING_INDEX(InitialInvoice.bill_no,'/','1')"] =  $data['bill_no'];
-                            if(!in_array('18',$roles))
+                            if($role!='admin')
                                     $condition['InitialInvoice.branch_name'] =  $branch_name;
                             $data = $this->InitialInvoice->find('all',array('fields'=>array('id','branch_name','bill_no','total','po_no','grn','invoiceDescription'),
                                 'joins'=>array(array('table'=>'cost_master',
@@ -2512,8 +2567,9 @@ if ($this->request->is('post'))
 			$branch_name=$this->Session->read("branch_name");
                         
 			$roles=explode(',',$this->Session->read("page_access"));
+                        $role=$this->Session->read("role");
 			$data='';
-			if(in_array('18',$roles))
+			if($role=='admin')
 			{
                             $data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id)));
 			}
@@ -2545,8 +2601,9 @@ if ($this->request->is('post'))
 			$username=$this->Session->read("username");
 			$branch_name=$this->Session->read("branch_name");
 			$roles=explode(',',$this->Session->read("page_access"));
+                        $role=$this->Session->read("role");
 
-			if(in_array('18',$roles))
+			if($role=='admin')
 			{
 				$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id)));
 			}
@@ -2573,7 +2630,9 @@ if ($this->request->is('post'))
 			$username=$this->Session->read("username");
 			$branch_name=$this->Session->read("branch_name");
 			$roles=explode(',',$this->Session->read("page_access"));
-			if(in_array('21',$roles))
+                        $role=$this->Session->read("role");
+                        
+			if($role=='admin')
 			{
 			$this->set('tbl_invoice', $this->InitialInvoice->find('all',array('conditions'=>array('not'=>array('bill_no'=>'','po_no'=>''),'grn'=>''))));
 			}
@@ -2588,10 +2647,11 @@ if ($this->request->is('post'))
 			$branch_name=$this->Session->read("branch_name");
 			$id  = $this->request->query['id'];
 			$roles=explode(',',$this->Session->read("page_access"));
+                        $role=$this->Session->read("role");
 			$this->layout='home';
 			
 			$data=array();
-			if(in_array('21',$roles))
+			if($role=='admin')
 			{
 					if(!$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id))))
 					{return $this->redirect(array('controller'=>'Users','action' => 'login')); }
@@ -2652,7 +2712,9 @@ if ($this->request->is('post'))
 					
 						$msg .= "<br><strong><b style=color:#FF0000>KINDLY SEND IT FOR SUBMISSION </b></strong>";
 					
-						$emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
+						$emailid = $this ->User->find("all",
+                                        array('fields' => array('email','id','branch_name'),
+                                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 					
 						$nofifyArr = array(); $notifyLoop=0;
 					
@@ -2715,7 +2777,9 @@ if ($this->request->is('post'))
 					
 						$msg .= "<br><strong><b style=color:#FF0000> KINDLY SEND IT FOR SUBMISSION </b></strong>";
 					
-						$emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
+						$emailid = $this ->User->find("all",
+                                        array('fields' => array('email','id','branch_name'),
+                                        'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 					
                                                 $nofifyArr = array(); $notifyLoop=0;
 					
@@ -2773,6 +2837,7 @@ if ($this->request->is('post'))
                         {    
                             $branch_name=$this->Session->read("branch_name");
                             $roles=explode(',',$this->Session->read("page_access"));
+                            $role = $this->Session->read("role");
                             $data = $this->request->data['InitialInvoice'];
                             
                             $condition = array();
@@ -2784,7 +2849,7 @@ if ($this->request->is('post'))
                                 $condition['InitialInvoice.branch_name'] =  $data['branch_name'];
                             if($data['bill_no'] !='')
                                 $condition["SUBSTRING_INDEX(InitialInvoice.bill_no,'/','1')"] =  $data['bill_no'];
-                            if(!in_array('18',$roles))
+                            if($role!='admin')
                                     $condition['InitialInvoice.branch_name'] =  $branch_name;
                             $data = $this->InitialInvoice->find('all',array('fields'=>array('id','branch_name','bill_no','total','po_no','grn',
                                 'invoiceDescription','filepath'),
@@ -2939,7 +3004,10 @@ if ($this->request->is('post'))
 			$id  = $this->request->query['id'];
 			$this->layout='home';
 			$data=$this->InitialInvoice->find('first',array('conditions'=>array('id'=>$id,'status'=>'0')));
-			
+			$username = $this->Session->read('username');
+            $userid = $this->Session->read('userid');
+            $EditAmount = $this->EditAmount->query("insert into edit_inv_after_approval set inv_id='$id',action='open',inv_date=now(),userid='$userid',username='$username'");
+            
                         //print_r($data); exit;
                         
 			$b_name = $data['InitialInvoice']['branch_name'];
@@ -2973,6 +3041,7 @@ if ($this->request->is('post'))
 		{
     $this->layout='home';
     $roles=explode(',',$this->Session->read("page_access"));
+    $role=$this->Session->read("role");
 
     if ($this->request->is('post'))
     {
@@ -2980,6 +3049,9 @@ if ($this->request->is('post'))
         //print_r($this->request->data); exit;
         $id=$this->params['data']['InitialInvoice']['id'];
         
+        $username = $this->Session->read('username');
+        $userid = $this->Session->read('userid');
+        $EditAmount = $this->EditAmount->query("insert into edit_inv_after_approval set inv_id='$id',action='update',inv_date=now(),userid='$userid',username='$username'");
         
         $findData = $this->InitialInvoice->find('first',array('conditions'=>array('Id'=>$id)));
 
@@ -3343,7 +3415,7 @@ if ($this->request->is('post'))
 
             $msg .= "<br><strong><b style=color:#FF0000>Kindly update your Records </b></strong>";
 
-            $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' => array('work_type'=>'account','UserActive'=>'1','not' => array('email' => ''),'OR' => array('and'=>array('branch_name' => $b_name),'role' => 'admin'))));
+            $emailid = $this ->User->find("all",array('fields' => array('email','id','branch_name'),'conditions' =>"(user_type IS NULL OR user_type!='Super-Admin') and work_type='account' and UserActive='1' and email!='' and (role='admin' or branch_name='$b_name')" ));
 
             $nofifyArr = array(); $notifyLoop=0;
 					
@@ -3371,7 +3443,7 @@ if ($this->request->is('post'))
                                             }
                                         }				
 
-            if(in_array('5',$roles))
+            if($role=='admin')
             {return $this->redirect(array('controller'=>'InitialInvoices','action' => 'view_invoice'));}
             else
             {return $this->redirect(array('controller'=>'InitialInvoices','action' => 'branch_view'));}

@@ -14,18 +14,26 @@ class ProvisionsController extends AppController
 	}
 	else
 	{
+            $this->Auth->allow('index','add','uploadProvision','view','edit','update','provision_check',
+                    'provision_check_edit','uploadProvision','view_provision','get_cost_center','get_provision_amt_field',
+                    'get_cost_center_bill','bill_outsource','get_cost_bill','bill_outsource_master','get_cost_rev','add_outsource_record'
+                    ,'bill_outsource_master_save','delete_bill_part','dashboard','provisionDetails','showReport',
+                    'dashboard','provisionDetails','view_provision_change_request','bill_outsource_proc_upd',
+                    'get_outsource_record','get_upd_proc_outsource');
+            
+            
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
             $this->Auth->allow('index','add');
-            if(in_array('41',$roles)){$this->Auth->allow('index','add','uploadProvision');}
-            if(in_array('4',$roles)){$this->Auth->allow('index','view','add','edit','update','provision_check',
+            $this->Auth->allow('index','add','uploadProvision');
+            $this->Auth->allow('index','view','add','edit','update','provision_check',
                     'provision_check_edit','uploadProvision','view_provision','get_cost_center','get_provision_amt_field',
                     'get_cost_center_bill','bill_outsource','get_cost_bill','bill_outsource_master','get_cost_rev','add_outsource_record'
-                    ,'bill_outsource_master_save','delete_bill_part');}
-            if(in_array('38',$roles)){$this->Auth->allow('dashboard','provisionDetails','showReport');}
-            if(in_array('178',$roles)){$this->Auth->allow('view','edit','update');}
-            if(in_array('179',$roles)){$this->Auth->allow('dashboard','provisionDetails','view_provision_change_request');}
-            if(in_array('208',$roles)){$this->Auth->allow('bill_outsource_proc_upd','get_outsource_record','get_upd_proc_outsource');}
+                    ,'bill_outsource_master_save','delete_bill_part');
+            $this->Auth->allow('dashboard','provisionDetails','showReport');
+            $this->Auth->allow('view','edit','update');
+            $this->Auth->allow('dashboard','provisionDetails','view_provision_change_request');
+            $this->Auth->allow('bill_outsource_proc_upd','get_outsource_record','get_upd_proc_outsource');
 	}
     }
 		
@@ -424,12 +432,13 @@ on Provision.FinanceYear = pm.finance_year and Provision.FinanceMonth=pm.month a
                 $provisionForEditRequest['provision_balance'] = $data['provision'];
                 $provisionForEditRequest['remarks'] = addslashes($data['remarks']);
                 $provisionForEditRequest['userid'] = $this->Session->read("userid");
+                $userid = $this->Session->read("userid");
                 //$provisionForEditRequest['ProvisionId'] = $id;
                 
                 if(!empty($this->ProvisionEditRequest->find('list',array('fields'=>array('id','cost_center'),'conditions'=>"ProvisionId='$id' and ApproveStatus='1'"))))
                 {
                     
-                    if($this->ProvisionEditRequest->updateAll(array('branch_name'=>"'".$data['branch_name']."'",'remarks'=>"'".addslashes($data['remarks'])."'",'cost_center'=>"'".$data['cost_center']."'",'finance_year'=>"'".$data['finance_year']."'",'month'=>"'".$data['month']."'",'provision'=>$data['provision'],'provision_balance'=>$data['provision']),array('ProvisionId'=>$id)))
+                    if($this->ProvisionEditRequest->updateAll(array('userid'=>$userid,'branch_name'=>"'".$data['branch_name']."'",'remarks'=>"'".addslashes($data['remarks'])."'",'cost_center'=>"'".$data['cost_center']."'",'finance_year'=>"'".$data['finance_year']."'",'month'=>"'".$data['month']."'",'provision'=>$data['provision'],'provision_balance'=>$data['provision']),array('ProvisionId'=>$id)))
                     {
                         $this->Session->setFlash("Provision Edit Request has been saved. Please check ");
                     }

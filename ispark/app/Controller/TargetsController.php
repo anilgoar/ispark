@@ -19,8 +19,8 @@ class TargetsController extends AppController
                     'get_basic_direct_data','get_basic_direct_data1','get_basic_indirect_data','get_basic_indirect_data1','save_actual_data','view_freeze_request_for_approval','view_freeze_data',
                     'freeze_branch','save_basic_indirect','save_basic_indirect1','disapprove_feeze_request','save_actual_data1','asp_delete');
             $roles=explode(',',$this->Session->read("page_access"));
-            if(in_array('48',$roles)){$this->Auth->allow('index','add','get_process','get_entry_form');}
-            if(in_array('38',$roles)){$this->Auth->allow('get_dash_data','index','get_entry_form','add','get_process','get_tower','upload_target');}
+            $this->Auth->allow('index','add','get_process','get_entry_form');
+            $this->Auth->allow('get_dash_data','index','get_entry_form','add','get_process','get_tower','upload_target');
 	}
     }
 		

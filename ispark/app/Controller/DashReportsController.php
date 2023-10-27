@@ -15,7 +15,7 @@ class DashReportsController extends AppController
 	{
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
-            if(in_array('49',$roles)){$this->Auth->allow('index','export','get_reportdash');}
+            $this->Auth->allow('index','export','get_reportdash');
 	}
     }
 		

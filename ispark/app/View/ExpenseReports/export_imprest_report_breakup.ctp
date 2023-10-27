@@ -16,6 +16,7 @@ $fileName = "Imprest_Export";
                             <th>S.No.</th>
                             <th>GRN</th>
                             <th>Branch</th>
+                            <th>Finance Month</th>
                             <th>Exp. Type</th>
                             <th>Year Month</th>
                             <th>Exp. Head</th>
@@ -30,6 +31,8 @@ $fileName = "Imprest_Export";
                             <th>Approval Date</th>
                             <th>Bill Date</th>
                             <th>Due Date</th>
+                            <th>Payment Date</th>
+                            <th>TDS Deduct</th>
                             <th>status</th>
                             <th>username</th>
                             <?php if($type!='Export') { ?>
@@ -38,13 +41,14 @@ $fileName = "Imprest_Export";
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i=1; $amt=0; $sgst = 0; $cgst=0; $Total=0; //print_r($ExpenseReport); exit;
+                        <?php $i=1; $amt=0; $sgst = 0; $cgst=0; $Total=0;$tds =0; //print_r($ExpenseReport); exit;
                                 foreach($ExpenseReport as $exp)
                                 {
                                     echo "<tr>";
                                         echo "<td>".$i++."</td>";
                                         echo "<td>".$exp['eem']['GrnNo']."</td>";
                                         echo "<td>".$exp['bm']['branch_name']."</td>";
+                                        echo "<td>".$exp['eem']['FinanceMonth']."</td>";
                                         if($exp['eem']['ExpenseEntryType']=='Vendor')
                                         {
                                             echo "<td>".$exp['vm']['vendor']."</td>";
@@ -78,6 +82,8 @@ $fileName = "Imprest_Export";
                                         echo "<td>".$exp['0']['ApprovalDate']."</td>";
                                         echo "<td>".$exp['eem']['bill_date']."</td>";
                                         echo "<td>".$exp['eem']['due_date']."</td>";
+                                        echo "<td>".$exp['0']['grn_payment_date']."</td>";
+                                        echo "<td>".$exp['vm']['tdsAmount']."</td>"; 
                                         echo "<td>".$exp['eem']['EntryStatus']."</td>";
                                         echo "<td>".$exp['tu']['emp_name']."</td>";
                                         
@@ -92,15 +98,18 @@ $fileName = "Imprest_Export";
                                     echo "</tr>";
                                     $amt += round($exp['0']['Amount'],2);
                                     $Total += round($exp['0']['Total'],2);
+                                    $tds+= $exp['vm']['tds'];
                                 }
                                 echo "<tr>";
-                                    echo '<td colspan="8"><b>Total</b></td>';
+                                    echo '<td colspan="9"><b>Total</b></td>';
                                     echo '<td><b>'.round($amt,2).'</b></td>';
                                     echo '<td><b>'.round($sgst,2).'</b></td>';
                                     echo '<td><b>'.round($cgst,2).'</b></td>';
                                     echo '<td><b>'.round($igst,2).'</b></td>';
                                     echo '<td><b>'.round($Total,2).'</b></td>';
-                                    echo '<td colspan="7"></td>';
+                                    echo '<td colspan="5"></td>';
+                                    echo '<td><b>'.round($tds,2).'</b></td>';
+                                    echo '<td colspan="2"></td>';
                                 echo "</tr>"; 
                         ?>
                     </tbody>

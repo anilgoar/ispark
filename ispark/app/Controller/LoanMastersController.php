@@ -175,7 +175,7 @@ class LoanMastersController extends AppController {
         if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
             
             if($_REQUEST['BranchName'] !="ALL"){$conditoin['BranchName']=$_REQUEST['BranchName'];}else{unset($conditoin['BranchName']);}
-            if($_REQUEST['StartDate'] !=""){$conditoin['StartDate BETWEEN ? and ?']=array(date('Y-m-d',strtotime($_REQUEST['StartDate'])),date('Y-m-d',strtotime($_REQUEST['EndDate'])));}else{unset($conditoin['StartDate']);}
+            if($_REQUEST['StartDate'] !=""){$conditoin['StartDate BETWEEN ? and ?']=array(date('Y-m-d',strtotime('01-'.$_REQUEST['StartDate'])),date('Y-m-t',strtotime('01-'.$_REQUEST['EndDate'])));}else{unset($conditoin['StartDate']);}
             if($_REQUEST['EmpCode'] !=""){$conditoin['EmpCode']=$_REQUEST['EmpCode'];}else{unset($conditoin['EmpCode']);}
             
             if($_REQUEST['Status'] =="Applied"){$conditoin['ApproveFirst']=NULL;}
@@ -183,9 +183,13 @@ class LoanMastersController extends AppController {
             else if($_REQUEST['Status'] =="Not Approve BM"){$conditoin['ApproveFirst']='No';}
             else if($_REQUEST['Status'] =="Approve HO"){$conditoin['ApproveSecond']='Yes';}
             else if($_REQUEST['Status'] =="Not Approve HO"){$conditoin['ApproveSecond']='No';}
-            else{unset($conditoin['ApproveFirst']);unset($conditoin['ApproveSecond']);}
+            else{unset($conditoin['ApproveFirst']);unset($conditoin['ApproveSecond']);} 
+            
+            //print_r($conditoin); exit; 
             
             $data   =   $this->LoanMaster->find('all',array('conditions'=>$conditoin));
+            
+            
             
             if(!empty($data)){
             ?>

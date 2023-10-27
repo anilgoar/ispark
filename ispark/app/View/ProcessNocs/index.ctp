@@ -85,9 +85,22 @@ function getBranch(BranchName){
                                     }
                                     $curYear = date('Y');
                                     $TcurMonth = date('M');
-                                    if($TcurMonth=='Jan')
-                                    {?>
-                                        <option value="Dec-<?php echo $curYear-1; ?>">Dec-<?php echo $curYear-1; ?></option>
+                                    //if($TcurMonth=='Jan')
+                                    if(1)    
+                                    { ?>
+                                        <option value="Jan-<?php echo $curYear-1; ?>">Jan-<?php echo $curYear-1; ?></option>
+                                        <option value="Feb-<?php echo $curYear-1; ?>">Feb-<?php echo $curYear-1; ?></option>
+                                        <option value="Mar-<?php echo $curYear-1; ?>">Mar-<?php echo $curYear-1; ?></option>
+                                        <option value="Apr-<?php echo $curYear-1; ?>">Apr-<?php echo $curYear-1; ?></option>
+                                        <option value="May-<?php echo $curYear-1; ?>">May-<?php echo $curYear-1; ?></option>
+                                        <option value="Jun-<?php echo $curYear-1; ?>">Jun-<?php echo $curYear-1; ?></option>
+                                        <option value="Jul-<?php echo $curYear-1; ?>">Jul-<?php echo $curYear-1; ?></option>
+                                        <option value="Aug-<?php echo $curYear-1; ?>">Aug-<?php echo $curYear-1; ?></option>
+                                        <option value="Sep-<?php echo $curYear-1; ?>">Sep-<?php echo $curYear-1; ?></option>
+                                        <option value="Oct-<?php echo $curYear-1; ?>">Oct-<?php echo $curYear-1; ?></option>
+                                        <option value="Nov-<?php echo $curYear-1; ?>">Nov-<?php echo $curYear-1; ?></option>
+                                        <option value="Dec-<?php echo $curYear-1; ?>">Dec-<?php echo $curYear-1; ?></option> 
+                                        
                                     <?php }
                                     
                                     

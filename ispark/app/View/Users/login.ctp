@@ -1,5 +1,3 @@
-
-<!-- File: /app/View/UserType/index.ctp -->
 <?php
 
 $this_year = date('Y');
@@ -7,6 +5,9 @@ $next_year = $this_year-2000+1;
 
 $year = "$this_year-$next_year";
 ?>    
+
+<!-- File: /app/View/UserType/index.ctp -->
+    
 
 
 <div class="box-content">

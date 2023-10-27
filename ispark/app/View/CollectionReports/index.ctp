@@ -141,13 +141,13 @@ $.get("CollectionReports/get_client",
 						</div>
 					</div>
 						<div class="form-group has-success has-feedback">
-						<label class="col-sm-2 control-label">To Date</label>
+						<label class="col-sm-2 control-label">From Date</label>
 						<div class="col-sm-3">
 						
 							<?php	echo $this->Form->input('toDate', array('label'=>false,'class'=>'form-control','required'=>true,"onclick"=>"displayDatePicker('data[Add][toDate]');")); ?>
 						</div>
 
-						<label class="col-sm-2 control-label">From Date</label>
+						<label class="col-sm-2 control-label">To Date</label>
 						<div class="col-sm-3">
 						<?php	echo $this->Form->input('fromDate', array('label'=>false,'class'=>'form-control','required'=>true,"onclick"=>"displayDatePicker('data[Add][fromDate]');")); ?>
 						</div>

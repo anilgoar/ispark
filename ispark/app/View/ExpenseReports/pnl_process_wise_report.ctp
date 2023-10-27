@@ -51,11 +51,11 @@ function DashboardLog(Id){
                         <label class="col-sm-1 control-label">Year</label>
                         <div class="col-sm-3">
                         <?php	
-                            echo $this->Form->input('FinanceYear', array('label'=>false,'id'=>'Year','class'=>'form-control','options' => $financeYearArr,'empty' => 'Select Year','required'=>true));
+                            echo $this->Form->input('FinanceYear', array('label'=>false,'id'=>'Year','class'=>'form-control','options' => $financeYearArr,'empty' => 'Select Year','value'=>$FinanceYearLogin,'required'=>true));
                         ?>
                         </div>
-                        <label class="col-sm-1 control-label">Month</label>
-                        <div class="col-sm-3">
+                        <label class="col-sm-2 control-label">Pertaining Month</label>
+                        <div class="col-sm-2">
                             <?php	$month = array('Jan'=>'Jan','Feb'=>'Feb','Mar'=>'Mar','Apr'=>'Apr','May'=>'May','Jun'=>'Jun','Jul'=>'Jul','Aug'=>'Aug','Sep'=>'Sep','Oct'=>'Oct','Nov'=>'Nov','Dec'=>'Dec');
                                 echo $this->Form->input('FinanceMonth', array('label'=>false,'id'=>'Month','class'=>'form-control','options' => $month,'empty' => 'Select Month','required'=>true));
                             ?>
@@ -66,7 +66,7 @@ function DashboardLog(Id){
                         <label class="col-sm-2 control-label">&nbsp;</label>
                         <div class="col-sm-2">
                            <button class="btn btn-primary btn-label-left" onclick="return revenue_branch_wise_validate('Export')">Export</button>
-                           <a href="/ispark/FinanceReports" class="btn btn-primary btn-label-left">Back</a> 
+                           <a href="/ispark/Menuisps/sub?AX=MTM1" class="btn btn-primary btn-label-left">Back</a> 
                         </div>
                     </div>
                     

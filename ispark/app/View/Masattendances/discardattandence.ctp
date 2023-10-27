@@ -1,5 +1,11 @@
 <?php ?>
-
+<script>
+    function getBranch(BranchName){ 
+        $.post("<?php echo $this->webroot;?>Masattendances/getcostcenter",{BranchName:BranchName}, function(data){
+            $("#CostCenter").html(data);
+        });  
+    }
+</script>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
 	<a href="#" class="show-sidebar">
@@ -30,7 +36,17 @@
                
                 <?php echo $this->Session->flash(); ?>
 		<div class="form-group has-info has-feedback">
-                    <label class="col-sm-2 control-label">Date</label>
+                    <label class="col-sm-1 control-label">Branch</label>
+                    <div class="col-sm-2">
+                        <?php echo $this->Form->input('branch_name',array('label' => false,'options'=>$branchName,'empty'=>'Select','class'=>'form-control','id'=>'BranchName','onchange'=>'getBranch(this.value)','required'=>true)); ?>
+                    </div>
+                    <label class="col-sm-1 control-label">CostCenter</label>
+                    <div class="col-sm-2">
+                        <select id="CostCenter" name="CostCenter" autocomplete="off" class="form-control" >
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-1 control-label">Date</label>
                     <div class="col-sm-3">
                         <div class="input-group">
                            <?php

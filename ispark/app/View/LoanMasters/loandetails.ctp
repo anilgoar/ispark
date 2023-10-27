@@ -180,6 +180,7 @@ function chequeVerification(type,Id){
                         <select name="StartDate" id="StartDate" class="form-control" required="">
                             <option value="">Month</option>
                             <?php
+                            $curYear = date('Y');
                                     $TcurMonth = date('M');
                                     if($TcurMonth=='Jan')
                                     {?>

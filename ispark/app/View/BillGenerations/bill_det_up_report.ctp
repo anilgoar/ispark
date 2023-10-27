@@ -74,7 +74,7 @@
                     <label class="col-sm-2 control-label"><b style="font-size:14px">Finance Year</b></label>	
                     <div class="col-sm-2">
                         <?php	echo $this->Form->input('FinanceYear', array('label'=>false,'class'=>'form-control',
-                        'options'=>$financeYearArr,'id'=>'FinanceYear','required'=>true)); ?>
+                        'options'=>$financeYearArr,'id'=>'FinanceYear','value'=>$FinanceYearLogin,'required'=>true)); ?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -89,7 +89,7 @@
                     <div class="col-sm-3">
                         <button type="submit" name="button" value="Save" onclick="return get_report_bill_upd('show')" class="btn btn-primary">Show</button>
                         <button type="submit" name="button" value="Save" onclick=" return tableToExcel('bill_table', 'bill_detail_upd')" class="btn btn-primary">Export</button>
-                        <a href="/ispark/FinanceReports" class="btn btn-primary btn-label-left">Back</a> 
+                        <a href="/ispark/Menuisps/sub?AX=MTM1" class="btn btn-primary btn-label-left">Back</a> 
                     </div>
                 </div>
                 

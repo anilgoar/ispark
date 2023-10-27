@@ -1,5 +1,5 @@
 <?php
-
+ if(empty($FinYear)) {$FinYear = $FinanceYearLogin;}
 ?>
 <style>
 body {font-family: Arial, Helvetica, sans-serif;}
@@ -106,9 +106,9 @@ table th,td{text-align: center;font-size: 13px;}
                         <label class="col-sm-2 control-label">&nbsp;</label>
                         
                         <div class="col-sm-3">
-                            <button class="btn btn-primary btn-label-left" onClick="return budget_validate12('Show');">Show</button>
-				<button class="btn btn-primary btn-label-left" onClick="return budget_validate12('Export');">Export</button>
-                                <a href="/ispark/Finances" class="btn btn-primary btn-label-left">Back</a> 
+                            <button class="btn btn-primary btn-label-left" onClick="return budget_validate_new('Show');">Show</button>
+				<button class="btn btn-primary btn-label-left" onClick="return budget_validate_new('Export');">Export</button>
+                                <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
 			</div>
                     </div>
                     
@@ -253,7 +253,7 @@ table th,td{text-align: center;font-size: 13px;}
         </div>
     </div>
 </div>
-
+ 
 <div class="row">
     <div class="col-xs-12 col-sm-12">
         <div class="box">
@@ -276,7 +276,6 @@ table th,td{text-align: center;font-size: 13px;}
         </div>
     </div>
 </div>
- 
 <script>
 // Get the modal
 function get_pop_up(Branch,FinanceYear,FinanceMonth,Head,SubHead,Amount,id)
@@ -315,7 +314,7 @@ function pop_up_close()
     modal.style.display = "none";
 }
 
-function budget_validate12(val)
+function budget_validate_new(val)
 {
 var	branch_Name = document.getElementById('ExpenseBranchName').value;
 
@@ -343,7 +342,7 @@ var month = document.getElementById('ExpenseFinanceMonth').value;
         
         if(val=='Export') 
         {        
-            return budgetreport12(branch_Name,year,month,val);
+            return budget_validate_exp(branch_Name,year,month,val);
         }
         else
         {
@@ -354,7 +353,7 @@ var month = document.getElementById('ExpenseFinanceMonth').value;
         }
 }
 
-function budgetreport12(branchName,year,month,val)
+function budget_validate_exp(branchName,year,month,val)
 {
 	var url='export_budget/?BranchName='+branchName+'&year='+year+'&month='+month+'&type='+val;
 	window.location.href = url;
@@ -599,4 +598,7 @@ function save_grn_cost_center_un()
     }
     
 }
+
+
+
 </script>

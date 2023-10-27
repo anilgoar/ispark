@@ -16,8 +16,8 @@ class ConnectivitiesController extends AppController
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
 
-            if(in_array('77',$roles)){$this->Auth->allow('index','view','save_doc','mobile','export1','save_doc1','get_report11');}
-            else{$this->Auth->deny('index');}
+            $this->Auth->allow('index','view','save_doc','mobile','export1','save_doc1','get_report11');
+            //else{$this->Auth->deny('index');}
             $this->Auth->allow('index','view','save_doc','save_doc1','mobile','export1','get_report11');
         }
     }

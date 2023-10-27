@@ -26,9 +26,11 @@ $this->Auth->allow('reject_report','get_proccesed','get_expense_cost_center','sa
 public function pnl_process_wise_report()
   {
         $this->layout='home';
+        $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+        $this->set('FinanceYearLogin',$FinanceYearLogin);
         $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2017-18','2018-19','2019-20','2020-21')))));
-        $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'order'=>array('branch_name')));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16')")));
+        $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
         $branchMaster = array('All'=>'All') + $branchMaster2;
         $this->set('branch_master',$branchMaster);
         
@@ -64,13 +66,17 @@ public function pnl_process_wise_report()
       $this->set('type',$Expense['type']);
       $branch=$Expense['Company'];
       if($branch == 'All'){
-          $qu='';
-          $qu1='';
-          $qu2='';
-          $qu3=' 1=1';
-         $qu4="";
-         $qu5 = "";
-         $qu6 = "";
+          
+        $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array("pnl_active"=>'1'),'order'=>array('branch_name')));
+        $br_in = implode("','", $branchMaster2);
+          
+          $qu= "and bm.branch_name in ('$br_in')";
+         $qu1="and branch in ('$br_in')";
+         $qu4="and cm.branch in ('$br_in')";
+         $qu2="and cm.branch in ('$br_in')";
+         $qu3=" pm.branch_name in ('$br_in')";
+         $qu5 = " and Branch in ('$br_in')";
+         $qu6 = " and branch in ('$br_in')";
       }
       else
       { 
@@ -87,17 +93,22 @@ public function pnl_process_wise_report()
       $qry1 = " 1=1 ";
       $qry3 = " ";
       $qry4 = " ";
-      $this->set('cost_master',$this->CostCenterMaster->find('list',array('fields'=>array('id','cost_center'),'conditions'=>"active='1' $qu1")));
+      $this->set('cost_master',$this->CostCenterMaster->find('list',array('fields'=>array('id','cost_center'),'conditions'=>"active='1' $qu1",'order'=>array('branch'=>'asc'))));
       $this->set('cost_name',$this->CostCenterMaster->find('list',array('fields'=>array('id','process_name'),'conditions'=>"active='1' $qu1")));
       $this->set('orderD',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('OrderPriority','HeadingDesc'),'conditions'=>array('EntryBy'=>"",'Cost'=>'D',"close_status"=>"1"),'order'=>array('OrderPriority')))) ;
       $this->set('orderI',$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('OrderPriority','HeadingDesc'),'conditions'=>array('EntryBy'=>"",'Cost'=>'I',"close_status"=>"1"),'order'=>array('OrderPriority')))) ;
-      $this->set('cost_Nbranch' , $this->CostCenterMaster->find('list',array('fields'=>array('id','branch'),'conditions'=>"active='1' $qu1",'order'=>array('branch'=>'asc'))));
+      
+      //$cost_Nbranch = $this->CostCenterMaster->find('list',array('fields'=>array('id','branch'),'conditions'=>"active='1' $qu1",'order'=>array('branch'=>'asc')));
+      
       
       
       /// Getting Provision Branch Wise as UnProcessed Provision in Gross Salary in p&l report From table provision_master
       $provisionArr = $this->Provision->query("SELECT cm.id,SUM(pm.provision) provision,cm.Billing FROM provision_master pm
 INNER JOIN cost_master cm ON pm.cost_center = cm.cost_center
- WHERE pm.invoiceType1='Revenue' and pm.finance_year='{$Expense['FinanceYear']}' AND pm.`month` = '$month' $qu4 GROUP BY cm.id;");
+ WHERE pm.invoiceType1='Revenue' and pm.`month` = '$month' $qu4 GROUP BY cm.id;");
+      
+      //pnl_process_wise_report
+      
       foreach($provisionArr as $pro)
       {
         $provision_master[$pro['cm']['id']] = $pro['0']['provision'];
@@ -146,7 +157,10 @@ INNER JOIN cost_master cm ON pm.Cost_Center_OutSource = cm.cost_center
       /// Getting Sell Invoice as Processed Amount in Gros Salary in p&l report from table table_invoice 
       $InvoiceArr = $this->InitialInvoice->query("SELECT cm.id,SUM(total) total,cm.Billing FROM tbl_invoice ti 
  INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
- WHERE ti.invoiceType='Revenue' and ti.finance_year='{$Expense['FinanceYear']}' AND left(ti.`month`,3)='{$Expense['FinanceMonth']}' AND ti.`status`=0 $qu4 GROUP BY cm.id");
+ WHERE ti.invoiceType='Revenue' and ti.month='$month' AND ti.`status`=0 $qu4 GROUP BY cm.id");
+      
+      //and ti.finance_year='{$Expense['FinanceYear']}' AND left(ti.`month`,3)='{$Expense['FinanceMonth']}'
+      
       foreach($InvoiceArr as $pro)
       {
           $inv_master[$pro['cm']['id']] = $pro['0']['total'];
@@ -532,6 +546,77 @@ GROUP BY cm.id,subhead.SubHeadingDesc";
             } 
 
         }
+        
+        $get_capex_head = "SELECT head.HeadingId,subhead.SubHeadingId FROM `tbl_bgt_expenseheadingmaster` head 
+INNER JOIN 
+`tbl_bgt_expensesubheadingmaster` subhead ON head.HeadingId = subhead.HeadingId
+WHERE Cost='C' ORDER BY head.HeadingId";
+        $dir_capex_head_arr = $this->ExpenseMaster->query($get_capex_head);
+        
+        foreach($dir_capex_head_arr as $exp_head_arr)
+        {
+            $expense_head = $exp_head_arr['head']['HeadingId'];
+            $expense_subhead = $exp_head_arr['subhead']['SubHeadingId'];
+            
+            $check_busi_status = "Branch='$branch' and FinanceYear='{$Expense['FinanceYear']}' AND FinanceMonth='{$Expense['FinanceMonth']}' AND HeadId='$expense_head' AND SubHeadId='$expense_subhead'";
+            $status = $this->ExpenseMaster->find('first',array('conditions'=>$check_busi_status));
+            
+            //print_r($status); exit;
+            
+            if($status['ExpenseMaster']['EntryStatus']=='0')
+            {
+                $capex_unproc = "SELECT subhead.SubHeadingDesc,head.HeadingDesc,cm.id,SUM(eep.Amount) Amount FROM expense_entry_master eem 
+INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
+INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId AND head.close_status=1
+INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId AND subhead.sub_close_status=1
+INNER JOIN cost_master cm ON eep.CostCenterId = cm.id
+WHERE head.HeadingId='$expense_head' AND subhead.subHeadingId='$expense_subhead' AND eem.FinanceYear='{$Expense['FinanceYear']}' AND 
+eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'C' AND eem.HeadId!='24' $qu4
+GROUP BY cm.id,subhead.SubHeadingDesc";  
+
+            }
+            else
+            {
+                $capex_unproc = "SELECT eem.EntryStatus,subhead.SubHeadingDesc,head.HeadingDesc,cm.id,SUM(eep.Amount) Amount FROM expense_master eem 
+INNER JOIN expense_particular eep ON eem.Id = eep.ExpenseId AND eep.ExpenseType='CostCenter'
+INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId AND head.close_status=1
+INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId AND subhead.sub_close_status=1
+INNER JOIN cost_master cm ON eep.ExpenseTypeId = cm.id
+WHERE head.HeadingId='$expense_head' AND subhead.subHeadingId='$expense_subhead' AND eem.FinanceYear='{$Expense['FinanceYear']}' AND 
+eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'C' AND eem.HeadId!='24'  $qu4
+GROUP BY cm.id,subhead.SubHeadingDesc";
+
+            }
+            $CapexUnArr = $this->ExpenseEntryMaster->query($capex_unproc); 
+       
+            foreach($CapexUnArr as $cap)
+            {
+                $UnCapex[$cap['cm']['id']] += $cap['0']['Amount'];
+                $BranchNArr[] = strtoupper($cap['cm']['id']);
+            } 
+            
+            $capex_proc = "SELECT subhead.SubHeadingDesc,head.HeadingDesc,cm.id,SUM(eep.Amount) Amount FROM expense_entry_master eem 
+INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
+INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId AND head.close_status=1
+INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId AND subhead.sub_close_status=1
+INNER JOIN cost_master cm ON eep.CostCenterId = cm.id
+WHERE head.HeadingId='$expense_head' AND subhead.subHeadingId='$expense_subhead' AND eem.FinanceYear='{$Expense['FinanceYear']}' AND 
+eem.FinanceMonth='{$Expense['FinanceMonth']}' AND head.Cost = 'C' AND eem.HeadId!='24'  $qu4
+GROUP BY cm.id,subhead.SubHeadingDesc";
+            
+            $CapexArr = $this->ExpenseEntryMaster->query($capex_proc); 
+       
+            foreach($CapexArr as $cap)
+            {
+                $Capex[$cap['cm']['id']] += $cap['0']['Amount'];
+                $BranchNArr[] = strtoupper($cap['cm']['id']);
+            } 
+
+        }
+        
+        $this->set('Capex',$Capex);
+        $this->set('UnCapex',$UnCapex);
+        
       
        $billingUnProc_select_contract_fees = "SELECT cm.id,SUM(pm.outsource_amt) billing_amt FROM provision_particulars pm 
 INNER JOIN cost_master cm ON pm.cost_center = cm.cost_center 
@@ -683,6 +768,13 @@ GROUP BY cm.id,subhead.SubHeadingDesc";
 
         }
        
+        
+        
+        
+        
+        
+        
+        
         $PnlProcessSave = $this->PnlProcessSave->find('all',array('conditions'=>"FinanceYear='{$Expense['FinanceYear']}' and FinanceMonth='{$Expense['FinanceMonth']}' and pnlMasterId='8' $qu5"));       
         foreach($PnlProcessSave as $processRecords)
         {
@@ -808,18 +900,27 @@ public function get_imprest_manager()
             
             if($BranchId=='All' && $role=='admin')
             {
-                $condition=array('Active'=>'1');
+                $condition=" and im.active='1'";
                 $all = array('All'=>'All');
             }
             else if($BranchId=='All')
             {
-                $condition=array('Active'=>'1','UserId'=>$userid);
+                $condition=" and im.active='1' and im.UserId='$userid'";
             }
             else
             {
-                $condition=array('Active'=>'1','BranchId'=>$BranchId);
+                //$condition=array('Active'=>'1','BranchId'=>$BranchId);
+                $condition=" and im.active='1' and tga.BranchId='$BranchId'";
             }
-            $ImperstList = $this->ImprestManager->find('list',array('fields'=>array('Id','UserName'),'conditions'=>$condition));
+            $ImperstList_arr = $this->ImprestManager->query("SELECT * FROM `imprest_manager` im 
+            INNER JOIN `tbl_grn_access` tga  ON im.UserId = tga.UserId
+            WHERE 1=1 $condition");
+            
+            foreach($ImperstList_arr as $imprest_det)
+            {
+                $ImperstList[$imprest_det['im']['Id']] = $imprest_det['im']['TallyHead'];
+            }
+            
             $ImperstList = $all+$ImperstList;
             echo json_encode($ImperstList);
         }
@@ -830,6 +931,8 @@ public function index()
 {
     $this->layout = "home";
     $role = $this->Session->read('role');
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
      $all = array();
      if($role=='admin')
         {
@@ -838,7 +941,14 @@ public function index()
         }
         else
         {
-            $condition=array('branch_name'=>$this->Session->read("branch_name"),'active'=>1);
+            $userid = $this->Session->read('userid');
+            $branch4 = $this->Addbranch->query("SELECT BranchId,bm.branch_name FROM `tbl_grn_access` tga inner join branch_master bm on tga.BranchId = bm.id  WHERE tga.UserId='$userid'");
+            //$condition=array('branch_name'=>$this->Session->read("branch_name"),'active'=>1);
+            foreach($branch4 as $br)
+            {
+                $branchMaster[] = $br['bm']['branch_name'];
+            }
+            $condition=array('branch_name'=>$branchMaster,'active'=>1);
         }
      
     
@@ -928,72 +1038,74 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadin
 public function export_budget()
 {
     $this->layout='ajax';
-    if($this->request->is('POST'))
-    {$result = $this->request->data;}
-    else
-    {$result = $this->params->query;}
+      if($this->request->is('POST'))
+      {$result = $this->request->data;}
+      else
+      {
+          $result = $this->params->query;
+      }
       
       $this->set('type',$result['type']);
     
     $BranchName = $result['BranchName'];
-    $year =$result['year'];
-    $month =$result['month'];
+		$year =$result['year'];
+                $month =$result['month'];
 		
     
     
         //print_r($this->request->data); exit;
         $qry = "Where 1=1";
-        
+        $qry1 = "Where 1=1";
         
         if($BranchName!='All')
         {
             $qry .= " and Branch='".$BranchName."'";
+            $qry1 .= " AND bm.branch_name='".$BranchName."'";
         }
         
         if($year!='All')
         {
             $qry .= " and FinanceYear='".$year."'";
+            $qry1 .= " and eem.FinanceYear='".$year."'";
         }
         
         if($month!='All')
         {
             $qry .= " and FinanceMonth='".$month."'";
+            $qry1 = " and eem.FinanceMonth='".$month."'";
         }
         
-        
-        
-       $this->set('TotalUnProcess',$this->ExpenseMaster->query("SELECT em.Id,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(EntryStatus=0,'Closed','Approved')
+       $this->set('ExpenseReport',$this->ExpenseMaster->query("SELECT em.Id,em.BranchId,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(EntryStatus=0,'Closed','Approved')
 `bus_status`,PaymentFile,'1' Action,em.HeadId,em.SubHeadId FROM expense_master em 
            INNER JOIN `tbl_bgt_expenseheadingmaster` hm ON em.HeadId = hm.HeadingId 
 INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadingId $qry
 UNION ALL
-SELECT em.Id,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(Approve1 IS NULL,'BM Pending',IF(Approve2 IS NULL,'VH Pending',if(Approve3 is null,'FH Pending','Approved'))) 
+SELECT em.Id,em.BranchId,Branch,EntryNo,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc,Amount,DATE_FORMAT(createdate,'%d-%b-%Y') `date`,IF(Approve1 IS NULL,'BM Pending',IF(Approve2 IS NULL,'VH Pending',if(Approve3 is null,'FH Pending','Approved'))) 
 `bus_status`,PaymentFile,'1' Action,em.HeadId,em.SubHeadId FROM tmp_expense_master em 
            INNER JOIN `tbl_bgt_expenseheadingmaster` hm ON em.HeadId = hm.HeadingId 
-INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadingId $qry  and Active=1 order by Branch,HeadingDesc,SubHeadingDesc")); 
+INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON em.SubHeadId = shm.SubHeadingId $qry  and Active=1 order by Branch,FinanceYear,FinanceMonth,HeadingDesc,SubHeadingDesc")); 
        
-       
-       
-    $ProcessedMaster = $this->ExpenseEntryMaster->query("SELECT head.HeadingDesc,subhead.SubHeadingDesc,SUM(eep.amount)Total FROM expense_entry_master eem
+$ProcessedMaster = $this->ExpenseEntryMaster->query("SELECT bm.id,eem.FinanceYear,eem.FinanceMonth,head.HeadingDesc,subhead.SubHeadingDesc,SUM(eep.amount)Total FROM expense_entry_master eem
 INNER JOIN `expense_entry_particular` eep ON eem.Id = eep.ExpenseEntry
 INNER JOIN `cost_master` cm ON eep.CostCenterId = cm.Id
 INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.HeadId = head.HeadingId
 INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.SubHeadId = subhead.SubHeadingId
 INNER JOIN branch_master bm ON cm.branch = bm.branch_name 
-WHERE eem.FinanceYear='$year' AND eem.FinanceMonth='$month'
- AND bm.branch_name='$BranchName'  group by eem.HeadId,eem.SubHeadId");
+$qry1
+   group by bm.id,eem.FinanceYear,eem.FinanceMonth,eem.HeadId,eem.SubHeadId");
 
     $Processed = array();
     foreach($ProcessedMaster as $processed)
     {
-        $Processed[$processed['head']['HeadingDesc']][$processed['subhead']['SubHeadingDesc']] += $processed['0']['Total'];
+        $Processed[$processed['bm']['id']][$processed['eem']['FinanceYear']][$processed['eem']['FinanceMonth']][$processed['head']['HeadingDesc']][$processed['subhead']['SubHeadingDesc']] += $processed['0']['Total'];
     }
     
     //print_r($Processed);exit;
-    $this->set('Processed',$Processed);
+    $this->set('Processed',$Processed);    
     
     
 }
+
 
 public function get_proccesed()
 {
@@ -1026,11 +1138,11 @@ where bm.branch_name='$BranchName' and FinanceYear='$year' and FinanceMonth='$mo
         echo '<th>Amount</th>';
         echo '<th>Action</th>';
     echo '</tr>';
-    $i=1;
+    $srno=1;
     foreach($process_arr as $proc)
     {
         echo '<tr>';
-            echo '<td>'.$srno.'</td>';
+            echo '<td>'.$srno++.'</td>';
             echo '<td>'.$proc['bm']['branch_name'].'</td>';
             echo '<td>'.$proc['hm']['HeadingDesc'].'</td>';
             echo '<td>'.$proc['shm']['SubHeadingDesc'].'</td>';
@@ -1044,8 +1156,6 @@ where bm.branch_name='$BranchName' and FinanceYear='$year' and FinanceMonth='$mo
     echo '</table>';
     exit;
 }
-
-
 
 public function get_expense_cost_center()
 {
@@ -1063,7 +1173,8 @@ public function get_expense_cost_center()
     $process_arr=$this->ExpenseMaster->query($qr);
     
     $cost_list = $this->CostCenterMaster->find('list',array('fields'=>array('id','cost_center'),'conditions'=>"branch='$BranchName' and active='1'"));
-
+    $cost_list_value = $this->ExpenseEntryParticular->find('list',array('fields'=>array('CostCenterId','Total'),'conditions'=>"ExpenseEntry='$expenseId'"));
+    
     $vendorId = $process_arr['0']['eem']['Vendor'];
     
     $qr_gst_enable = "SELECT GSTEnable FROM `tbl_state_comp_gst_details` gst WHERE VendorId='$vendorId'";
@@ -1075,15 +1186,16 @@ public function get_expense_cost_center()
     echo '<table border="2">';
     echo '<tr>';
     echo '<th colspan="2">GRN No.</th>';
-    echo '<th colspan="2">'.$process_arr['0']['eem']['GrnNo'].'</th>';
+    echo '<th colspan="3">'.$process_arr['0']['eem']['GrnNo'].'</th>';
     echo '</tr>';
     echo '<tr>';
     echo '<th colspan="2">Amount</th>';
-    echo '<th  colspan="2">'.$process_arr['0']['0']['Amount'].'</th>';
+    echo '<th  colspan="3">'.$process_arr['0']['0']['Amount'].'</th>';
     echo '</tr>';
     
     echo '<tr>';
     echo '<th>Cost Center</th>';
+    echo '<th>Old Amount</th>';
     echo '<th>Amount</th>';
     echo '<th>GST</th>';
     echo '<th>Tax</th>';
@@ -1095,10 +1207,12 @@ public function get_expense_cost_center()
     {
         echo '<tr>';
         echo '<td>'.$cost_center.'</td>';
+        echo '<td>'.'<input type="text" value="'.$cost_list_value[$costId].'"> </td>';
         echo '<td>'.'<input type="text" class="cost" id="'.$costId.'" onkeypress="return isNumberKey(event)" name="cost_amount['.$costId.']'.'" onblur="getsum();"> </td>';
+        
         echo '<td>';
             echo '<select onchange="getsum();" id="gst_per'.$costId.'" name="gst_per['.$costId.']"';
-            if($gst_enable=='0')
+            if($gst_enable!='1')
             {
                 echo 'disabled=""';
             }
@@ -1117,7 +1231,7 @@ public function get_expense_cost_center()
     }
     
     echo '<tr>';
-            echo '<td>Total</td>';
+            echo '<td colspan="2">Total</td>';
             echo '<td>';
                echo '<input type="text" id="amount_grn_sum" value="0" readonly="">';
             echo '</td>';
@@ -1132,7 +1246,7 @@ public function get_expense_cost_center()
     echo '</tr>';
     
     echo '<tr>';
-            echo '<td colspan="2">';
+            echo '<td colspan="3">';
                 echo '<a href="#" onclick="save_grn_cost_center()" class="btn btn-primary">Save</a>';
             echo '</td>';
     echo '</tr>';
@@ -1154,6 +1268,7 @@ function save_changes_to_cost_center()
     $this->layout="ajax";
     //print_r($this->request->data);
     //exit;
+    $userId = $this->Session->read('userid');
     $ExpenseId = $this->request->data['expenseId'];
     $ExpenseData = $this->ExpenseEntryMaster->find('first',array("conditions"=>"id='$ExpenseId'"));
     //if($this->ExpenseEntryParticular->deleteAll(array('Id'=>$ExpenseId)))
@@ -1187,6 +1302,8 @@ function save_changes_to_cost_center()
             }
             $record['ExpenseEntryType'] = $ExpenseData['ExpenseEntryMaster']['ExpenseEntryType'];
             $record['ExpenseEntry'] = $ExpenseId;
+            $record['userid'] = $userId;
+            $record['createdate'] = date('Y-m-d H:i:s');
             $record_arr[] = $record;
                 
                 
@@ -1202,7 +1319,7 @@ function save_changes_to_cost_center()
         if($this->ExpenseEntryParticular->saveAll($record_arr))
         {
             
-            $this->ExpenseEntryMaster->updateAll(array('pnl_change'=>"'0'",'pnl_change_date'=>'now()'),array('id'=>$ExpenseId));
+            $this->ExpenseEntryMaster->updateAll(array('pnl_change'=>"'1'",'pnl_change_date'=>'now()'),array('id'=>$ExpenseId));
             echo 'record updated successfully.';
         }
         else
@@ -1244,11 +1361,11 @@ where bm.branch_name='$BranchName' and FinanceYear='$year' and FinanceMonth='$mo
         echo '<th>Amount</th>';
         echo '<th>Action</th>';
     echo '</tr>';
-    $i=1;
+    $srno=1;
     foreach($process_arr as $proc)
     {
         echo '<tr>';
-            echo '<td>'.$srno.'</td>';
+            echo '<td>'.$srno++.'</td>';
             echo '<td>'.$proc['bm']['branch_name'].'</td>';
             echo '<td>'.$proc['hm']['HeadingDesc'].'</td>';
             echo '<td>'.$proc['shm']['SubHeadingDesc'].'</td>';
@@ -1279,17 +1396,18 @@ public function get_budget_cost_center()
     $unprocess_arr=$this->ExpenseMaster->query($qr);
     
     $cost_list = $this->CostCenterMaster->find('list',array('fields'=>array('id','cost_center'),'conditions'=>"branch='$BranchName' and active='1'"));
-        
+       $cost_list_value = $this->ExpenseParticular->find('list',array('fields'=>array('ExpenseTypeId','Amount'),'conditions'=>"ExpenseId='$expenseId' and ExpenseType='CostCenter'")); 
     echo '<form id="save_grn_cost" action="save_changes_to_cost_center" method="post">';
     echo '<table border="2">';
     
     echo '<tr>';
     echo '<th>Amount</th>';
-    echo '<th>'.$unprocess_arr['0']['em']['Amount'].'</th>';
+    echo '<th colspan="2">'.$unprocess_arr['0']['em']['Amount'].'</th>';
     echo '</tr>';
     
     echo '<tr>';
     echo '<th>Cost Center</th>';
+    echo '<th>Old Amount</th>';
     echo '<th>Amount</th>';
     echo '</tr>';
     
@@ -1297,19 +1415,20 @@ public function get_budget_cost_center()
     {
         echo '<tr>';
         echo '<td>'.$cost_center.'</td>';
+        echo '<td>'.'<input type="text" value="'.$cost_list_value[$costId].'"> </td>';
         echo '<td>'.'<input type="text" class="cost" id="'.$costId.'" onkeypress="return isNumberKey(event)" name="cost_amount['.$costId.']'.'" onblur="getsum_un();"> </td>';
         echo '</tr>';
     }
     
     echo '<tr>';
-            echo '<td>Total</td>';
+            echo '<td colspan="2">Total</td>';
             echo '<td>';
                echo '<input type="text" id="amount_grn_sum" value="0" readonly="">';
             echo '</td>';
     echo '</tr>';
     
     echo '<tr>';
-            echo '<td colspan="2">';
+            echo '<td colspan="3">';
                 echo '<a href="#" onclick="save_grn_cost_center_un()" class="btn btn-primary">Save</a>';
             echo '</td>';
     echo '</tr>';
@@ -1328,6 +1447,7 @@ public function get_budget_cost_center()
 function save_changes_to_cost_center_budget()
 {
     $this->layout="ajax";
+    $userId = $this->Session->read('userid');
     //print_r($this->request->data);
     //exit;
     $ExpenseId = $this->request->data['expenseId'];
@@ -1357,7 +1477,9 @@ function save_changes_to_cost_center_budget()
             $record['FinanceMonth'] = $ExpenseData['ExpenseMaster']['FinanceMonth'];
             $record['HeadId'] = $ExpenseData['ExpenseMaster']['HeadId'];
             $record['SubHeadId'] = $ExpenseData['ExpenseMaster']['SubHeadId'];
-            
+            $record['AmountPercent'] = 100;
+            $record['createdate'] = date('Y-m-d H:i:s');
+            $record['userid'] = $userId;
             $record_arr[] = $record;
             }
             
@@ -1369,7 +1491,7 @@ function save_changes_to_cost_center_budget()
         if($this->ExpenseParticular->saveAll($record_arr))
         {
             
-            $this->ExpenseMaster->updateAll(array('pnl_change'=>"'0'",'pnl_change_date'=>'now()'),array('id'=>$ExpenseId));
+            $this->ExpenseMaster->updateAll(array('pnl_change'=>"'1'",'pnl_change_date'=>'now()'),array('id'=>$ExpenseId));
             echo 'record updated successfully.';
         }
         else
@@ -1379,10 +1501,15 @@ function save_changes_to_cost_center_budget()
     }
     exit;
 } 
- 
+
+
+
+
 public function imprest_report()
 {
     $this->layout = "home";
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
     $all = array();
     
     $role = $this->Session->read('role');
@@ -1399,7 +1526,7 @@ public function imprest_report()
     $branchMaster = $all+$branchMaster2;
     $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>'14-15')))));
     $this->set('branch_master',$branchMaster);
-    $this->set('head',array('All'=>'All')+$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'conditions'=>"EntryBy=''")));
+    $this->set('head',array('All'=>'All')+$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'),'conditions'=>"EntryBy=''",'order'=>array('HeadingDesc'=>'asc'))));
     
     if($this->request->is('POST'))
     {
@@ -1542,6 +1669,8 @@ LEFT JOIN tbl_vendormaster vm ON em.Vendor=vm.Id $qry order by em.Id";
 public function grn_report()
 {
     $this->layout = "home";
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
     $all = array();
     
     $role = $this->Session->read('role');
@@ -1553,7 +1682,7 @@ public function grn_report()
     
         
     $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>'2017-18','2018-19','2019-20','2020-21'))));
+    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16','2014-15','2015-16','2016-17')")));
     
     if($this->request->is('POST'))
     {
@@ -1666,10 +1795,7 @@ public function export_grn_report()
             $qry .= " and DATE_FORMAT(em.approvalDate,'%b-%y')='".$NewMonth."'";
         }
         
-        
-        
-        //print_r($qry);exit;
-             $select  = "SELECT em.Id,SUBSTRING_INDEX(GrnNo,'/',-1) VchNo,DATE_FORMAT(LAST_DAY(em.approvalDate),'%d-%b-%y') Dates,head.HeadingDesc,
+/*         $select  = "SELECT em.Id,SUBSTRING_INDEX(GrnNo,'/',-1) VchNo,DATE_FORMAT(LAST_DAY(em.approvalDate),'%d-%b-%y') Dates,head.HeadingDesc,
 subhead.SubHeadingDesc,IF(em.Vendor_State_Code=em.Billing_State_Code,'state','central')GSTType,tscgd.GSTEnable,em.bill_no,vm.TDSEnabled,vm.TDS,vm.TDSSection,vm.TDSChange,vm.TDSNew,
 vm.TallyHead,SUM(eep.Amount)Amount,eep.Rate,SUM(eep.Tax) Tax,SUM(eep.Total) Total,''DebitCredit,cm.Branch CostCategory,
 vm.TDSTallyHead,subhead.SubHeadTDSEnabled,subhead.SubHeadTds,td.description,td2.description,td.TDS,
@@ -1686,9 +1812,43 @@ INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON em.SubHeadId = subhead.S
 LEFT JOIN tds_master td ON subhead.SubHeadTdsSection = td.Id
 LEFT JOIN tds_master td2 ON vm.TDSSection = td2.Id
 WHERE  1=1 $qry
-GROUP BY cm.branch,em.GrnNo,em.Id   ORDER BY STR_TO_DATE(em.approvalDate,'%d-%m-%Y'),CONVERT(SUBSTRING_INDEX(GrnNo,'/',-1),UNSIGNED INTEGER)";  
-               $ExpenseReport= $this->ExpenseMaster->query($select);
+GROUP BY cm.branch,em.GrnNo,em.Id   ORDER BY STR_TO_DATE(em.approvalDate,'%d-%m-%Y'),CONVERT(SUBSTRING_INDEX(GrnNo,'/',-1),UNSIGNED INTEGER)"; */
         
+        //print_r($qry);exit;
+             $select1  = "SELECT em.Id,bm.id,vm.id,SUBSTRING_INDEX(GrnNo,'/',-1) VchNo,DATE_FORMAT(LAST_DAY(em.approvalDate),'%d-%b-%y') Dates,head.HeadingDesc,
+subhead.SubHeadingDesc,IF(em.Vendor_State_Code=em.Billing_State_Code,'state','central')GSTType,em.bill_no,vm.TDSEnabled,vm.TDS,vm.TDSSection,vm.TDSChange,vm.TDSNew,
+vm.TallyHead,SUM(eep.Amount)Amount,eep.Rate,SUM(eep.Tax) Tax,SUM(eep.Total) Total,''DebitCredit,bm.branch_name CostCategory,
+vm.TDSTallyHead,subhead.SubHeadTDSEnabled,subhead.SubHeadTds,td.description,td2.description,td.TDS,
+bm.branch_name CostCenter,em.FinanceYear,em.FinanceMonth,eep.Particular NarrationEach,em.Description Narration,
+IF(1=1,em.Billing_State_Code,em.Billing_State_Code)state,
+bm.tally_code,bm.tally_branch,em.GrnNo,DATE_FORMAT(STR_TO_DATE(em.bill_date,'%d-%m-%Y'),'%d-%b-%y') bill_date1,em.bill_date FROM `expense_entry_master` 
+em 
+INNER JOIN expense_entry_particular eep ON em.Id=eep.ExpenseEntry  
+INNER JOIN cost_master cm ON cm.Id = eep.CostCenterId
+INNER JOIN branch_master bm ON em.branchId = bm.id
+INNER JOIN tbl_vendormaster vm ON vm.Id = em.vendor
+INNER JOIN `tbl_bgt_expenseheadingmaster` head ON em.HeadId = head.HeadingId
+INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON em.SubHeadId = subhead.SubHeadingId
+LEFT JOIN tds_master td ON subhead.SubHeadTdsSection = td.Id
+LEFT JOIN tds_master td2 ON vm.TDSSection = td2.Id
+WHERE  em.`reject`!='0' $qry 
+GROUP BY bm.branch_name,em.GrnNo,em.Id   ORDER BY STR_TO_DATE(em.approvalDate,'%d-%m-%Y'),CONVERT(SUBSTRING_INDEX(GrnNo,'/',-1),UNSIGNED INTEGER)";   
+            
+               $ExpenseReport2= $this->ExpenseMaster->query($select1);
+               $ExpenseReport = array();
+
+               foreach($ExpenseReport2 as $exp)
+               {
+                    $branchId = $exp['bm']['id'];
+                    $vendorId = $exp['vm']['id'];
+                    $select_gst_enable = "SELECT GSTEnable FROM `tbl_state_comp_gst_details` tscgd
+                    WHERE BranchId='$branchId' AND VendorId='$vendorId' limit 1";
+                    //echo $select_gst_enable;exit;
+                    $ExpenseGSTReport= $this->ExpenseMaster->query($select_gst_enable);
+                    //print_r($ExpenseGSTReport);exit;
+                    $exp['tscgd']['GSTEnable'] = $ExpenseGSTReport['0']['tscgd']['GSTEnable'];
+                    $ExpenseReport[] = $exp; 
+               }
 
         //Changes as per date today 28 oct 2019
         
@@ -1722,9 +1882,14 @@ GROUP BY cm.branch,em.GrnNo,em.Id   ORDER BY STR_TO_DATE(em.approvalDate,'%d-%m-
      
 }
 
+
+
+
 public function imprest_report_breakup()
 {
     $this->layout = "home";
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+        $this->set('FinanceYearLogin',$FinanceYearLogin);
     $all = array();
     $userid = $this->Session->read("userid");
     $role = $this->Session->read('role');
@@ -1786,13 +1951,15 @@ public function imprest_report_breakup()
         }
         
         //print_r($qry); exit;
-        $this->set('data',$this->ExpenseEntryMaster->query("SELECT GrnNo,eem.due_date,date(eem.ApprovalDate) ApprovalDate,date(eem.bill_date) bill_date,cm.branch,cm.cost_center,eem.ExpenseEntryType,eem.FinanceYear,eem.FinanceMonth,head.HeadingDesc,subhead.SubHeadingDesc,
-            IF(eep.Total IS NULL,eep.Amount,eep.Total) Amount,ExpenseDate
+        $this->set('data',$this->ExpenseEntryMaster->query("SELECT eem.GrnNo,eem.due_date,date(eem.ApprovalDate) ApprovalDate,date(eem.bill_date) bill_date,cm.branch,cm.cost_center,eem.ExpenseEntryType,eem.FinanceYear,eem.FinanceMonth,head.HeadingDesc,subhead.SubHeadingDesc,
+            IF(eep.Total IS NULL,eep.Amount,eep.Total) Amount,ExpenseDate,date_format(pmt.PaymentDate,'%d-%b-%y') grn_payment_date
             FROM `expense_entry_particular` eep INNER JOIN expense_entry_master eem ON eep.ExpenseEntry = eem.Id
             INNER JOIN cost_master cm ON eep.CostCenterId= cm.Id 
             INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.headid = head.HeadingId
             INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.subheadid = subhead.SubHeadingId
-            INNER JOIN branch_master bm ON cm.branch = bm.branch_name $qry group by eem.Id"));
+            INNER JOIN branch_master bm ON cm.branch = bm.branch_name
+            left JOIN tbl_payment_processing pmt ON eem.GrnNo = pmt.GrnNo
+            $qry group by eem.Id"));
         
         
         
@@ -1864,19 +2031,63 @@ public function Export_imprest_report_breakup()
             $qry .= " and eem.GrnNo like '%".$Expense['GrnNo']."'";
         }
         
-         $select = "SELECT GrnNo,date(eem.ApprovalDate)ApprovalDate,eem.due_date,IF(vm.as_bill_to=1,'state',IF(bm.branch_state=vm.state,'state','central'))GSTType,eem.bill_date,cm.branch,bm.branch_name,cm.cost_center,
+         $select = "SELECT eem.GrnNo,eem.FinanceYear,FinanceMonth,date(eem.ApprovalDate)ApprovalDate,eem.due_date,
+             IF(vm.as_bill_to=1,'state',IF(bm.branch_state=vm.state,'state','central'))GSTType,
+             eem.bill_date,cm.branch,bm.branch_name,cm.cost_center,
              eem.ExpenseEntryType,eem.FinanceYear,eem.FinanceMonth,head.HeadingDesc,subhead.SubHeadingDesc,
-            sum(eep.Amount) Amount,sum(eep.Tax) Tax,sum(eep.Total) Total,ExpenseDate,vm.vendor,tu.emp_name,eem.description,eem.EntryStatus,eem.grn_file
-            FROM `expense_entry_particular` eep INNER JOIN expense_entry_master eem ON eep.ExpenseEntry = eem.Id
+            sum(eep.Amount) Amount,sum(eep.Tax) Tax,sum(eep.Total) Total,ExpenseDate,
+            vm.vendor,tu.emp_name,eem.description,eem.EntryStatus,eem.grn_file,date_format(pmt.PaymentDate,'%d-%b-%y') grn_payment_date,
+            subhead.SubHeadingId,subhead.SubHeadTdsSection,subhead.SubHeadTDSEnabled,
+            vm.TDSSection,vm.TDSEnabled,vm.TDS,vm.TDSNew,vm.id
+            FROM `expense_entry_particular` eep 
+            INNER JOIN expense_entry_master eem ON eep.ExpenseEntry = eem.Id
             INNER JOIN cost_master cm ON eep.CostCenterId= cm.Id 
             INNER JOIN `tbl_bgt_expenseheadingmaster` head ON eem.headid = head.HeadingId
             INNER JOIN `tbl_bgt_expensesubheadingmaster` subhead ON eem.subheadid = subhead.SubHeadingId
             INNER JOIN branch_master bm ON cm.branch = bm.branch_name 
-            left JOIN `tbl_vendormaster` vm ON eem.vendor = vm.id
+            left JOIN `tbl_vendormaster` vm ON eem.vendor = vm.id            
+            left JOIN tbl_user tu ON eem.userid = tu.id 
+            left JOIN tbl_payment_processing pmt ON eem.GrnNo = pmt.GrnNo
+                 $qry group by eem.Id,cm.branch"; 
+            $ExpenseReport =      $this->ExpenseMaster->query($select);
             
-            INNER JOIN tbl_user tu ON eem.userid = tu.id $qry group by eem.Id"; 
-        
-       $this->set('ExpenseReport',$this->ExpenseMaster->query($select));
+            foreach($ExpenseReport as $key =>$exp)
+            {
+                //$SubHeadTdsSection = $exp['subhead']['SubHeadTdsSection'];
+                //$tds_det1 = $this->ExpenseMaster->query("Select TDS from tds_master td where id='$SubHeadTdsSection'");
+                //$tdsAmount = round(($tds_det1['0']['td']['TDS']*$exp['0']['Amount'])/100,2);
+                //$exp['vm']['tdsAmount'] = $tdsAmount;
+                //$ExpenseReport[$key] = $exp;
+                $TDSSection = $exp['subhead']['SubHeadTdsSection'];
+                $ExpenseEntryType = $exp['eem']['ExpenseEntryType'];
+                if(strtolower($ExpenseEntryType)=='vendor')
+                {
+                    $tds_det = $this->ExpenseMaster->query("Select TDS from tds_master td where id='$TDSSection'");
+                    if($exp['vm']['TDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='1' || $exp['subhead']['SubHeadTDSEnabled']=='Yes')
+                    {
+                        //print_r($exp);exit;
+                        if(($exp['subhead']['SubHeadTDSEnabled']=='Yes' || $exp['subhead']['SubHeadTDSEnabled']=='1') )
+                        {
+                            $tdsAmount = round(($tds_det['0']['td']['TDS']*$exp['0']['Amount'])/100,2);
+                        }
+                        else if($exp['vm']['TDSChange']=='No' || empty($exp['vm']['TDSChange']))
+                        {
+                            $tdsAmount = round(($exp['vm']['TDS']*$exp['0']['Amount'])/100,2);
+                        }
+                        else
+                        {
+                            $tdsAmount = round(($exp['vm']['TDSNew']*$exp['0']['Amount'])/100,2);
+                        }
+
+                        $exp['vm']['tdsAmount'] = $tdsAmount;
+                        $ExpenseReport[$key] = $exp;
+                    }    
+                    //$exp['tds'][''] = ;
+                }
+            }
+            
+           //print_r($ExpenseReport);exit; 
+        $this->set('ExpenseReport',$ExpenseReport);
        
     
     
@@ -2067,6 +2278,7 @@ public function imprest_detail()
             $branch = " and BranchId='".$Expense['BranchId']."'";
             $branch1 = " and eem.BranchId='".$Expense['BranchId']."'";
             $branch2 = " and iam.BranchId='".$Expense['BranchId']."'";
+            $branch3 = " and eem.BranchId='".$Expense['BranchId']."'";
         }
         
         
@@ -2085,6 +2297,7 @@ public function imprest_detail()
             $ImprestManagerArray = $this->ImprestManager->find('first',array('fields'=>array('UserName','UserId'),'conditions'=>array('Id'=>$Expense['ImprestManagerId'])));
             $imprest = " and ImprestManagerId='".$Expense['ImprestManagerId']."'";
             $imprest1 = " and userid='".$ImprestManagerArray['ImprestManager']['UserId']."'";
+            $imprest2 = " and eem.userid='".$ImprestManagerArray['ImprestManager']['UserId']."'";
             $this->set('ImprestManager',$ImprestManagerArray['ImprestManager']['UserName']);
         }
         else
@@ -2097,14 +2310,16 @@ public function imprest_detail()
         
         $ToDate1 = explode('-',$Expense['DateTo']);
         krsort($ToDate1);
-        $ToDate  = implode('-',$ToDate1);
+        $ToDate  = implode('-',$ToDate1); 
         
         //echo "select sum(Amount) TotalAllotment from imprest_allotment_master where date(EntryDate)<date('$FromDate') $branch $imprest"; exit;
        $TotalAllotment =  $this->ExpenseEntryMaster->query("select sum(Amount) TotalAllotment from imprest_allotment_master where date(EntryDate)<date('$FromDate') $branch $imprest");
        $TotalAllotment = $TotalAllotment['0']['0']['TotalAllotment'];
        //$this->set('opening'.$TotalAllotment);
        
-       $TotalGrn =  $this->ExpenseEntryMaster->query("select sum(Amount) TotalGrn from expense_entry_master where ExpenseEntryType='Imprest' and date(createdate)<date('$FromDate') $branch $imprest1");
+       $TotalGrn =  $this->ExpenseEntryMaster->query("select SUM(eem.Amount) TotalGrn FROM expense_entry_master eem
+INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
+ WHERE eem.ExpenseEntryType='Imprest' AND DATE(eem.createdate)=<date('$FromDate') $branch3 $imprest1");
        $TotalGrn = $TotalGrn['0']['0']['TotalGrn'].'<br>';
        
        $Balance = $TotalAllotment - $TotalGrn;
@@ -2123,7 +2338,7 @@ public function imprest_detail()
             INNER JOIN `tbl_bgt_expenseheadingmaster` hm ON eem.HeadId = hm.HeadingId
             INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON eem.SubHeadId = shm.SubHeadingId
             WHERE ExpenseEntryType='Imprest' and eem.CreateDate = ADDDATE('$FromDate',INTERVAL $a DAY)
-            AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch1 $imprest1"); 
+            AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch1 $imprest2"); 
            
            $listCount1 = $listCount2 = 0;
            $flagDetails = false;
@@ -2146,11 +2361,11 @@ public function imprest_detail()
                 
                }
            }
-           
-           $outflowArr = $this->ExpenseEntryMaster->query("SELECT *,DATE_FORMAT(EntryDate,'%d-%b-%Y') `EntryDate` FROM `imprest_allotment_master` iam
+           $arqr = "SELECT *,DATE_FORMAT(EntryDate,'%d-%b-%Y') `EntryDate` FROM `imprest_allotment_master` iam
 LEFT JOIN `tbl_bank` tu ON iam.BankId = tu.Id
             WHERE DATE(EntryDate) = ADDDATE('$FromDate',INTERVAL $a DAY)
-            AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch2 $imprest"); 
+            AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch2 $imprest";
+           $outflowArr = $this->ExpenseEntryMaster->query($arqr); 
            
            if(!empty($outflowArr))
            {
@@ -2217,7 +2432,14 @@ public function export_imprest_detail()
             $userid = $this->Session->read('userid');
             $branch4 = $this->Addbranch->query("SELECT GROUP_CONCAT(BranchId) BranchArr FROM `tbl_grn_access` WHERE UserId='$userid'");
             $branch5 = $branch4[0][0]['BranchArr'];
-            $branch3 = " and eep.BranchId in ($branch5)";
+            if($Expense['BranchId']=='All')
+            {
+                $branch3 = " and eep.BranchId in ($branch5)";
+            }
+            else
+            {
+                $branch3 = " and eep.BranchId='".$Expense['BranchId']."'";
+            }
             $branch6 = " and eep.BranchId='".$Expense['BranchId']."'";
             
         }
@@ -2256,12 +2478,14 @@ public function export_imprest_detail()
          $TotalAllotment = $TotalAllotment['0']['0']['TotalAllotment'];  
         //echo "select sum(Amount) TotalGrn from expense_entry_master where ExpenseEntryType='Imprest' and str_to_date(ExpenseDate,'%d-%m-%Y')<date('$FromDate') $branch $imprest1";exit;
         
+         
+         
        $TotalGrn =  $this->ExpenseEntryMaster->query("SELECT SUM(eep.Amount) TotalGrn FROM expense_entry_master eem
 INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
- WHERE eem.ExpenseEntryType='Imprest'  and str_to_date(eem.ExpenseDate,'%d-%m-%Y')<date('$FromDate') $branch6 $imprest2");
-       $TotalGrn = $TotalGrn['0']['0']['TotalGrn'].'<br>'; 
+ WHERE eem.ExpenseEntryType='Imprest'  and date(eem.ApprovalDate)<date('$FromDate') $branch6 $imprest2");
+       $TotalGrn = $TotalGrn['0']['0']['TotalGrn']; 
        
-       $Balance = $TotalAllotment - $TotalGrn;
+       $Balance = $TotalAllotment - $TotalGrn;  
        $this->set('opening',$Balance);
        //print_r($Balance); exit;
        $dateLoop = $this->ExpenseEntryMaster->query("SELECT DATEDIFF('$ToDate','$FromDate') count FROM `expense_entry_master` LIMIT 1"); 
@@ -2275,7 +2499,7 @@ INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
 		INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
             INNER JOIN `tbl_bgt_expenseheadingmaster` hm ON eem.HeadId = hm.HeadingId
             INNER JOIN `tbl_bgt_expensesubheadingmaster` shm ON eem.SubHeadId = shm.SubHeadingId
-            WHERE eem.ExpenseEntryType='Imprest' and str_to_date(eem.ExpenseDate,'%d-%m-%Y') = ADDDATE('$FromDate',INTERVAL $a DAY)
+            WHERE eem.ExpenseEntryType='Imprest' and date(eem.ApprovalDate) = ADDDATE('$FromDate',INTERVAL $a DAY)
             AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch3 $imprest2 group by eem.Id";
            $inflowArr = $this->ExpenseEntryMaster->query($inflowArrStr); 
            
@@ -2301,10 +2525,11 @@ INNER JOIN expense_entry_particular eep ON eem.Id = eep.ExpenseEntry
                }
            }
            
-           $outflowArr = $this->ExpenseEntryMaster->query("SELECT *,DATE_FORMAT(EntryDate,'%d-%b-%Y') `EntryDate` FROM `imprest_allotment_master` iam
+           $arqr = "SELECT *,DATE_FORMAT(EntryDate,'%d-%b-%Y') `EntryDate` FROM `imprest_allotment_master` iam
 LEFT JOIN `tbl_bank` tu ON iam.BankId = tu.Id
             WHERE DATE(EntryDate) = ADDDATE('$FromDate',INTERVAL $a DAY)
-            AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch2 $imprest"); 
+            AND ADDDATE('$FromDate',INTERVAL $a DAY)<='$ToDate' $branch2 $imprest";
+           $outflowArr = $this->ExpenseEntryMaster->query($arqr); 
            
            if(!empty($outflowArr))
            {
@@ -2916,7 +3141,7 @@ WHERE em.vendor='$vendorId' and subhead.SubHeadTDSEnabled='1' $qry
   {
         $this->layout='home';
         $this->set('company_name',$this->Addcompany->find('list',array('fields'=>array('Id','company_name'))));
-        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>'2020-21'))));
+        $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>'2021-22'))));
   }
   
   public function export_grn_reject_report()
@@ -3072,6 +3297,8 @@ GROUP BY eep.CostCenterId,eem.HeadId"));
     public function voucher_new_report()
 {
     $this->layout = "home";
+    $FinanceYearLogin = $this->Session->read('FinanceYearLogin');
+    $this->set('FinanceYearLogin',$FinanceYearLogin);
     $all = array();
     
     $role = $this->Session->read('role');
@@ -3086,7 +3313,7 @@ GROUP BY eep.CostCenterId,eem.HeadId"));
         }
     $branchMaster2 = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>$condition,'order'=>array('branch_name')));
     $branchMaster = $all+$branchMaster2;
-    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('not'=>array('finance_year'=>'14-15')))));
+    $this->set('financeYearArr',$this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>"finance_year not in ('14-15','15-16','2014-15','2015-16','2016-17')")));
     $this->set('branch_master',$branchMaster);
     $this->set('head',array('All'=>'All')+$this->Tbl_bgt_expenseheadingmaster->find('list',array('fields'=>array('HeadingId','HeadingDesc'))));
     
@@ -3100,19 +3327,19 @@ GROUP BY eep.CostCenterId,eem.HeadId"));
         
         if($Expense['FinanceYear']!='All')
         {
-            $qry .= " and YEAR(createdate)='$FinanceYear'"; 
+            $qry .= " and YEAR(tve.createdate)='$FinanceYear'"; 
         }
         
         if($Expense['FinanceMonth']!='All')
         {
-            $qry .= " and DATE_FORMAT(createdate,'%b') = '$FinanceMonth'";
+            $qry .= " and DATE_FORMAT(tve.createdate,'%b') = '$FinanceMonth'";
         }
         
         
         
         //print_r($qry); exit;
         
-       $this->set('ExpenseReport',$this->ExpenseMaster->query("SELECT * FROM `tbl_voucher_entries` $qry"));
+       $this->set('ExpenseReport',$this->ExpenseMaster->query("SELECT * FROM `tbl_voucher_entries` tve left join client_master cm on tve.part_id=cm.id $qry"));
        
     } 
     

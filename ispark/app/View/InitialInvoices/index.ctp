@@ -185,12 +185,16 @@ $data,'empty' => 'Month','required'=>true,'onChange'=>'getDescription(this);get_
                     
                 </div>
                 <div class="form-group has-success has-feedback">
-                    <label class="col-sm-2 control-label">invoice Type</label>
+                    <label class="col-sm-2 control-label">Invoice Type</label>
                     <div class="col-sm-3">
                     <?php	echo $this->Form->input('invoiceType', array('label'=>false,'class'=>'form-control','empty'=>'Invoice Type',
                         'options'=>array("Revenue"=>"Revenue","Non Revenue"=>"Non Revenue"),'required'=>true)); ?>
                     </div>
-                    
+                    <label class="col-sm-2 control-label">Category</label>
+                    <div class="col-sm-3">
+                    <?php	echo $this->Form->input('category', array('label'=>false,'class'=>'form-control','value'=>'Others',
+                        'options'=>array("Others"=>"Others","Talk Time"=>"Talk Time","Setup Cost"=>"Setup Cost",'Subscription'=>'Subscription','Development Cost'=>'Development Cost'),'required'=>true)); ?>
+                    </div>
                     
                 </div>
                 <div class="form-group has-success has-feedback">

@@ -2,6 +2,8 @@
 
 <?php //print_r($ExpenseEntryMaster);  exit;
 
+//if(empty($ExpenseEntryMaster['0'])) {$ExpenseEntryMaster['0'] = $FinanceYearLogin;}
+
 echo $this->Html->script('sample/datetimepicker_css');
 
 echo $this->Form->create('Gms',array('class'=>'form-horizontal','action'=>'add','enctype'=>'multipart/form-data'));
@@ -145,7 +147,11 @@ else
             </div>
         </div>
             <div class="form-group has-info has-feedback">
-            
+            <label class="col-sm-2 control-label">Branch</label>
+            <div class="col-sm-4">
+            <?php echo $this->Form->input('branch_id' ,array('label' =>false,'options'=>$branch_master,'empty' => 'Select',
+                'value'=>$ExpenseEntryMaster[18],'class'=>'form-control','id' => 'branch_id',"required"=>true)); ?>
+            </div>
             <label class="col-sm-2 control-label">Multi Month</label>
             <div class="col-sm-4">
                 <input type="checkbox" name="multiMonthCheck" id="multiMonthCheck" value="1" onclick="MultiMonthDisplay()" <?php if($ExpenseEntryMaster[12]=='1') echo 'checked=""'; ?> />
@@ -908,6 +914,7 @@ function save_grn()
     var entry_status = $("#entry_status").val();
     var due_date = $("#due_date").val();
     var multi_month = $("#MultiMonth").val();
+    var branch_id = $("#branch_id").val();
     var multi_check=0;
     var gst_enable = $('#gstEnable').val();
     var Vendor_State_Code = $('#Vendor_State_Code').val();
@@ -1009,7 +1016,12 @@ function save_grn()
         $("#Vendor_State_Code").focus();
         return false;
     }
-    
+    else if(branch_id=='')
+    {
+        alert("Select Branch");
+        $("#branch_id").focus();
+        return false;
+    }
     
 //    else if(multi_check=='1' && multi_month=='')
 //    {
@@ -1037,7 +1049,9 @@ function save_grn()
              multi_month:multi_month,
              gst_enable:gst_enable,
              Vendor_State_Code:Vendor_State_Code,
-             Billing_State_Code:Billing_State_Code
+             Billing_State_Code:Billing_State_Code,
+             branch_id:branch_id,
+             ExpenseEntryType:'Vendor',
             },
             function(data,status){
                if(data==1)

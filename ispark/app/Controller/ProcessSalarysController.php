@@ -1,10 +1,17 @@
  <?php
 class ProcessSalarysController extends AppController {
-    public $uses = array('Addbranch','Masjclrentry','FieldAttendanceMaster','OnSiteAttendanceMaster','Masattandance','ProcessAttendanceMaster','HolidayMaster','SalarData','DesignationNameMaster','UploadDeductionMaster','IncomtaxMaster','LoanMaster','UploadIncentiveBreakup','OldAttendanceIssue');
+    public $uses = array('Addbranch','CostCenterMaster','Masjclrentry','FieldAttendanceMaster','OnSiteAttendanceMaster','Masattandance','ProcessAttendanceMaster','HolidayMaster','SalarData','DesignationNameMaster','UploadDeductionMaster','IncomtaxMaster','LoanMaster','UploadIncentiveBreakup','OldAttendanceIssue','LoanAmount');
         
     public function beforeFilter(){
         parent::beforeFilter(); 
-        $this->Auth->allow('index','export_report','total_employees','show_report','getcostcenter','delete_report');
+        $this->Auth->allow('index',
+                'export_report',
+                'total_employees',
+                'show_report',
+                'getcostcenter',
+                'export_paid_pending_report',
+                'delete_report',
+                'export_datewise_report');
         if(!$this->Session->check("username")){
             return $this->redirect(array('controller'=>'users','action' => 'login'));
         }
@@ -431,8 +438,17 @@ class ProcessSalarysController extends AppController {
                         $AdminChrg         =   0;  
                         }
                            
-                        $LoanEndDate        =   "$y-$m-01";     
-                        $LoanArr            =   $this->LoanMaster->find('first',array('fields'=>array('Id','Amount','DeductionPerMonth','DeductedAmount','PendingAmount','LastUpdateDate'),'conditions'=>array('BranchName'=>$BranchName,'EmpCode'=>$EmpCode,'DATE(EndDate) >='=>$LoanEndDate,'TransationStatus'=>'YES','ApproveFirst'=>'Yes','ApproveSecond'=>'Yes','Type'=>'Loan','PendingAmount !='=>0)));
+                        $LoanEndDate        =   "$y-$m-01";   
+                        $loan_cndtn = array('BranchName'=>$BranchName,'EmpCode'=>$EmpCode,'DATE(EndDate) >='=>$LoanEndDate,'TransationStatus'=>'YES','ApproveFirst'=>'Yes','ApproveSecond'=>'Yes','Type'=>'Loan','PendingAmount !='=>0);  
+                        
+                        $loan_exist_det = $this->LoanAmount->find('first',array("conditions"=>"emp_id='$EmpCode' and year='$y' and month='$m'"));
+                        if(!empty($loan_exist_det))
+                        {
+                            $loan_id = $loan_exist_det['LoanAmount']['loan_id'];
+                            $loan_cndtn = array('BranchName'=>$BranchName,'EmpCode'=>$EmpCode,'DATE(EndDate) >='=>$LoanEndDate,'TransationStatus'=>'YES','ApproveFirst'=>'Yes','ApproveSecond'=>'Yes','Type'=>'Loan','id'=>$loan_id);  
+                        }
+
+                        $LoanArr            =   $this->LoanMaster->find('first',array('fields'=>array('Id','Amount','DeductionPerMonth','DeductedAmount','PendingAmount','LastUpdateDate'),'conditions'=>$loan_cndtn));
                         $AdvaArr            =   $this->LoanMaster->find('first',array('fields'=>array('Id','Amount','DeductionPerMonth','DeductedAmount','PendingAmount','LastUpdateDate'),'conditions'=>array('BranchName'=>$BranchName,'EmpCode'=>$EmpCode,'DATE(EndDate) >='=>$LoanEndDate,'TransationStatus'=>'YES','ApproveFirst'=>'Yes','ApproveSecond'=>'Yes','Type'=>'Advance','PendingAmount !='=>0)));
                         $InceArr            =   $this->UploadIncentiveBreakup->find('all',array('fields'=>array('Amount'),'conditions'=>array('BranchName'=>$BranchName,'CostCenter'=>$CostCenter,'EmpCode'=>$EmpCode,'YEAR(SalaryMonth)'=>$y,'MONTH(SalaryMonth)'=>$m,'ApproveStatus'=>'Approve','UploadType'=>'UploadIncentive')));
                         
@@ -441,6 +457,13 @@ class ProcessSalarysController extends AppController {
                             $LPD=$LoanArr['LoanMaster']['DeductionPerMonth'];
                             
                             $UpdateId       =   $LoanArr['LoanMaster']['Id'];
+
+                            // $pending_amt_del = "delete from loan_amount where loan_id='$UpdateId' and year='$y' and month='$m'";
+                            // $pending_amt_del_rsc = $this->LoanAmount->query($pending_amt_del);
+
+                            // $pending_amt_qry = "select sum(DeductedAmount) damt from loan_amount where loan_id='$UpdateId'";
+                            // $pending_amt_rsc = $this->LoanAmount->query($pending_amt_qry);
+
                             $DeductedAmount =   ($LoanArr['LoanMaster']['DeductedAmount']+$LPD);
                             $PendingAmount  =   ($LoanArr['LoanMaster']['PendingAmount']-$LPD);
                             $lastupdatedate =   date("Y-m",strtotime($LoanArr['LoanMaster']['LastUpdateDate']));
@@ -448,10 +471,12 @@ class ProcessSalarysController extends AppController {
                             
                             if($LoanArr['LoanMaster']['DeductedAmount'] ==""){
                                 $this->LoanMaster->query("UPDATE `LoanMaster` SET `DeductedAmount`='$DeductedAmount',`PendingAmount`='$PendingAmount',`LastUpdateDate`=NOW() WHERE Id='$UpdateId'");
+                                $this->LoanAmount->query("Insert into `loan_amount` SET `loan_id`='$UpdateId',`emp_id`='$EmpCode',`Type`='Loan',`month`='$m',`year`='$y',`Amount`='$LTD',`DeductedAmount`='$DeductedAmount',`RemainingAmount`='$PendingAmount',`createdate`=now()");
                             }
                             else{
                                 if($curupdatedate !=$lastupdatedate){
                                     $this->LoanMaster->query("UPDATE `LoanMaster` SET `DeductedAmount`='$DeductedAmount',`PendingAmount`='$PendingAmount',`LastUpdateDate`=NOW() WHERE Id='$UpdateId'");
+                                    $this->LoanAmount->query("Insert into `loan_amount` SET `loan_id`='$UpdateId',`emp_id`='$EmpCode',`Type`='Loan',`month`='$m',`year`='$y',`Amount`='$LTD',`DeductedAmount`='$DeductedAmount',`RemainingAmount`='$PendingAmount',`createdate`=now()");
                                 }
                             }
    
@@ -779,6 +804,24 @@ class ProcessSalarysController extends AppController {
                     <?php foreach($dataArr as $data){ 
                     $Emp_Arr    =   $this->Masjclrentry->find('first',array('fields'=>array('Dept','Profile','EmpLocation','Billable_Status','AcNo','IFSCCode','AcBank','AcBranch','UAN'),'conditions'=>array('EmpCode'=>$data['SalarData']['EmpCode'])));
                     $Emp_Row    =   $Emp_Arr['Masjclrentry'];
+			 $qr22 = "SELECT SUM(Amount) Incentive FROM upload_incentive_breakup 
+WHERE EmpCode='{$data['SalarData']['EmpCode']}' AND SalaryMonth='{$data['SalarData']['SalDate']}' AND  ApproveStatus ='Approve'"; 
+		    $Inc_Arr    =   $this->Masjclrentry->query($qr22);
+			//print_r($Inc_Arr);exit;
+
+
+			/*if(empty($Inc_Arr['0']['0']['Incentive']))
+			{
+				$data['SalarData']['Incentive'] = 0;
+			}
+			else
+			{
+				$data['SalarData']['Incentive']    =   $Inc_Arr['0']['0']['Incentive'];
+			}*/
+                    
+
+
+
                     ?>
                     <tr>
                         <td><?php echo $data['SalarData']['EmpCode']?></td>
@@ -885,6 +928,116 @@ class ProcessSalarysController extends AppController {
         }
     }
     
+    public function export_paid_pending_report(){
+        
+        if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
+           
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=SalaryPaidPending.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            
+            $m=$_REQUEST['EmpMonth'];
+            $y=$_REQUEST['EmpYear'];
+            $mwd    =   cal_days_in_month(CAL_GREGORIAN, $m, $y);
+            $SalayDay   =   $y."-".$m."-".$mwd;
+            
+            if($_REQUEST['BranchName'] !="ALL"){
+                $condition=array('Branch'=>$_REQUEST['BranchName'],'date(SalayDate)'=>$SalayDay);
+            }
+            else{
+                $condition=array('date(SalayDate)'=>$SalayDay);
+            }
+            
+            $dataArr   =   $this->SalarData->find('all',array('conditions'=>$condition));
+            ?>
+                  
+            <table border="1"  >     
+                <thead>
+                    <tr>
+                        <th>EmpCode</th>
+                        <th>EmpType</th>
+                        <th>EmpName</th>
+                        <th>CostCenter</th>
+                        <th>Branch</th>
+                        <th>ProcessName</th>
+                        <th>Type</th>
+                        <th>NetSalary</th>
+                        <th>Final Status</th>
+                        
+                        
+                        <!--
+                        <th>SalaryBranch</th>
+                        <th>SalayDate</th>
+                        -->
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($dataArr as $data){ 
+                    $Emp_Arr    =   $this->Masjclrentry->find('first',array('fields'=>array('Dept','Type_Of_Employee','EmpType','ResignationDate','Profile','EmpLocation','Billable_Status','AcNo','IFSCCode','AcBank','AcBranch','UAN'),'conditions'=>array('EmpCode'=>$data['SalarData']['EmpCode'])));
+                    $Emp_Row    =   $Emp_Arr['Masjclrentry'];
+			 $qr22 = "SELECT SUM(Amount) Incentive FROM upload_incentive_breakup 
+WHERE EmpCode='{$data['SalarData']['EmpCode']}' AND SalaryMonth='{$data['SalarData']['SalDate']}' AND  ApproveStatus ='Approve'"; 
+		    $Inc_Arr    =   $this->Masjclrentry->query($qr22);
+                    $cost_center = $data['SalarData']['CostCenter'];
+                    $cost_det = $this->CostCenterMaster->find('first',array('conditions'=>"cost_center='$cost_center'"));
+                    $process = $cost_det['CostCenterMaster']['process_name'];
+                    $branch = $cost_det['CostCenterMaster']['branch'];
+                    $ecs_no = $data['SalarData']['ChequeNumber'];
+                    $dol = $Emp_Row['ResignationDate'];
+                    $paid = 'Pending';
+                    $start_date_of_month = date('Y-m-01',strtotime($SalayDay));
+                    if(!empty($dol) && strtotime($dol)>=strtotime($start_date_of_month) && strtotime($dol)<=strtotime($SalayDay))
+                    {
+                        $paid = 'Left';
+                    }
+                    else if(!empty($dol) && strtotime($dol)<=strtotime($start_date_of_month))
+                    {
+                        $paid = 'Left';
+                    }
+                    else if(!empty($ecs_no))
+                    {
+                        $paid = 'Paid';
+                    }
+			//print_r($Inc_Arr);exit;
+
+
+			/*if(empty($Inc_Arr['0']['0']['Incentive']))
+			{
+				$data['SalarData']['Incentive'] = 0;
+			}
+			else
+			{
+				$data['SalarData']['Incentive']    =   $Inc_Arr['0']['0']['Incentive'];
+			}*/
+                    
+
+
+
+                    ?>
+                    <tr>
+                        <td><?php echo $data['SalarData']['EmpCode'];?></td>
+                        <td><?php echo $Emp_Row['EmpType'];?></td>
+                        <td><?php echo $data['SalarData']['EmpName'];?></td>
+                        <td><?php echo $data['SalarData']['CostCenter'];?></td>
+                        
+                        <td><?php echo $branch;?></td>
+                        <td><?php echo $process;?></td>
+                        <td><?php echo $Emp_Row['Type_Of_Employee'];?></td>
+                        <td><?php echo $data['SalarData']['NetSalary'];?></td>
+                        
+                        <td><?php echo $paid;?></td>
+                        
+                    </tr>
+                    <?php }?>
+                </tbody>
+            </table>
+           <?php
+           die;
+        }
+    }
+    
     public function delete_report(){
         
         if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
@@ -959,7 +1112,7 @@ class ProcessSalarysController extends AppController {
         $branchName =   $_REQUEST['BranchName'];
         $y          =   $_REQUEST['EmpYear'];
         $m          =   $_REQUEST['EmpMonth'];
-            
+          
         $data = $this->ProcessAttendanceMaster->find('list', array('fields'=>array('CostCenter','CostCenter'),'conditions' => array('BranchName'=>$branchName,'ProcessMonth'=>"$y-$m",'FinializeStatus'=>'Yes')));
 
         if(!empty($data)){
@@ -973,6 +1126,248 @@ class ProcessSalarysController extends AppController {
             echo "<option value=''>Select</option>";die;
         }
         
+    }
+
+    public function export_datewise_report(){
+        
+        if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
+           
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=Salary_date_wise.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            
+            $from=date("Y-m-d",strtotime($_REQUEST['From']));
+            $to=date("Y-m-d",strtotime($_REQUEST['To']));
+            
+            $wheretag = "";
+
+            if($_REQUEST['BranchName'] !="ALL"){
+                $wheretag .= "Branch = '".$_REQUEST['BranchName']."' and date(SalayDate) BETWEEN '$from' and '$to'";
+                // $condition=array('Branch'=>$_REQUEST['BranchName'],'date(SalayDate)'=>$SalayDay);
+            }
+            else{
+                $wheretag .= "date(SalayDate) BETWEEN '$from' and '$to'";
+                // $condition=array('date(SalayDate)'=>$SalayDay);
+            }
+            
+            // $dataArr   =   $this->SalarData->find('all',array('conditions'=>$condition));
+            $qry = "select * from `salary_data` where $wheretag";
+            $dataArr    =   $this->SalarData->query($qry);
+            ?>
+                  
+            <table border="1"  >     
+                <thead>
+                    <tr>
+                        <th>EmpCode</th>
+                        <th>EmpName</th>
+                        <th>CostCenter</th>
+                        <th>Department</th>
+                        <th>Designation</th>
+                        <th>Profile</th>
+                        <th>Employee For</th>
+                        <th>Billable</th>
+                        <th>Branch</th>
+                        <th>Basic</th>
+                        <th>HRA</th>
+                        <th>Bonus</th>
+                        <th>Conv</th>
+                        <th>Portfolio</th>
+                        <th>MedicalAllowance</th>
+                        <th>LTA</th>
+                        <th>SpecialAllowance</th>
+                        <th>OtherAllowance</th>
+                        <th>PLI1</th>
+                        <th>Gross</th>
+                        <th>WorkingDays</th>
+                        <th>CTCOffered</th>
+                        <th>CurrentCTC</th>
+                        <th>ActualDays</th>
+                        <th>EarnedDays</th>
+                        <th>ExtraDay</th>
+                        <th>Leave</th>
+                        <th>Basic1</th>
+                        <th>HRA1</th>
+                        <th>Bonus1</th>
+                        <th>Conv1</th>
+                        <th>Portfolio1</th>
+                        <th>SpecialAllowance1</th>
+                        <th>OtherAllowance1</th>
+                        <th>MedicalAllowance1</th>
+                        <th>Gross1</th>
+                        <th>ESIElig</th>
+                        <th>PFELig</th>
+                        <th>ESIC</th>
+                        <th>EPF</th>
+                        <th>IncomeTax</th>
+                        <th>AdvTaken</th>
+                        <th>AdvPaid</th>
+                        <th>LoanTaken</th>
+                        <th>LoanDed</th>
+                        <th>Incentive</th>
+                        <th>ExtraDayIncentive</th>
+                        <th>Arrear</th>
+                        <th>PLI</th>
+                        <th>NetSalary</th>
+                        <th>ESICCompany</th>
+                        <th>EPFCompany</th>
+                        <th>AdminChrg</th>
+                        <th>CTC</th>
+                        <th>SHSH</th>
+                        <th>MobileDedcution</th>
+                        <th>ShortCollection</th>
+                        <th>AssetRecovery</th>
+                        <th>Insurance</th>
+                        <th>ProTaxDeduction</th>
+                        <th>LeaveDeduction</th>
+                        <th>OtherDeduction</th>
+                        <th>OtherDeductionRemarks</th>
+                        <th>TotalDeduction</th>
+                        <th>SalDate</th>
+                        <th>UAN</th>
+                        <th>EPFNo</th>
+                        <th>ESICNo</th>
+                        <th>ChequeNumber</th>
+                        <th>ChequeDate</th>
+                        <th>PrintDate</th>
+                        <th>LeftStatus</th>
+                        <th>TaxTotalGross</th>
+                        <th>TaxSection10</th>
+                        <th>TaxBalance</th>
+                        <th>TaxUnderHd</th>
+                        <th>DeductionUnder24</th>
+                        <th>TaxGrossTotal</th>
+                        <th>TaxAggofChapter6</th>
+                        <th>TotalIncome</th>
+                        <th>TaxOnTotalIncome</th>
+                        <th>EduCess</th>
+                        <th>TaxPayEduCess</th>
+                        <th>TaxDeductedTillPreviousMonth</th>
+                        <th>BalanceTax</th>
+                        <th>SalaryPaymentMode</th>
+                        <th>AcNo</th>
+                        <th>IFSCCode</th>
+                        <th>AcBank</th>
+                        <th>AcBranch</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($dataArr as $data){ 
+                    $Emp_Arr    =   $this->Masjclrentry->find('first',array('fields'=>array('Dept','Profile','EmpLocation','Billable_Status','AcNo','IFSCCode','AcBank','AcBranch','UAN'),'conditions'=>array('EmpCode'=>$data['salary_data']['EmpCode'])));
+                    $Emp_Row    =   $Emp_Arr['Masjclrentry'];
+                    $qr22 = "SELECT SUM(Amount) Incentive FROM upload_incentive_breakup 
+                        WHERE EmpCode='{$data['salary_data']['EmpCode']}' AND SalaryMonth='{$data['salary_data']['SalDate']}' AND  ApproveStatus ='Approve'"; 
+                    $Inc_Arr    =   $this->Masjclrentry->query($qr22);
+			
+                    
+
+
+
+                    ?>
+                    <tr>
+                        <td><?php echo $data['salary_data']['EmpCode']?></td>
+                        <td><?php echo $data['salary_data']['EmpName']?></td>
+                        <td><?php echo $data['salary_data']['CostCenter']?></td>
+                        <td><?php echo $Emp_Row['Dept']?></td>
+                        <td><?php echo $data['salary_data']['Designation']?></td>
+                        <td><?php echo $Emp_Row['Profile']?></td>
+                        <td><?php echo $Emp_Row['EmpLocation']?></td>
+                        <td><?php echo $Emp_Row['Billable_Status']?></td>
+                        <td><?php echo $data['salary_data']['Branch']?></td>
+                        <td><?php echo $data['salary_data']['Basic']?></td>
+                        <td><?php echo $data['salary_data']['HRA']?></td>
+                        <td><?php echo $data['salary_data']['Bonus']?></td>
+                        <td><?php echo $data['salary_data']['Conv']?></td>
+                        <td><?php echo $data['salary_data']['Portfolio']?></td>
+                        <td><?php echo $data['salary_data']['MedicalAllowance']?></td>
+                        <td><?php echo $data['salary_data']['LTA']?></td>
+                        <td><?php echo $data['salary_data']['SpecialAllowance']?></td>
+                        <td><?php echo $data['salary_data']['OtherAllowance']?></td>
+                        <td><?php echo $data['salary_data']['PLI1']?></td>
+                        <td><?php echo $data['salary_data']['Gross']?></td>
+                        <td><?php echo $data['salary_data']['WorkingDays']?></td>
+                        <td><?php echo $data['salary_data']['CTCOffered']?></td>
+                        <td><?php echo $data['salary_data']['CurrentCTC']?></td>
+                        <td><?php echo $data['salary_data']['ActualDays']?></td>
+                        <td><?php echo $data['salary_data']['EarnedDays']?></td>
+                        <td><?php echo $data['salary_data']['ExtraDay']?></td>
+                        <td><?php echo $data['salary_data']['Leave']?></td>
+                        <td><?php echo $data['salary_data']['Basic1']?></td>
+                        <td><?php echo $data['salary_data']['HRA1']?></td>
+                        <td><?php echo $data['salary_data']['Bonus1']?></td>
+                        <td><?php echo $data['salary_data']['Conv1']?></td>
+                        <td><?php echo $data['salary_data']['Portfolio1']?></td>
+                        <td><?php echo $data['salary_data']['SpecialAllowance1']?></td>
+                        <td><?php echo $data['salary_data']['OtherAllowance1']?></td>
+                        <td><?php echo $data['salary_data']['MedicalAllowance1']?></td>
+                        <td><?php echo $data['salary_data']['Gross1']?></td>
+                        <td><?php echo $data['salary_data']['ESIElig']?></td>
+                        <td><?php echo $data['salary_data']['PFELig']?></td>
+                        <td><?php echo $data['salary_data']['ESIC']?></td>
+                        <td><?php echo $data['salary_data']['EPF']?></td>
+                        <td><?php echo $data['salary_data']['IncomeTax']?></td>
+                        <td><?php echo $data['salary_data']['AdvTaken']?></td>
+                        <td><?php echo $data['salary_data']['AdvPaid']?></td>
+                        <td><?php echo $data['salary_data']['LoanTaken']?></td>
+                        <td><?php echo $data['salary_data']['LoanDed']?></td>
+                        <td><?php echo $data['salary_data']['Incentive']?></td>
+                        <td><?php echo $data['salary_data']['ExtraDayIncentive']?></td>
+                        <td><?php echo $data['salary_data']['Arrear']?></td>
+                        <td><?php echo $data['salary_data']['PLI']?></td>
+                        <td><?php echo $data['salary_data']['NetSalary']?></td>
+                        <td><?php echo $data['salary_data']['ESICCompany']?></td>
+                        <td><?php echo $data['salary_data']['EPFCompany']?></td>
+                        <td><?php echo $data['salary_data']['AdminChrg']?></td>
+                        <td><?php echo $data['salary_data']['CTC']?></td>
+                        <td><?php echo $data['salary_data']['SHSH']?></td>
+                        <td><?php echo $data['salary_data']['MobileDedcution']?></td>
+                        <td><?php echo $data['salary_data']['ShortCollection']?></td>
+                        <td><?php echo $data['salary_data']['AssetRecovery']?></td>
+                        <td><?php echo $data['salary_data']['Insurance']?></td>
+                        <td><?php echo $data['salary_data']['ProTaxDeduction']?></td>
+                        <td><?php echo $data['salary_data']['LeaveDeduction']?></td>
+                        <td><?php echo $data['salary_data']['OtherDeduction']?></td>
+                        <td><?php echo $data['salary_data']['OtherDeductionRemarks']?></td>
+                        <td><?php echo $data['salary_data']['TotalDeduction']?></td>
+                        <td><?php echo $data['salary_data']['SalDate']?></td>
+                        <td><?php echo $Emp_Row['UAN']?></td>
+                        <td><?php echo $data['salary_data']['EPFNo']?></td>
+                        <td><?php echo $data['salary_data']['ESICNo']?></td>
+                        <td><?php echo $data['salary_data']['ChequeNumber']?></td>
+                        <td><?php echo $data['salary_data']['ChequeDate']?></td>
+                        <td><?php echo $data['salary_data']['PrintDate']?></td>
+                        <td><?php echo $data['salary_data']['LeftStatus']?></td>
+                        <td><?php echo $data['salary_data']['TaxTotalGross']?></td>
+                        <td><?php echo $data['salary_data']['TaxSection10']?></td>
+                        <td><?php echo $data['salary_data']['TaxBalance']?></td>
+                        <td><?php echo $data['salary_data']['TaxUnderHd']?></td>
+                        <td><?php echo $data['salary_data']['DeductionUnder24']?></td>
+                        <td><?php echo $data['salary_data']['TaxGrossTotal']?></td>
+                        <td><?php echo $data['salary_data']['TaxAggofChapter6']?></td>
+                        <td><?php echo $data['salary_data']['TotalIncome']?></td>
+                        <td><?php echo $data['salary_data']['TaxOnTotalIncome']?></td>
+                        <td><?php echo $data['salary_data']['EduCess']?></td>
+                        <td><?php echo $data['salary_data']['TaxPayEduCess']?></td>
+                        <td><?php echo $data['salary_data']['TaxDeductedTillPreviousMonth']?></td>
+                        <td><?php echo $data['salary_data']['BalanceTax']?></td>
+                        <td><?php echo $data['salary_data']['SalaryPaymentMode']?></td>
+                        <td><?php echo $Emp_Row['AcNo'] !=""?"'".$Emp_Row['AcNo']:"Pending";?></td>
+                        <td><?php echo $Emp_Row['IFSCCode']!=""?$Emp_Row['IFSCCode']:"Pending";?></td>
+                        <td><?php echo $Emp_Row['AcBank']!=""?$Emp_Row['AcBank']:"Pending";?></td>
+                        <td><?php echo $Emp_Row['AcBranch']!=""?$Emp_Row['AcBranch']:"Pending";?></td>
+                        
+                        <!--
+                        <td><?php echo $data['salary_data']['SalaryBranch']?></td>
+                        <td><?php echo $data['salary_data']['SalayDate']?></td>
+                        -->
+                    </tr>
+                    <?php }?>
+                </tbody>
+            </table>
+           <?php
+           die;
+        }
     }
     
     

@@ -269,6 +269,10 @@ class HrVisitorsController extends AppController {
         if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
             $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
             $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
+        }else if($this->Session->read('role')=='HR')
+        {
+            $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
+            $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
         }
         else{
             $this->set('branchName',array($branchName=>$branchName)); 
@@ -783,7 +787,7 @@ class HrVisitorsController extends AppController {
         if(isset($_REQUEST['id']) && $_REQUEST['id'] !=""){
             $Interview_Id   = base64_decode($_REQUEST['id']);
     
-            $dirPath="/var/www/html/ispark/app/webroot/Interview_File/".$Interview_Id."/";
+            $dirPath="/var/www/html/mascallnetnorth.in/ispark/app/webroot/Interview_File/".$Interview_Id."/";
             array_map('unlink', glob("$dirPath/*.*"));
             rmdir($dirPath);
 
@@ -800,13 +804,14 @@ class HrVisitorsController extends AppController {
         $this->layout='home';
         
         $branchName = $this->Session->read('branch_name');
-        if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
+        if($this->Session->read('role')=='admin' || $this->Session->read('role')=='HR' || $branchName =="HEAD OFFICE"){
             $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>array('active'=>1),'order'=>array('branch_name')));            
             $this->set('branchName',array_merge(array('ALL'=>'ALL'),$BranchArray));
         }
         else{
             $this->set('branchName',array($branchName=>$branchName)); 
         }
+
         
         if($this->request->is('POST')){
             $request        =   $this->request->data;
@@ -894,7 +899,7 @@ class HrVisitorsController extends AppController {
             $branch_name = $this->request->data['branch_name'];
             
             $Masjclrentry = $this->Masjclrentry->find('first',array('fields'=>array("id","EmpCode","BranchName","EmpName","Mobile","OfficeEmailId"),'conditions'=>array('id'=>$mas_id)));
-            $hr_mas = $this->HRVisitorRecruiter->find('first',array('conditions'=>array('branch'=>$branch_name)));
+            $hr_mas = $this->HRVisitorRecruiter->find('first',array('conditions'=>array('branch'=>$branch_name,'mas_code'=>$mas_id)));
             
             //print_r($this->request->data); exit;
             

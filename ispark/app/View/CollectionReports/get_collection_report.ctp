@@ -76,7 +76,27 @@ $totalTds +=  $post['tab']['TDS'];
 $totalOth +=  ($post['tab']['Other Ded']+$post['tab2']['other_deduction']+$post['tab']['other_deduction_bill']);
 $totalNet +=  $post['tab']['ChequeAmount'];
     endforeach; ?>
-    
+   
+<?php   foreach($result2 as $post):  ?>
+        <tr>
+        <td><?=$post['tab']['branch_name']?></td>
+        <td><?=$post['tab']['ChequeNo']?></td>
+        <td><?=$post['tab']['client']?></td>
+        <td><?=$post['tab']['Dates']?></td>
+        <td><?=$post['tab']['net_amount']?></td>
+        <td><?=$post['tab']['TDS']?></td>
+        <td><?=($post['tab']['Other Ded'] + $post['tab2']['other_deduction']+$post['tab']['other_deduction_bill']) ?></td>
+        <td><?=$post['tab']['ChequeAmount']?></td>
+        <td><div id="result<?=$i++?>"></div></td>
+        </tr>
+        <?php
+
+$totalAmount +=  $post['tab']['net_amount'];
+$totalTds +=  $post['tab']['TDS'];
+$totalOth +=  ($post['tab']['Other Ded']+$post['tab2']['other_deduction']+$post['tab']['other_deduction_bill']);
+$totalNet +=  $post['tab']['ChequeAmount'];
+    endforeach; ?>
+
    <tr>
    <th colspan="4">Total</th>
    <th><?=$totalAmount?></th>
@@ -94,7 +114,9 @@ else { ?>
         <th>Branch</th>
         <th>Invoice Date</th>
         <th>Invoice No.</th>
+        <th>Client</th>
         <th>Payment Date</th>
+        <th>Entry Date</th>
         <th>Amount</th>
         <th>TDS Ded</th>
         <th>Deduction</th>
@@ -123,9 +145,60 @@ foreach($result as $post):
         echo "<td>".$post['tab']['branch_name']."</td>";
         echo "<td>".$post['tab']['invoiceDate']."</td>";
         echo "<td>".$post['tab']['bill_no']."</td>";
-        $date = date_create($post['tab']['createdate']);
+        echo "<td>".$post['tab']['client']."</td>";
+        $date = date_create($post['tab']['pay_dates']);
         $date = date_format($date, 'd-M-Y');
         echo "<td>".$date."</td>";
+        $date2 = date_create($post['tab']['createdate']);
+        $date2 = date_format($date2, 'd-M-Y');
+        echo "<td>".$date2."</td>";
+        echo "<td>".$post['tab']['bill_passed']."</td>";
+        echo "<td>".$post['tab']['tds_ded']."</td>";
+        echo "<td>".$post['tab']['deduction']."</td>";
+        echo "<td>".$post['tab']['other_deduction']."</td>";
+        echo "<td>".$post['tab']['other_deduction_bill']."</td>";
+        echo "<td>".$post['tab']['net_amount']."</td>";
+        echo "<td>".$post['tab']['ChequeNo']."</td>";
+        echo "<td>".$post['tab']['ChequeAmount']."</td>";
+    echo "</tr>";
+    
+    
+    
+    $bill_passed += $post['tab']['bill_passed'];
+    $tds_ded += $post['tab']['tds_ded'];
+    $deduction += $post['tab']['deduction'];
+    $other_deduction += $post['tab']['other_deduction'];
+    $other_deduction_bill += $post['tab']['other_deduction_bill'];
+    $net_amount += $post['tab']['net_amount'];
+    //$ChequeAmount += $post['tab']['ChequeAmount'];
+    
+endforeach;
+
+
+
+foreach($result2 as $post):
+    
+    if($flag){$old = $new = $post['tab']['other_deduction'].$post['tab']['ChequeNo'].$post['tab']['ChequeAmount'];}
+    else{
+            $old =$new;
+            $new = $post['tab']['other_deduction'].$post['tab']['ChequeNo'].$post['tab']['ChequeAmount'];
+            if($old == $new)
+            {
+                $post['tab']['other_deduction'] = 0;
+            }
+    }
+    $flag = false;
+    echo "<tr>";
+        echo "<td>".$post['tab']['branch_name']."</td>";
+        echo "<td>".$post['tab']['invoiceDate']."</td>";
+        echo "<td>Advance</td>";
+        echo "<td>".$post['tab']['client']."</td>";
+        $date = date_create($post['tab']['pay_dates']);
+        $date = date_format($date, 'd-M-Y');
+        echo "<td>".$date."</td>";
+        $date2 = date_create($post['tab']['createdate']);
+        $date2 = date_format($date2, 'd-M-Y');
+        echo "<td>".$date2."</td>";
         echo "<td>".$post['tab']['bill_passed']."</td>";
         echo "<td>".$post['tab']['tds_ded']."</td>";
         echo "<td>".$post['tab']['deduction']."</td>";
@@ -149,7 +222,7 @@ foreach($result as $post):
 endforeach;
 ?>
     <tr>
-        <th colspan="4">Total</th>
+        <th colspan="6">Total</th>
         <th><?=$bill_passed ?></th>
         <th><?=$tds_ded ?></th>
         <th><?=$deduction ?></th>

@@ -217,21 +217,29 @@ class FinancesController extends AppController {
         $this->set('page_access',$page_access);
           $pageName = 
             array('BusinessCase'=>array(
-                '67'=>array('ExpenseReports/index','View Budget / Business Case'),
-            '141'=>array('Imprests/add_head_type','Add Head Type'),
-            '142'=>array('Imprests/add_tds_section','Add TDS Section'),
-            '133'=>array('Imprests/add_head','Add Expense Head'),
+                '142'=>array('Imprests/add_tds_section','Add TDS Section'), 
+                '133'=>array('Imprests/add_head','Add Expense Head'),
                 '134'=>array('Imprests/add_sub_head','Add Expense Sub Head'),
-                '84'=>array('Imprests/addunit','Add Unit'),
                 '76'=>array('Imprests/imprest_manager_save','Add Imprest Manager'),
+                '84'=>array('Imprests/addunit','Add Unit'),
+                '141'=>array('Imprests/add_head_type','Add Head Type'),
+                
                 '63'=>array('ExpenseEntries/initial_branch','Budget/Business Case Entry'),
-            '70'=>array('ExpenseEntries/view','Pending Business Case'),
-            '74'=>array('ExpenseEntries/business_case_ropen','Business Case Re-Open Request'),
+                '67'=>array('ExpenseReports/index','View Budget / Business Case'),
+                '74'=>array('ExpenseEntries/business_case_ropen','Business Case Re-Open Request'),
                 '75'=>array('ExpenseEntries/view_business_case_ropen','View Business Case Re-Open Request'),
+                '165'=>array('ExpenseEntries/business_case_upload','Business Case File Upload'),
+                '70'=>array('ExpenseEntries/view','Pending Business Case'),
+                
+                
+                
+            
+            
+                
                 '64'=>array('ExpenseEntries/view_bm','Approve Bus. Case(BM)'),
                 '65'=>array('ExpenseEntries/view_vh','Approve Bus. Case(VH)'),
                 '66'=>array('ExpenseEntries/view_fh','Approve Bus. Case(FH)'),
-                '165'=>array('ExpenseEntries/business_case_upload','Business Case File Upload'),
+                
                 ),
                 )
             

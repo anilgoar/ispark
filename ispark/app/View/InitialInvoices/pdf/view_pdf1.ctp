@@ -258,7 +258,7 @@ td#t07
 </style>
 </head>
 <body style="font-size:12px;  font-family:Arial, Helvetica, sans-serif;">
-    <?php if($cost_master['CostCenterMaster']['company_name']=='IDC') {echo "<br/><br/><br/><br/><br/><br/><br/><br/>";} ?>
+    <?php if($tbl_invoice['InitialInvoice']['cost_company_name']=='IDC') {echo "<br/><br/><br/><br/><br/><br/><br/><br/>";} ?>
    
 <br/>    
 <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) {} else { ?> 
@@ -299,33 +299,33 @@ td#t07
 
 	<tr>
 		<td colspan="2"  valign="top">
-			<?php if($cost_master['CostCenterMaster']['as_client']) echo $btr = '<b>'.$cost_master['CostCenterMaster']['client'].'</b><br>'; ?>
-			<?php if(!$cost_master['CostCenterMaster']['as_client']) echo $btr ='<b>'.$cost_master['CostCenterMaster']['bill_to'].'</b><br>'; ?>
-			<?php echo $cost_master['CostCenterMaster']['b_Address1']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['b_Address2']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['b_Address3']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['b_Address4']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['b_Address5']; ?><br/>
+			<?php if($tbl_invoice['InitialInvoice']['cost_as_client']) echo $btr = '<b>'.$tbl_invoice['InitialInvoice']['cost_client'].'</b><br>'; ?>
+			<?php if(!$tbl_invoice['InitialInvoice']['cost_as_client']) echo $btr ='<b>'.$tbl_invoice['InitialInvoice']['cost_bill_to'].'</b><br>'; ?>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_b_Address1']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_b_Address2']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_b_Address3']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_b_Address4']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_b_Address5']; ?><br/>
                         <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
-                        <font size="1">GST No :<?php echo $cost_master['CostCenterMaster']['VendorGSTNo']; ?>
-                        <br/>GST STATE NAME :<?php echo $cost_master['CostCenterMaster']['VendorGSTState'];?>
-                        <br/>GST STATE CODE :<?php echo $cost_master['CostCenterMaster']['VendorStateCode'];?>
+                        <font size="1">GST No :<?php echo $tbl_invoice['InitialInvoice']['cost_VendorGSTNo']; ?>
+                        <br/>GST STATE NAME :<?php echo $tbl_invoice['InitialInvoice']['cost_VendorGSTState'];?>
+                        <br/>GST STATE CODE :<?php echo $tbl_invoice['InitialInvoice']['cost_VendorStateCode'];?>
                         </font>
                         <?php } ?>
                         
 		</td>
 		<td valign="top">
-			<?php if($cost_master['CostCenterMaster']['as_bill_to']) echo $btr; ?>
-			<?php if(!$cost_master['CostCenterMaster']['as_bill_to']) echo '<b>'.$cost_master['CostCenterMaster']['ship_to'].'</b><br>'; ?>
-			<?php echo $cost_master['CostCenterMaster']['a_address1']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['a_address2']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['a_address3']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['a_address4']; ?><br/>
-			<?php echo $cost_master['CostCenterMaster']['a_address5']; ?><br/>
+			<?php if($tbl_invoice['InitialInvoice']['cost_as_bill_to']) echo $btr; ?>
+			<?php if(!$tbl_invoice['InitialInvoice']['cost_as_bill_to']) echo '<b>'.$tbl_invoice['InitialInvoice']['cost_ship_to'].'</b><br>'; ?>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_a_address1']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_a_address2']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_a_address3']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_a_address4']; ?><br/>
+			<?php echo $tbl_invoice['InitialInvoice']['cost_a_address5']; ?><br/>
                         <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
-                        <font size="1">GST No :<?php echo $cost_master['CostCenterMaster']['VendorGSTNo']; ?>
-                        <br/>GST STATE NAME :<?php echo $cost_master['CostCenterMaster']['VendorGSTState'];?>
-                        <br/>GST STATE CODE :<?php echo $cost_master['CostCenterMaster']['VendorStateCode'];?>
+                        <font size="1">GST No :<?php echo $tbl_invoice['InitialInvoice']['cost_VendorGSTNo']; ?>
+                        <br/>GST STATE NAME :<?php echo $tbl_invoice['InitialInvoice']['cost_VendorGSTState'];?>
+                        <br/>GST STATE CODE :<?php echo $tbl_invoice['InitialInvoice']['cost_VendorStateCode'];?>
                         </font>
                         <?php } ?>
 			<?php unset($CostCenterMaster); ?>
@@ -345,10 +345,10 @@ td#t07
 					
 					<tr><td id = "t06">Pan No</td></tr>
                                         <tr><td id = "t06"><font size="10px"><b>GRN No</b></font></td></tr>
-                                        <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
+                                        
                                         <tr><td id = "t06"><b>Place Of Supply</b></td></tr>
                                         <tr><td id = "t06"><b>TAX PAYBLE UNDER RCM</b></td></tr>
-                                        <?php } ?>
+                                        
 		  </table>
 		</td>
 		<td height="100" valign="top">
@@ -357,20 +357,20 @@ td#t07
 
                                         <tr><td id = "t06"><font size="10pxpx"><b><?php if($tbl_invoice['InitialInvoice']['approve_po']=='Yes')echo $tbl_invoice['InitialInvoice']['po_no']; ?>&nbsp;</b></font></td></tr>
 					<?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
-                                       <tr><td id = "t06"><?php  echo $cost_master['CostCenterMaster']['ServiceTaxNo'];?>&nbsp;</td></tr>
-					<tr><td id = "t06"><?php  echo $cost_master['CostCenterMaster']['HSNCode'];?>&nbsp;</td></tr>
-                                        <tr><td id = "t06"><?php  echo $cost_master['CostCenterMaster']['SACCode'];?>&nbsp;</td></tr>
+                                       <tr><td id = "t06"><?php  echo $tbl_invoice['InitialInvoice']['cost_ServiceTaxNo'];?>&nbsp;</td></tr>
+					<tr><td id = "t06"><?php  echo $tbl_invoice['InitialInvoice']['cost_HSNCode'];?>&nbsp;</td></tr>
+                                        <tr><td id = "t06"><?php  echo $tbl_invoice['InitialInvoice']['cost_SACCode'];?>&nbsp;</td></tr>
                                         <?php } else { ?>
 					<tr><td id = "t06"><?php  echo $company['Addcompany']['service_no'];?>&nbsp;</td></tr>
                                         <?php } ?>
 					
 					<tr><td id = "t06"><?php echo $company['Addcompany']['pan_no'];?>&nbsp;</td></tr>
                                         <tr><td id = "t06"><font size="10px"><b><?php if($tbl_invoice['InitialInvoice']['approve_grn']=='Yes')echo $tbl_invoice['InitialInvoice']['grn']; ?>&nbsp;</b></font></td></tr>
-                                        <?php if( strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
-                                        <tr><td width="130"  id = "t07"><?php if(empty($cost_master['CostCenterMaster']['statenamecost'])) { echo $branch_detail['Addbranch']['state']; } else {echo $cost_master['CostCenterMaster']['statenamecost'];} ?>&nbsp;</td></tr>
+                                        
+                                        <tr><td width="130"  id = "t07"><?php if(empty($tbl_invoice['InitialInvoice']['cost_statenamecost'])) { echo $branch_detail['Addbranch']['state']; } else {echo $tbl_invoice['InitialInvoice']['cost_statenamecost'];} ?>&nbsp;</td></tr>
                                         <tr><td width="130"  id = "t07">NO&nbsp;</td></tr>
-                                         <?php } ?>
-		  </table>
+                                        
+                        </table>
 
 		</td>
 	</tr>
@@ -427,8 +427,8 @@ td#t07
 			<td></td>
 		</tr>	
 		<tr>
-                        <td rowspan="<?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) {if($cost_master['CostCenterMaster']['GSTType']=='Integrated') echo "4"; else echo "5";  }  else if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2015-11-14")) {if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2016-05-31")) echo "6"; else echo "5"; } else echo "4"; ?>" id = "t02"></td>
-                        <td rowspan="<?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) {if($cost_master['CostCenterMaster']['GSTType']=='Integrated') echo "4"; else echo "5";  }  else if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2015-11-14"))  {if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2016-05-31")) echo "6";  else echo "5";} else echo "4"; ?>"></td>
+                        <td rowspan="<?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) {if($tbl_invoice['InitialInvoice']['cost_GSTType']=='Integrated') echo "4"; else echo "5";  }  else if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2015-11-14")) {if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2016-05-31")) echo "6"; else echo "5"; } else echo "4"; ?>" id = "t02"></td>
+                        <td rowspan="<?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) {if($tbl_invoice['InitialInvoice']['cost_GSTType']=='Integrated') echo "4"; else echo "5";  }  else if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2015-11-14"))  {if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2016-05-31")) echo "6";  else echo "5";} else echo "4"; ?>"></td>
 			<td ></td>
 			<td ></td>
 			<td></td>
@@ -438,7 +438,7 @@ td#t07
 		<th colspan="2" id ="t04">TAXABLE INVOICE VALUE</th>
 		<th id ="t05"><?php echo round($tbl_invoice['InitialInvoice']['total']); ?></th>
 	</tr>
-    <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { if($cost_master['CostCenterMaster']['GSTType']=='Integrated') {  ?>
+    <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { if($tbl_invoice['InitialInvoice']['cost_GSTType']=='Integrated') {  ?>
         <tr>
 		<th colspan="2" id ="t04">IGST @ 18%</th>
 		<th id ="t05"><?php echo round($tbl_invoice['InitialInvoice']['igst']); ?></th>
@@ -484,9 +484,9 @@ td#t07
 		<td colspan="5" id="t06">
 		<br>
 			Note : Please issue Ch/DD in favour of <br>
-			<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd')
+			<?php if($tbl_invoice['InitialInvoice']['cost_company_name']=='Mas Callnet India Pvt Ltd')
                                         {echo "SBI A/c. MAS Callnet India Pvt. Ltd. Payable at Delhi";}
-                                        else if($cost_master['CostCenterMaster']['company_name']=='IDC')
+                                        else if($tbl_invoice['InitialInvoice']['cost_company_name']=='IDC')
                                         {echo "SBI A/c. ISPARK Dataconnect Pvt. Ltd. Payable at Delhi";}
                                         else {echo "Pikquick Services Pvt. Ltd.";}
                                 ?> 
@@ -495,7 +495,7 @@ td#t07
         
 	<tr>
 		<td colspan="4" valign="top">
-                    <?php if($cost_master['CostCenterMaster']['company_name']!='Pikquick Pvt. Ltd.') { ?>
+                    <?php if($tbl_invoice['InitialInvoice']['cost_company_name']!='Pikquick Pvt. Ltd.') { ?>
 		<b>Covered under MSME Act vide letter No : F/5/CL/EM/2012/2062 dated 19.12.12 <br>
 		Enterpreneurs Memorandum No. : '070092201354'</b>
                     <?php } else { ?>
@@ -527,11 +527,11 @@ td#t07
 		<td <?php if($tbl_invoice['InitialInvoice']['bill_no'] == 'abc'){ ?> style="background-image:url(<?php echo $this->webroot; ?>app/webroot/img/sign4.png);background-repeat: no-repeat; <?php } ?>">
 		<b>for <?php    
                                 
-                                if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd')
+                                if($tbl_invoice['InitialInvoice']['cost_company_name']=='Mas Callnet India Pvt Ltd')
                                 {
                                     echo "MAS Callnet India Pvt. Ltd.";
                                 }
-                                else if($cost_master['CostCenterMaster']['company_name']=='IDC')
+                                else if($tbl_invoice['InitialInvoice']['cost_company_name']=='IDC')
                                 {
                                     echo "ISPARK Dataconnect Pvt. Ltd.";
                                 }
@@ -546,7 +546,7 @@ td#t07
 		</td>
 	</tr>
         <tr>
-            <?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd') { ?>
+            <?php if($tbl_invoice['InitialInvoice']['cost_company_name']=='Mas Callnet India Pvt Ltd') { ?>
             <td width="103" style="font-family: arial;size: 12;font-weight: bold;padding-top: 10px;padding-bottom:10px;" colspan="5" >
 			TDS for this invoice to be deducted @ 2%  "Under section 4th Provision to section 194J(1) of the Income Tax Act, 1961. The Finance Act, 2017 " for the  payee engaged only in the business of operation of call centre.
 		</td>
@@ -558,7 +558,7 @@ td#t07
 
 </table>
 <?php if(strtotime($tbl_invoice['InitialInvoice']['invoiceDate']) > strtotime("2017-06-30")) { ?>
-<?php if($cost_master['CostCenterMaster']['company_name']=='Mas Callnet India Pvt Ltd') { ?>
+<?php if($tbl_invoice['InitialInvoice']['cost_company_name']=='Mas Callnet India Pvt Ltd') { ?>
 <br/>
 <br/>
 <br/>

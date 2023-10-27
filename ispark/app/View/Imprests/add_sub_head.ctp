@@ -46,6 +46,7 @@
                                        
                                         <div class="col-sm-2">
                                             <button type="submit" onclick="return validate_head()" class="btn btn-primary btn-label-left">Submit</button>
+                                            <a href="/ispark/Menuisps/sub?AX=NTk=&AY=L2lzcGFyay9NZW51aXNwcz9BWD1OQSUzRCUzRA==" class="btn btn-primary btn-label-left">Back</a> 
                                         </div>
                                     </div>    
 					<div class="clearfix"></div>

@@ -27,6 +27,7 @@ class UsersController extends AppController {
        {
             $this->redirect(array('action' => 'view')); 
        }
+       
 	$this->layout='view';
     }
     
@@ -35,334 +36,334 @@ class UsersController extends AppController {
         $this->User->recursive = 0;
        if($this->Session->check('Auth.User'))
        {
-            $this->redirect(array('action' => 'view')); 
+            $this->redirect(array('action' => 'view'));
+
        }
+
 	$this->layout='view';
     }
-    
     public function logout() 
     {
    	$this->Session->delete('username');
    	$this->Session->destroy();
         $this->redirect(array('action'=>'login'));
     }
-    
-    public function view() 
-            
+public function view() 
+{
+    if ($this->request->is('post')) 
     {
-        if ($this->request->is('post')) 
-        {
-            
-            $data_login=$this->params['data']['User'];//reading user name
+        $data_login=$this->params['data']['User'];//reading user name
             $pdata['UserActive'] = '1';
             $pdata['username'] = $data_login['username'];
             $pdata['password'] = $data_login['password'];
             $FinanceYearLogin = $data_login['FinanceYear'];
             
-            $rdata=$this->User->find('first',array('conditions'=>$pdata)); //finding username in table
-            $rdata=$rdata['User'];		//returns array
-
-            //print_r($pdata); exit;
-
-            if (!empty($rdata))		//checking if array is not empty
+        $rdata=$this->User->find('first',array('conditions'=>$pdata)); //finding username in table
+        $rdata=$rdata['User'];		//returns array
+        
+        // $this->User->query("FLUSH HOSTS");
+        
+        if (!empty($rdata))		//checking if array is not empty
+	{
+            
+            if($this->User->query("SELECT * FROM `tbl_user` WHERE username='$pUser' AND PASSWORD='$pPass' AND DATEDIFF(CURDATE(),DATE(pass_change_date))>30")) //checking password not changed from last 30 days
             {
-
-                if($this->User->query("SELECT * FROM `tbl_user` WHERE username='$pUser' AND PASSWORD='$pPass' AND DATEDIFF(CURDATE(),DATE(pass_change_date))>30")) //checking password not changed from last 30 days
+                $otp = rand(100000, 999999);
+                $unique_key = uniqid('', true);
+                $rdata=$this->User->find('first',array('conditions'=>$pdata));
+                if($this->User->updateAll(array("otp"=>"'".$otp."'","unique_key"=>"'".$unique_key."'",'otp_send_date'=>"now()"),array("Id"=>$rdata['User']['id'])))
                 {
-                    $otp = rand(100000, 999999);
-                    $unique_key = uniqid('', true);
-                    $rdata=$this->User->find('first',array('conditions'=>$pdata));
-                    if($this->User->updateAll(array("otp"=>"'".$otp."'","unique_key"=>"'".$unique_key."'",'otp_send_date'=>"now()"),array("Id"=>$rdata['User']['id'])))
+                    App::uses('sendEmail', 'custom/Email');
+
+                    $ukeyArr['ukey'] = base64_encode($unique_key);
+                    $ukeyArr['otp'] = base64_encode($otp);
+                    $ukeyStr = base64_encode(json_encode($ukeyArr));
+
+
+                    $sub = "Ispark Link For Password Change";
+                    $msg = "Your Link For Password Change will be expired in 24 Hrs.";
+                    $msg .= "<br/><br/><br/><br/>";
+                    $url = "http://mascallnetnorth.in/ispark/users/change_password?ukey=".$ukeyStr;
+                    $msg .= 'Please <a href="'.$url.'">click here</a> to change password.<br/>';
+
+
+                    $mail = new sendEmail();
+                    $mail_status = $mail-> to($rdata['User']['email'],$msg,$sub);
+                    if($mail_status)
                     {
-                        App::uses('sendEmail', 'custom/Email');
-
-                        $ukeyArr['ukey'] = base64_encode($unique_key);
-                        $ukeyArr['otp'] = base64_encode($otp);
-                        $ukeyStr = base64_encode(json_encode($ukeyArr));
-
-
-                        $sub = "Ispark Link For Password Change";
-                        $msg = "Your Link For Password Change will be expired in 24 Hrs.";
-                        $msg .= "<br/><br/><br/><br/>";
-                        $url = "http://mascallnetnorth.in/ispark/users/change_password?ukey=".$ukeyStr;
-                        $msg .= 'Please <a href="'.$url.'">click here</a> to change password.<br/>';
-
-
-                        $mail = new sendEmail();
-                        $mail_status = $mail-> to($rdata['User']['email'],$msg,$sub);
-                        if($mail_status)
-                        {
-                            echo "<script>alert('Url Sent To Your Registered Email-Id For Reset Password');</script>";
-                            $this->Session->setFlash('<font color="green">Url Sent To Your Registered Mail-Id For Reset Password.</font>');
-                            return $this->redirect(array('action'=>'login'));
-                        }
-                        else
-                        {
-                            $this->Session->setFlash("Mail Id Not Found! Please Contact To Admin");
-                            return $this->redirect(array('action'=>'login'));
-                        }
-                    }
-                    else 
-                    {
-                        $this->Session->setFlash("Internet Problem! Please Try Again");
+                        echo "<script>alert('Url Sent To Your Registered Email-Id For Reset Password');</script>";
+                        $this->Session->setFlash('<font color="green">Url Sent To Your Registered Mail-Id For Reset Password.</font>');
                         return $this->redirect(array('action'=>'login'));
                     }
-                    return $this->redirect(array('action'=>'login'));
-                }
-
-                $ProspectUser = $this->EcrMaster->find('first',array('fields'=>array('id','ecrName','parent_id','Label'),
-                'conditions'=>array('ecrName'=>$rdata['username'])));
-                //print_r($ProspectUser); exit;
-                if(!empty($ProspectUser))
-                {
-                    $childUser = $this->user_array($ProspectUser['EcrMaster']['Label'],$ProspectUser['EcrMaster']['id'],array()); 
-                    $parentUser = $this->puser_array($ProspectUser['EcrMaster']['Label'],$ProspectUser['EcrMaster']['parent_id'],array()); 
-                }
-                    $childUser[] = $rdata['username'];
-                    //print_r($parentUser); exit;
-
-                $this->Session->write("username",ucwords(str_replace('.', ' ', $rdata['emp_name']))); 	//creating session for user
-                $this->Session->write("email",$rdata['email']); 	//creating session for user
-                $this->Session->write("userid",$rdata['id']);	//creating session for user
-                $this->Session->write("role",$rdata['role']);
-                $this->Session->write("user-type",$rdata['user_type']);//creating access voilation for user 
-                $this->Session->write("branch_name",$rdata['branch_name']); ////creating access voilation for user
-                $this->Session->write("childUser",$childUser);
-                $this->Session->write("parentUser",$parentUser);
-                $this->Session->write("Access_Branch",$rdata['Access_Branch']);
-                
-                if(!empty($FinanceYearLogin))
-                {
-                    $this->Session->write("FinanceYearLogin",$FinanceYearLogin);
-                }
-
-                $page=$this->Access->find('first',array('conditions'=>array('id'=>$rdata['id'])));  //find page access links for user in database
-                //print_r($page); exit;
-                $page_access=$page['Access']['page_access'];
-                $this->Session->write("page_access",$page_access);  //setting page access links for user in session
-                $this->set('username',$rdata['emp_name']);
-
-                $username = $this->Session->read('username');
-                $branch_name = $this->Session->read('branch_name');
-                $LastBill = $this->InitialInvoice->find('first',array(
-                'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
-                'conditions'=> array( 'not' => array('bill_no' =>''),'id >' => '179','branch_name'=>$branch_name),
-                'order' => array("id"=>'desc')
-                ));
-
-                $client = $this->CostCenterMaster->find('first',array(
-                'fields'=>array('client'),
-                'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
-                ));
-
-                $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
-                $this->set('LastBill',$LastBill);
-
-                if($this->Session->read('role')=='branch')
-                    {
-                        $this->set('provision',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
-            WHERE IF(cm.po_required = 'Yes',IF(tb.po_no IS NULL OR tb.po_no ='',IF(tb.po_date IS NULL OR tb.po_date ='',TRUE,FALSE),FALSE),FALSE) AND tb.finance_year = '2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name"));
-
-                       $this->set('provision2',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd  FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
-            WHERE (cm.po_required ='Yes' AND IF(tb.po_no IS NOT NULL AND tb.po_no !='',TRUE,(tb.po_date IS NOT NULL AND tb.po_date !=''))) 
-            AND tb.id IN (SELECT  tb2.id  FROM tbl_invoice tb2 INNER JOIN cost_master cm2 ON tb2.cost_center = cm2.cost_center 
-            WHERE IF(cm.grn='Yes' AND (tb.grn IS NULL OR tb.grn ='') AND (tb.grn_date IS NULL OR tb.grn_date = ''),TRUE,FALSE)) AND finance_year='2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name")); 
-
-                       $this->set('provision3',$this->Provision->query("SELECT * FROM provision_master Provision LEFT JOIN cost_master cm ON Provision.cost_center=cm.cost_center
-                        WHERE Provision.provision_balance!=0 AND Provision.branch_name='$branch_name'"));
-
-
-
-                   }
                     else
                     {
-                        $this->set('provision','');
-                        $this->set('provision2','');
-                        $this->set('provision3','');
+                        $this->Session->setFlash("Mail Id Not Found! Please Contact To Admin");
+                        return $this->redirect(array('action'=>'login'));
                     }
-            }
-            else {   
-                    $this->Session->setFlash(__('<font color="red">Invalid User Name Or Password</font>'));
-                    $this->redirect(array('action' => 'login'));
                 }
-        }
-
-    if($this->Session->read('username'))
-    {
-                   $ipaddress = '';
-        if (getenv('HTTP_CLIENT_IP'))
-            $ipaddress = getenv('HTTP_CLIENT_IP');
-        else if(getenv('HTTP_X_FORWARDED_FOR'))
-            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-        else if(getenv('HTTP_X_FORWARDED'))
-            $ipaddress = getenv('HTTP_X_FORWARDED');
-        else if(getenv('HTTP_FORWARDED_FOR'))
-            $ipaddress = getenv('HTTP_FORWARDED_FOR');
-        else if(getenv('HTTP_FORWARDED'))
-           $ipaddress = getenv('HTTP_FORWARDED');
-        else if(getenv('REMOTE_ADDR'))
-            $ipaddress = getenv('REMOTE_ADDR');
-        else
-            $ipaddress = '';
-
-
-
-
-                $this->set('username',$this->Session->read('username'));
-            $LastBill = $this->InitialInvoice->find('first',array(
-            'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
-            'conditions'=> array( 'not' => array('bill_no' =>''),'id >'=>'179'),
-            'order' => array("id"=>'desc')
-            ));
-            $client = $this->CostCenterMaster->find('first',array(
-            'fields'=>array('client'),
-            'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
-            ));
-            $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
-            $this->set('LastBill',$LastBill);
+                else 
+                {
+                    $this->Session->setFlash("Internet Problem! Please Try Again");
+                    return $this->redirect(array('action'=>'login'));
+                }
+                return $this->redirect(array('action'=>'login'));
+            }
+            
+            $ProspectUser = $this->EcrMaster->find('first',array('fields'=>array('id','ecrName','parent_id','Label'),
+            'conditions'=>array('ecrName'=>$rdata['username'])));
+            //print_r($ProspectUser); exit;
+            if(!empty($ProspectUser))
+            {
+                $childUser = $this->user_array($ProspectUser['EcrMaster']['Label'],$ProspectUser['EcrMaster']['id'],array()); 
+                $parentUser = $this->puser_array($ProspectUser['EcrMaster']['Label'],$ProspectUser['EcrMaster']['parent_id'],array()); 
+            }
+                $childUser[] = $rdata['username'];
+                //print_r($parentUser); exit;
+            
+            $this->Session->write("username",ucwords(str_replace('.', ' ', $rdata['emp_name']))); 	//creating session for user
+            $this->Session->write("email",$rdata['email']); 	//creating session for user
+            $this->Session->write("userid",$rdata['id']);	//creating session for user
+            $this->Session->write("role",$rdata['role']);
+            $this->Session->write("user-type",$rdata['user_type']);//creating access voilation for user 
+            $this->Session->write("branch_name",$rdata['branch_name']); ////creating access voilation for user
+            $this->Session->write("childUser",$childUser);
+            $this->Session->write("parentUser",$parentUser);
+            $this->Session->write("Access_Branch",$rdata['Access_Branch']);
+            $this->Session->write("FinanceYearLogin",$FinanceYearLogin);            
+			
+            $page=$this->Access->find('first',array('conditions'=>array('id'=>$rdata['id'])));  //find page access links for user in database
+            //print_r($page); exit;
+            $page_access=$page['Access']['page_access'];
+            $this->Session->write("page_access",$page_access);  //setting page access links for user in session
+            $this->set('username',$rdata['emp_name']);
+            
             $username = $this->Session->read('username');
             $branch_name = $this->Session->read('branch_name');
-                    $PageUrl    =   $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $PageName   =   "User/Login";
-                    $NewDate = date('Y-m-d H:i:s'); 
-                    $this->Logx->save(array('UserId'=>$this->Session->read('userid'),'UserName' => "{$username}",'PageUrl' => "{$PageUrl}",'PageName' => "{$PageName}", 'IpAddress' => "{$ipaddress}", 'LogDate' => "{$NewDate}"));
-
-
-            if($this->Session->read('role')=='branch'){
-            $this->set('provision',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
-    WHERE IF(cm.po_required = 'Yes',IF(tb.po_no IS NULL OR tb.po_no ='',IF(tb.po_date IS NULL OR tb.po_date ='',TRUE,FALSE),FALSE),FALSE) AND tb.finance_year = '2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name"));
-
-            $this->set('provision2',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd  FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
-    WHERE (cm.po_required ='Yes' AND IF(tb.po_no IS NOT NULL AND tb.po_no !='',TRUE,(tb.po_date IS NOT NULL AND tb.po_date !=''))) 
-    AND tb.id IN (SELECT  tb2.id  FROM tbl_invoice tb2 INNER JOIN cost_master cm2 ON tb2.cost_center = cm2.cost_center
-    WHERE IF(cm.grn='Yes' AND (tb.grn IS NULL OR tb.grn ='') AND (tb.grn_date IS NULL OR tb.grn_date = ''),TRUE,FALSE)) AND finance_year='2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name"));
-
-            $this->set('provision3',$this->Provision->query("SELECT * FROM provision_master Provision LEFT JOIN cost_master cm ON Provision.cost_center=cm.cost_center
-                        WHERE Provision.provision_balance!=0 AND Provision.branch_name='$branch_name'"));
-            }
-            else if($this->Session->read('userid')=='19')
-            {
-                $this->set('provision3',$this->Provision->query("SELECT * FROM provision_master Provision LEFT JOIN cost_master cm ON Provision.cost_center=cm.cost_center
-    WHERE Provision.provision_balance!=0 ORDER BY Provision.branch_name ASC,provision_balance DESC"));
-            }
-            else
-            {
-                $this->set('provision','');
-                $this->set('provision2','');
-                $this->set('provision3','');
-            }
-    }
-
-
-
-    $email_id = $this->Session->read('email');
-    $obj = $this->PageMaster->query("SELECT parent_access FROM pages_ride WHERE user_name='$email_id'");
-
-    $arr = explode(",",$obj[0]['pages_ride']['parent_access']);
-
-    $query ="SELECT id,page_name,page_url FROM pages_master WHERE (";
-
-    foreach($arr as $ot){
-        $query.="id='$ot' OR ";
-    }
-    $query = substr($query,0,-4);        
-    //echo $query.") AND parent_id='0'"; die();
-
-    $dd = $this->PageMaster->query($query.") AND parent_id='0' ORDER BY page_name");
-    $this->set('dd',$dd);;
-    $this->Session->write("dd",$dd);
-
-
-
-    $obj_ispark = $this->PageMaster->query("SELECT parent_access FROM pages_ride_ispark WHERE user_name='$email_id'");
-
-    //print_r($obj_ispark[0]['pages_ride_ispark']['parent_access'])  ; exit;
-
-    $arr_ispark = explode(",",$obj_ispark[0]['pages_ride_ispark']['parent_access']);
-    //$this->Session->write("page_access",$obj_ispark[0]['pages_ride_ispark']['parent_access']);  //setting page access links for user in session
-
-
-    $query_ispark ="SELECT id,page_name,page_url FROM pages_master_ispark WHERE (";
-
-    foreach($arr_ispark as $ot_ispark){
-        $query_ispark.="id='$ot_ispark' OR ";
-    }
-
-
-
-    $query_ispark = substr($query_ispark,0,-4);        
-    //echo $query.") AND parent_id='0'"; die();
-    $query_ispark =$query_ispark.") AND parent_id='0' ORDER BY page_name";
-
-    //print_r($query_ispark); exit;
-
-    $dd_ispark = $this->PageMaster->query($query_ispark);
-
-
-
-    $this->set('dd_ispark',$dd_ispark);;
-    $this->Session->write("dd_ispark",$dd_ispark);
-
-    $dd_ispark_menu = $this->PageMaster->query("SELECT * FROM `pages_master_ispark` pmi");
-    $main_menu = array();
-    $page_m = array();
-
-    //print_r($dd_ispark_menu); exit;
-
-    foreach($dd_ispark_menu as $m_menu)
-    {
-        $menu['id'] = $m_menu['pmi']['id'];
-        $menu['page_name'] = $m_menu['pmi']['page_name'];
-        $menu['page_url'] = $m_menu['pmi']['page_url'];
-        $menu['parent_id'] = $m_menu['pmi']['parent_id'];
-        $main_menu[] = $menu;  
-    }
-
-
-
-
-    $pages_menu_ispark = $this->buildTree( $main_menu );
-    $this->Session->write("pages_menu_ispark",$pages_menu_ispark);
-    //print_r($pages_menu_ispark); exit; 
-
-    //$this->loadModel('CommonData');
-    //$this->CommonData->getMenu();
-    if($this->Session->read('role')=='admin')
-    {
-       $LastBill = $this->InitialInvoice->find('first',array(
+            
+            $LastBill = $this->InitialInvoice->find('first',array(
             'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
-            'conditions'=> array( 'not' => array('bill_no' =>''),'id >'=>'179'),
+            'conditions'=> array( 'not' => array('bill_no' =>''),'id >' => '179','branch_name'=>$branch_name),
             'order' => array("id"=>'desc')
             ));
+            
             $client = $this->CostCenterMaster->find('first',array(
             'fields'=>array('client'),
             'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
             ));
+            
             $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
-            $this->set('LastBill',$LastBill); 
+            $this->set('LastBill',$LastBill);
+            
+            if($this->Session->read('role')=='branch')
+                {
+                    $this->set('provision',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
+        WHERE IF(cm.po_required = 'Yes',IF(tb.po_no IS NULL OR tb.po_no ='',IF(tb.po_date IS NULL OR tb.po_date ='',TRUE,FALSE),FALSE),FALSE) AND tb.finance_year = '2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name"));
+
+                   $this->set('provision2',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd  FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
+        WHERE (cm.po_required ='Yes' AND IF(tb.po_no IS NOT NULL AND tb.po_no !='',TRUE,(tb.po_date IS NOT NULL AND tb.po_date !=''))) 
+        AND tb.id IN (SELECT  tb2.id  FROM tbl_invoice tb2 INNER JOIN cost_master cm2 ON tb2.cost_center = cm2.cost_center 
+        WHERE IF(cm.grn='Yes' AND (tb.grn IS NULL OR tb.grn ='') AND (tb.grn_date IS NULL OR tb.grn_date = ''),TRUE,FALSE)) AND finance_year='2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name")); 
+
+                   $this->set('provision3',$this->Provision->query("SELECT * FROM provision_master Provision LEFT JOIN cost_master cm ON Provision.cost_center=cm.cost_center
+                    WHERE Provision.provision_balance!=0 AND Provision.branch_name='$branch_name'"));
+                   
+                   
+                   
+               }
+                else
+                {
+                    $this->set('provision','');
+                    $this->set('provision2','');
+                    $this->set('provision3','');
+                }
+        }
+        else {   
+                $this->Session->setFlash(__('<font color="red">Invalid User Name Or Password</font>'));
+                $this->redirect(array('action' => 'login'));
+            }
     }
+
+		
+if($this->Session->read('username'))
+{
+               $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+       $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
     else
-    {
+        $ipaddress = '';
+		
+
+	   
+	   
+	    $this->set('username',$this->Session->read('username'));
         $LastBill = $this->InitialInvoice->find('first',array(
-                'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
-                'conditions'=> array( 'not' => array('bill_no' =>''),'id >' => '179','branch_name'=>$branch_name),
-                'order' => array("id"=>'desc')
-                ));
+        'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
+        'conditions'=> array( 'not' => array('bill_no' =>''),'id >'=>'179'),
+        'order' => array("id"=>'desc')
+	));
+        $client = $this->CostCenterMaster->find('first',array(
+        'fields'=>array('client'),
+	'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
+	));
+        $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
+	$this->set('LastBill',$LastBill);
+        $username = $this->Session->read('username');
+        $branch_name = $this->Session->read('branch_name');
+		$PageUrl    =   $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $PageName   =   "User/Login";
+		$NewDate = date('Y-m-d H:i:s'); 
+		$this->Logx->save(array('UserId'=>$this->Session->read('userid'),'UserName' => "{$username}",'PageUrl' => "{$PageUrl}",'PageName' => "{$PageName}", 'IpAddress' => "{$ipaddress}", 'LogDate' => "{$NewDate}"));
 
-                $client = $this->CostCenterMaster->find('first',array(
-                'fields'=>array('client'),
-                'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
-                ));
+        
+        if($this->Session->read('role')=='branch'){
+        $this->set('provision',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
+WHERE IF(cm.po_required = 'Yes',IF(tb.po_no IS NULL OR tb.po_no ='',IF(tb.po_date IS NULL OR tb.po_date ='',TRUE,FALSE),FALSE),FALSE) AND tb.finance_year = '2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name"));
+        
+        $this->set('provision2',$this->InitialInvoice->query("SELECT  tb.id,tb.branch_name,tb.cost_center,tb.finance_year,tb.month,tb.bill_no,tb.invoiceDescription,tb.total,tb.grnd  FROM tbl_invoice tb INNER JOIN cost_master cm ON tb.cost_center = cm.cost_center
+WHERE (cm.po_required ='Yes' AND IF(tb.po_no IS NOT NULL AND tb.po_no !='',TRUE,(tb.po_date IS NOT NULL AND tb.po_date !=''))) 
+AND tb.id IN (SELECT  tb2.id  FROM tbl_invoice tb2 INNER JOIN cost_master cm2 ON tb2.cost_center = cm2.cost_center
+WHERE IF(cm.grn='Yes' AND (tb.grn IS NULL OR tb.grn ='') AND (tb.grn_date IS NULL OR tb.grn_date = ''),TRUE,FALSE)) AND finance_year='2016-17' AND tb.branch_name ='$branch_name' order by tb.branch_name"));
+        
+        $this->set('provision3',$this->Provision->query("SELECT * FROM provision_master Provision LEFT JOIN cost_master cm ON Provision.cost_center=cm.cost_center
+                    WHERE Provision.provision_balance!=0 AND Provision.branch_name='$branch_name'"));
+        }
+        else if($this->Session->read('userid')=='19')
+        {
+            $this->set('provision3',$this->Provision->query("SELECT * FROM provision_master Provision LEFT JOIN cost_master cm ON Provision.cost_center=cm.cost_center
+WHERE Provision.provision_balance!=0 ORDER BY Provision.branch_name ASC,provision_balance DESC"));
+        }
+        else
+        {
+            $this->set('provision','');
+            $this->set('provision2','');
+            $this->set('provision3','');
+        }
+        $this->layout='home';		
+}
 
-                $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
-                $this->set('LastBill',$LastBill);
-    }
 
 
-    $this->layout='home';		
-    }
+$email_id = $this->Session->read('email');
+$obj = $this->PageMaster->query("SELECT parent_access FROM pages_ride WHERE user_name='$email_id'");
+#print_r($obj);exit;
+$arr = explode(",",$obj[0]['pages_ride']['parent_access']);
 
-    public function buildTree(array $elements, $parentId = 0) {
+//print_r($arr);die;
+
+$query ="SELECT id,page_name,page_url FROM pages_master WHERE (";
+
+foreach($arr as $ot){
+    $query.="id='$ot' OR ";
+}
+$query = substr($query,0,-4);        
+//echo $query.") AND parent_id='0'"; die();
+
+$dd = $this->PageMaster->query($query.") AND parent_id='0' ORDER BY page_name");
+//print_r($dd);die;
+$this->set('dd',$dd);
+$this->Session->write("dd",$dd);
+
+
+
+$obj_ispark = $this->PageMaster->query("SELECT parent_access FROM pages_ride_ispark WHERE user_name='$email_id'");
+
+//print_r($obj_ispark[0]['pages_ride_ispark']['parent_access'])  ; exit;
+
+$arr_ispark = explode(",",$obj_ispark[0]['pages_ride_ispark']['parent_access']);
+//$this->Session->write("page_access",$obj_ispark[0]['pages_ride_ispark']['parent_access']);  //setting page access links for user in session
+
+
+$query_ispark ="SELECT id,page_name,page_url FROM pages_master_ispark WHERE (";
+
+foreach($arr_ispark as $ot_ispark){
+    $query_ispark.="id='$ot_ispark' OR ";
+}
+
+
+
+$query_ispark = substr($query_ispark,0,-4);        
+//echo $query.") AND parent_id='0'"; die();
+$query_ispark =$query_ispark.") AND parent_id='0' ORDER BY page_name";
+
+//print_r($query_ispark); exit;
+
+$dd_ispark = $this->PageMaster->query($query_ispark);
+
+
+
+$this->set('dd_ispark',$dd_ispark);;
+$this->Session->write("dd_ispark",$dd_ispark);
+
+$dd_ispark_menu = $this->PageMaster->query("SELECT * FROM `pages_master_ispark` pmi");
+$main_menu = array();
+$page_m = array();
+
+//print_r($dd_ispark_menu); exit;
+
+foreach($dd_ispark_menu as $m_menu)
+{
+    $menu['id'] = $m_menu['pmi']['id'];
+    $menu['page_name'] = $m_menu['pmi']['page_name'];
+    $menu['page_url'] = $m_menu['pmi']['page_url'];
+    $menu['parent_id'] = $m_menu['pmi']['parent_id'];
+    $main_menu[] = $menu;  
+}
+
+
+
+
+$pages_menu_ispark = $this->buildTree( $main_menu );
+$this->Session->write("pages_menu_ispark",$pages_menu_ispark);
+//print_r($pages_menu_ispark); exit; 
+
+//$this->loadModel('CommonData');
+//$this->CommonData->getMenu();
+if($this->Session->read('role')=='admin')
+{
+   $LastBill = $this->InitialInvoice->find('first',array(
+        'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
+        'conditions'=> array( 'not' => array('bill_no' =>''),'id >'=>'179'),
+        'order' => array("id"=>'desc')
+	));
+        $client = $this->CostCenterMaster->find('first',array(
+        'fields'=>array('client'),
+	'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
+	));
+        $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
+	$this->set('LastBill',$LastBill); 
+}
+else
+{
+    $LastBill = $this->InitialInvoice->find('first',array(
+            'fields' => array( 'id','bill_no', 'InvoiceDescription', 'branch_name', 'month','cost_center'),
+            'conditions'=> array( 'not' => array('bill_no' =>''),'id >' => '179','branch_name'=>$branch_name),
+            'order' => array("id"=>'desc')
+            ));
+            
+            $client = $this->CostCenterMaster->find('first',array(
+            'fields'=>array('client'),
+            'conditions'=>array('cost_center' => $LastBill['InitialInvoice']['cost_center'])
+            ));
+            
+            $LastBill['InitialInvoice']['client'] = $client [ 'CostCenterMaster' ][ 'client' ];
+            $this->set('LastBill',$LastBill);
+}
+
+
+$this->layout='home';		
+}
+
+public function buildTree(array $elements, $parentId = 0) {
     $branch = array();
 
     foreach ($elements as $element) {
@@ -377,43 +378,42 @@ class UsersController extends AppController {
 
     return $branch;
 }
-
-    public  function manage_Access()
-    {
-         if ($this->request->is('post')) 
-         {
-                $conditions=array_keys($this->request->data);
-                                                $i=0;
-                foreach($this->request->data as $post):
-                    $str='';
-                    foreach($post as $key=>$value)
-                    {	
-                            if($value!=0)
-                            {
-                                    $str[]=$key;
+	public  function manage_Access()
+	{
+		 if ($this->request->is('post')) 
+		 {
+		 	$conditions=array_keys($this->request->data);
+							$i=0;
+			foreach($this->request->data as $post):
+                            $str='';
+                            foreach($post as $key=>$value)
+                            {	
+                                    if($value!=0)
+                                    {
+                                            $str[]=$key;
+                                    }
                             }
-                    }
-                    $data[$i]=implode(',',$str);
-                    $i++;		
-                    //$this->set('res',$data);
-                endforeach;
+                            $data[$i]=implode(',',$str);
+                            $i++;		
+                            //$this->set('res',$data);
+			endforeach;
+			
+			for($j=0; $j<$i; $j++)
+			{
+                            $this->Access->updateAll(array('page_access'=>"'".$data[$j]."'"),array('id'=>$conditions[$j]));
+			}
+			$this->redirect(array('action'=>'view_access'));
+		 }
 
-                for($j=0; $j<$i; $j++)
-                {
-                    $this->Access->updateAll(array('page_access'=>"'".$data[$j]."'"),array('id'=>$conditions[$j]));
-                }
-                $this->redirect(array('action'=>'view_access'));
-         }
 
-        $this->layout='home';
-        $id  = $this->request->query['id'];
-        $this->set('pages',$this->Pages->find('all',array('order'=>array('page_name'=>'asc'))));
-        $this->set('access',$this->Access->find('all',array('conditions'=>array("id"=>$id))));
+		$this->layout='home';
+		$id  = $this->request->query['id'];
+		$this->set('pages',$this->Pages->find('all',array('order'=>array('page_name'=>'asc'))));
+		$this->set('access',$this->Access->find('all',array('conditions'=>array("id"=>$id))));
 		//$this->set('res','data not post');
-    }
-    
-    public function view_access()
-    {
+	}
+	public function view_access()
+	{
 		if($this->request->is("POST"))		
 		{
 			$user=$this->request->data['InitialInvoice']['user'];
@@ -425,7 +425,7 @@ class UsersController extends AppController {
                 //$this->set('page',$this->Session->read('page_access'));
 	}
 
-    public  function create_User(){
+public  function create_User(){
     $this->layout='home';
     
     //$this->set('branch_master',$this->Addbranch->find('all',array('fields'=>array('branch_name'))));
@@ -476,8 +476,8 @@ class UsersController extends AppController {
     }
 }
         
-    public  function edit_User()
-    {
+public  function edit_User()
+{
     $this->layout='home';
     $this->set('user_master',$this->User->find('first',array('conditions'=>array('id'=>$this->Session->read('userid')))));
     if($this->request->is('Post'))
@@ -509,18 +509,21 @@ class UsersController extends AppController {
             }
 }
         
-    public function view_users()
-    {
-    $this->layout="home";
-    $this->set('User',$this->User->find('all',array('conditions'=>array('UserActive'=>'1'),'order'=>array('username'=>'Asc'))));
-    }
-
-    public  function edit_Users()
-    {
-        $this->layout='home';
+        public function view_users()
+        {
+            $this->layout="home";
+            $this->set('User',$this->User->find('all',array('conditions'=>array('UserActive'=>'1'),'order'=>array('username'=>'Asc'))));
+        }
+        
+        public  function edit_Users()
+	{
+	$this->layout='home';
         $id = $this->params->query['id'];
-        $this->set('user_master',$this->User->find('first',array('conditions'=>array('id'=>$id))));
-
+	$this->set('user_master',$this->User->find('first',array('conditions'=>array('id'=>$id))));
+        
+        //$this->set('branch_master',$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'))));
+        //$this->set('process_manager',$this->User->find('list',array('fields'=>array('email','username'),'conditions'=>array('role'=>array('Process Manager','IT Manager','admin')))));
+	
         $branchName = $this->Session->read('branch_name');
         if($this->Session->read('role')=='admin' && $branchName =="HEAD OFFICE"){
             $BranchArray=$this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'order'=>array('branch_name')));            
@@ -529,13 +532,13 @@ class UsersController extends AppController {
         else{
             $this->set('branchName',array($branchName=>$branchName)); 
         }
-
+        
         $this->set('Department_List',$this->IsparkDepartmentMaster->find('list',array('fields'=>array('Department_Name','Department_Name'))));
         $this->set('Process_List',$this->IsparkProcessMaster->find('list',array('fields'=>array('Process_Name','Process_Name'))));
         $this->set('process_manager',$this->User->find('list',array('fields'=>array('email','username'),'conditions'=>array('role'=>array('Process Manager','IT Manager','admin')))));
-
+    
         if($this->request->is('Post'))
-        {
+	{
             $data = $this->request->data['User'];
             $id = $data['id'];
             $data = Hash::remove($data,'id');
@@ -545,7 +548,7 @@ class UsersController extends AppController {
             {
                 $dataX[$k]="'".$v."'";
             }
-
+            
             if($data['hr_eligible'] =="Yes"){ 
                 isset($data['Access_Type'])&& $data['Access_Type']=="Own"?$dataX['Access_Rights'] = "'".$data['emp_code']."'" :"";
                 isset($data['Access_Type'])&& $data['Access_Type']=="CostCentre"?$dataX['Access_Rights'] = "'".implode(",",$this->request->data['Access_Rights'])."'" :"";
@@ -554,7 +557,7 @@ class UsersController extends AppController {
                 $dataX['Access_Type'] = NULL;
                 $dataX['Access_Rights'] = NULL;
             }
-
+            
             //print_r($dataX); die;
             if($this->User->updateAll($dataX,array('id'=>$id)))
             {
@@ -564,49 +567,49 @@ class UsersController extends AppController {
             unset($data); unset($dataX);
             $this->redirect(array('action'=>'edit_users','?'=>array('id'=>$id)));
         }
-    }
-    public function add_date()
-    {
-            if($this->request->is('POST'))
+	}
+public function add_date()
+{
+        if($this->request->is('POST'))
+        {
+            $data = $this->request->data['User'];
+            $keys = array_keys($data);
+            
+            for($i = 0; $i<count($data); $i++)
             {
-                $data = $this->request->data['User'];
-                $keys = array_keys($data);
-
-                for($i = 0; $i<count($data); $i++)
+                if(!empty($data[$keys[$i]]))
                 {
-                    if(!empty($data[$keys[$i]]))
+                    $keys2 = array_keys($data[$keys[$i]]);
+                
+                    if(!empty($data[$keys[$i]][$keys2[0]]))
                     {
-                        $keys2 = array_keys($data[$keys[$i]]);
-
-                        if(!empty($data[$keys[$i]][$keys2[0]]))
-                        {
-                            $date = date_format(date_create($data[$keys[$i]][$keys2[0]]),'Y-m-d');
-                            $date .= " ".date('H:i:s');
-
-                            $abc = $this->HisAction->saveAll(array('actionType'=>''.$keys2[0],'invoiceId'=>$keys[$i],''.$keys2[0]=>$date,''.$keys2[1]=>$data[$keys[$i]][$keys2[1]],
-                                'userid'=>$this->Session->read('userid'),'createdate'=>date('Y-m-d H:i:s')));
-
-                            $this->InitialInvoice->updateAll(array($keys2[0]=>"'".$date."'",$keys2[1]=>"'".$data[$keys[$i]][$keys2[1]]."'"),array('id'=>$keys[$i]));
-                        }
+                        $date = date_format(date_create($data[$keys[$i]][$keys2[0]]),'Y-m-d');
+                        $date .= " ".date('H:i:s');
+                        
+                        $abc = $this->HisAction->saveAll(array('actionType'=>''.$keys2[0],'invoiceId'=>$keys[$i],''.$keys2[0]=>$date,''.$keys2[1]=>$data[$keys[$i]][$keys2[1]],
+                            'userid'=>$this->Session->read('userid'),'createdate'=>date('Y-m-d H:i:s')));
+                        
+                        $this->InitialInvoice->updateAll(array($keys2[0]=>"'".$date."'",$keys2[1]=>"'".$data[$keys[$i]][$keys2[1]]."'"),array('id'=>$keys[$i]));
                     }
                 }
             }
-            $this->redirect(array('action'=>'view'));
-    }
+        }
+        $this->redirect(array('action'=>'view'));
+}
 
-    public function getMessage()
-    {
-            if($this->request->is('POST'))
-            {
-                $arr = $this->NotificationMaster->find('all',array('fields'=>'id','conditions'=>array('readStatus'=>'0','userid'=>$this->Session->read('userid'))));
-                echo $count = count($arr); 
-            }
-            else
-            {
-               echo 0; 
-            }
-            exit;
-    }
+public function getMessage()
+{
+        if($this->request->is('POST'))
+        {
+            $arr = $this->NotificationMaster->find('all',array('fields'=>'id','conditions'=>array('readStatus'=>'0','userid'=>$this->Session->read('userid'))));
+            echo $count = count($arr); 
+        }
+        else
+        {
+           echo 0; 
+        }
+        exit;
+}
 
 public function getMessageDisplay()
 {
@@ -750,7 +753,7 @@ public function change_password()
     }
 }
 
-public function get_emp(){
+    public function get_emp(){
         $this->layout='ajax';
         if(isset($_REQUEST['EmpCode']) && trim($_REQUEST['EmpCode']) !=""){ 
             $data = $this->Masjclrentry->find('first',array(
@@ -773,7 +776,7 @@ public function get_emp(){
         die;  
     }
     
-public function sendmail($email,$password,$empname){
+    public function sendmail($email,$password,$empname){
         App::uses('sendEmail', 'custom/Email');
         $mail   =   new sendEmail();
         $exp    =   explode(" ", $empname);
@@ -796,8 +799,9 @@ public function sendmail($email,$password,$empname){
         
         $mail->to($email,$EmailText,$Subject);
     }
-        
-public function getcostcenter(){
+    
+    
+    public function getcostcenter(){
         if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
             
             $data = $this->Masjclrentry->find('list',array('fields'=>array('CostCenter','CostCenter'),'conditions'=>array('BranchName'=>$_REQUEST['BranchName']),'group' =>array('CostCenter')));

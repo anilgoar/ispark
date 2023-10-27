@@ -15,7 +15,8 @@ class MailSchedulersController extends AppController
 	{
             $role=$this->Session->read("role");
             $roles=explode(',',$this->Session->read("page_access"));
-            $this->Auth->allow('index','business_dashboard_schedular','salary_schedular','profit_and_loss_schedular','budget_schedular','indirect_expenses_schedular');
+            $this->Auth->allow('index','business_dashboard_schedular','salary_schedular','profit_and_loss_schedular',
+                    'budget_schedular','indirect_expenses_schedular','pending_salary_data_schedular');
             
 	}
     }
@@ -57,6 +58,39 @@ class MailSchedulersController extends AppController
         $this->set('MailSchedular',$NewData);
     }
     
+    public function pending_salary_data_schedular()
+    {
+        $this->layout="home";
+        $BranchArr = $this->Addbranch->find('list',array('fields'=>array('id','branch_name'),'conditions'=>"active=1"));
+        sort($BranchArr);
+        $this->set('BranchArr',(array('All'=>'All') +$BranchArr)); 
+        
+        if($this->request->is('POST'))
+        {
+            $ScheduleData = $this->request->data['Report'];
+            $data = array();
+            foreach($ScheduleData as $mailer)
+            {
+                $mailer['ReportType'] = "PendingSalaryReport";
+                $data[] = $mailer;
+            }
+            
+            $this->MailSchedular->deleteAll(array('ReportType'=>'PendingSalaryReport'));
+            if($this->MailSchedular->saveMany($data))
+            {
+                $this->Session->setFlash("Record Added Successfully");
+            }
+        }
+        
+        $MailScheduler = $this->MailSchedular->find('all',array('conditions'=>"ReportType='PendingSalaryReport'"));
+        
+        foreach($MailScheduler as $mailer)
+        {
+            $NewData[$mailer['MailSchedular']['Branch']] = $mailer['MailSchedular'];
+        }
+        //print_r($NewData); exit;
+        $this->set('MailSchedular',$NewData);
+    }
     
     public function salary_schedular(){
         $this->layout="home";
@@ -94,7 +128,7 @@ class MailSchedulersController extends AppController
     
     public function profit_and_loss_schedular(){
         $this->layout="home";
-        $BranchArr = $this->Addbranch->find('list',array('fields'=>array('id','branch_name'),'conditions'=>"active=1"));
+        $BranchArr = $this->Addbranch->find('list',array('fields'=>array('id','branch_name'),'conditions'=>"pnl_active=1"));
         sort($BranchArr);
         $this->set('BranchArr',(array('All'=>'All') +$BranchArr));
         

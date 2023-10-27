@@ -13,12 +13,12 @@
 			
 			$this->Auth->allow('get_branch','add_eptp_date','get_eptp_track','report_eptp_tracking','collection_tracking_ptp_report'
                 ,'get_coll_eptp_track','collection_tracking_matrix');
-			$this->Auth->deny('get_client');
-			$this->Auth->deny('get_collectionReport');
-			$this->Auth->deny('Other_Deduction');
-			$this->Auth->deny('delete_other_deduction');
-			$this->Auth->deny('get_bill_amount');
-			$this->Auth->deny('back');
+			$this->Auth->allow('get_client');
+			$this->Auth->allow('get_collectionReport');
+			$this->Auth->allow('Other_Deduction');
+			$this->Auth->allow('delete_other_deduction');
+			$this->Auth->allow('get_bill_amount');
+			$this->Auth->allow('back');
                        
                         
                         
@@ -30,7 +30,7 @@
 			{
 				$role=$this->Session->read("role");
 				$roles=explode(',',$this->Session->read("page_access"));
-				if(in_array('24',$roles)){
+				
                                 $this->Auth->allow('get_branch','index');
                                 $this->Auth->allow('get_client');
                                 $this->Auth->allow('get_collectionReport');
@@ -41,7 +41,7 @@
                                 $this->Auth->allow('collectionDetails');
                                 $this->Auth->allow('view_report');
                                 $this->Auth->allow('view_report_performance');
-                                }
+                                
 			}			
 		
                 $this->Auth->allow('report_collection_tracking','get_coll_track','add_eptp_date','get_prov_mnt');
@@ -154,7 +154,7 @@ IF(bill_amount=(net_amount+tds_ded),'paid',IF(`status` LIKE '%paid%','paid','par
 (SELECT bill_no,company_name,branch_name,financial_year,GROUP_CONCAT(bpp.pay_type  ORDER BY id SEPARATOR '#') pay_type,
 GROUP_CONCAT(bpp.pay_no  ORDER BY id SEPARATOR '#') pay_no,GROUP_CONCAT(bpp.bank_name  ORDER BY id SEPARATOR '#') bank_name,
 GROUP_CONCAT(pay_dates  ORDER BY id SEPARATOR '#')pay_dates,GROUP_CONCAT(pay_amount  ORDER BY id SEPARATOR '#') pay_amount,bill_amount,
-bill_passed,SUM(tds_ded) tds_ded,SUM(net_amount) net_amount,SUM(deduction) deduction,GROUP_CONCAT(`status` ORDER BY id) `status`,remarks,
+SUM(bill_passed)bill_passed,SUM(tds_ded) tds_ded,SUM(net_amount) net_amount,SUM(deduction) deduction,GROUP_CONCAT(`status` ORDER BY id) `status`,remarks,
 pay_type_dates FROM `bill_pay_particulars` bpp  GROUP BY bpp.financial_year,bpp.company_name,bpp.branch_name,bpp.bill_no) bill_pay_particulars
 ) bpp 
  ON  bpp.bill_no = SUBSTRING_INDEX(ti.bill_no,'/',1) AND bpp.financial_year = ti.finance_year AND bpp.company_name = cm.company_name AND bpp.branch_name = ti.branch_name
@@ -171,9 +171,26 @@ AND cm.company_name = tab3.company_name
  ORDER BY branch_name ) AS tab
   LEFT JOIN (SELECT CONCAT(pay_type,pay_no,pay_amount) `ChequeNo`,SUM(IF(other_deduction IS NULL OR other_deduction = '',0,other_deduction)) `other_deduction` FROM other_deductions GROUP BY CONCAT(pay_type,pay_no),pay_amount) AS tab2
   ON tab.ChequeNo1 = tab2.ChequeNo $branch $client $date $company order by tab.branch_name");
+    
+    $qry4 = "SELECT * FROM (SELECT bpp.*,ti.client,CONCAT(bpp.pay_type,bpp.pay_no) `ChequeNo`,DATE_FORMAT(bpp.pay_dates,'%b %d %Y') `Dates`,
+        bpp.pay_amount ChequeAmount
+        FROM (
+    SELECT company_name,createdate,branch_name,financial_year,bill_no,SUM(bill_passed) bill_passed,SUM(tds_ded) tds_ded, 
+    GROUP_CONCAT(pay_type)pay_type,GROUP_CONCAT(pay_no)pay_no,GROUP_CONCAT(pay_amount)pay_amount,pay_dates,net_amount 
+    FROM bill_pay_advance tab WHERE 1=1  $date
+     GROUP BY financial_year,company_name, branch_name,bill_no)bpp 
+     LEFT JOIN 
+     cost_master  ti ON bpp.company_name = ti.company_name 
+     AND bpp.branch_name = ti.branch 
+     AND ti.id = bpp.bill_no)tab 
+     $branch $client $date $company"; 
+    $data2 = $this->CollectionParticulars->query($qry4);
+    
+    
                         }
 if($result['report'] == 'bill_wise') {
-    $data = $this->CollectionParticulars->query("SELECT * FROM (SELECT cm.company_name `company_name`,tb.branch_name,tb.bill_no,bpp.bill_passed, bpp.tds_ded,deduction,bpp.net_amount,
+
+$qry = "SELECT * FROM (SELECT cm.company_name `company_name`,tb.branch_name,tb.bill_no,bpp.bill_passed, bpp.tds_ded,deduction,bpp.net_amount,
 CONCAT(pay_type,pay_no) `ChequeNo`,bpp.pay_amount `ChequeAmount`,cm.client `client`,bpp.pay_dates `createdate`,
 DATE_FORMAT(tb.invoiceDate,'%b %d %Y' )`invoiceDate`,
 tab2.other_remarks `other_remarks`,tab2.other_deduction `other_deduction`,tab3.other_deduction_bill `other_deduction_bill`
@@ -184,7 +201,7 @@ IF(bill_amount=(net_amount+tds_ded),'paid',IF(`status` LIKE '%paid%','paid','par
 FROM 
 (SELECT bill_no,company_name,branch_name,financial_year,GROUP_CONCAT(bpp.pay_type  ORDER BY id SEPARATOR '#') pay_type,
 GROUP_CONCAT(bpp.pay_no  ORDER BY id SEPARATOR '#') pay_no,GROUP_CONCAT(bpp.bank_name  ORDER BY id SEPARATOR '#') bank_name,
-GROUP_CONCAT(pay_dates  ORDER BY id SEPARATOR '#')pay_dates,GROUP_CONCAT(pay_amount  ORDER BY id SEPARATOR '#') pay_amount,
+createdate pay_dates,GROUP_CONCAT(pay_amount  ORDER BY id SEPARATOR '#') pay_amount,
 bill_amount,
 bill_passed,SUM(tds_ded) tds_ded,SUM(net_amount) net_amount,SUM(deduction) deduction,GROUP_CONCAT(`status` ORDER BY id) `status`,
 remarks,
@@ -209,13 +226,54 @@ AND tb.branch_name = tab3.branch_name
 AND cm.company_name = tab3.company_name
 
  ORDER BY bpp.branch_name,CONVERT(bpp.bill_no, UNSIGNED INTEGER)) AS tab
- $branch $client $date $company");
+ $branch $client $date $company";
+
+  $qry2 = "SELECT * FROM (SELECT cm.company_name `company_name`,ti.branch_name,ti.bill_no,bpp.bill_no bill_no_bpp,bpp.bill_passed, bpp.tds_ded,
+bpp.net_amount, CONCAT(pay_type,pay_no) `ChequeNo`,bpp.pay_amount `ChequeAmount`,cm.client `client`,bpp.pay_dates
+ `createdate`, DATE_FORMAT(ti.invoiceDate,'%b %d %Y' )`invoiceDate` FROM cost_master cm 
+ INNER JOIN tbl_invoice ti ON ti.cost_center = cm.cost_center 
+ INNER JOIN (
+ SELECT company_name,branch_name,financial_year,bill_no,SUM(bill_passed) bill_passed,SUM(tds_ded) tds_ded,
+ GROUP_CONCAT(pay_type)pay_type,GROUP_CONCAT(pay_no)pay_no,GROUP_CONCAT(pay_amount)pay_amount,pay_dates,net_amount FROM 
+ bill_pay_particulars tab where 1=1 $date GROUP BY financial_year,company_name,
+ branch_name,bill_no ) 
+ bpp ON bpp.company_name = cm.company_name AND bpp.branch_name = cm.branch
+  AND bpp.financial_year = ti.finance_year AND SUBSTRING_INDEX(ti.bill_no,'/','1') = bpp.bill_no 
+   )tab $branch $client $date $company";  
+
+    $qry3 = "SELECT * FROM (SELECT bpp.*,ti.client FROM (
+    SELECT company_name,createdate,branch_name,financial_year,bill_no,SUM(bill_passed) bill_passed,SUM(tds_ded) tds_ded, 
+    GROUP_CONCAT(pay_type)pay_type,GROUP_CONCAT(pay_no)pay_no,GROUP_CONCAT(pay_amount)pay_amount,pay_dates,net_amount 
+    FROM bill_pay_particulars tab WHERE 1=1  $date
+     GROUP BY financial_year,company_name, branch_name,bill_no)bpp LEFT JOIN 
+     ( SELECT ti.bill_no,ti.finance_year,cm.* FROM tbl_invoice ti 
+     INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center) ti ON bpp.company_name = ti.company_name 
+     AND bpp.branch_name = ti.branch AND bpp.financial_year = ti.finance_year 
+     AND SUBSTRING_INDEX(ti.bill_no,'/','1') = bpp.bill_no)tab 
+     $branch $client $date $company"; 
+
+    
+    $qry4 = "SELECT * FROM (SELECT bpp.*,ti.client FROM (
+    SELECT company_name,createdate,branch_name,financial_year,bill_no,SUM(bill_passed) bill_passed,SUM(tds_ded) tds_ded, 
+    GROUP_CONCAT(pay_type)pay_type,GROUP_CONCAT(pay_no)pay_no,GROUP_CONCAT(pay_amount)pay_amount,pay_dates,net_amount 
+    FROM bill_pay_advance tab WHERE 1=1  $date
+     GROUP BY financial_year,company_name, branch_name,bill_no)bpp 
+     LEFT JOIN 
+     cost_master  ti ON bpp.company_name = ti.company_name 
+     AND bpp.branch_name = ti.branch 
+     AND ti.id = bpp.bill_no)tab 
+     $branch $client $date $company"; 
+    
+    $data = $this->CollectionParticulars->query($qry3);
+    $data2 = $this->CollectionParticulars->query($qry4);
+    
                         }                        
                         
-                        $this->set('report',$result['report']);
+            $this->set('report',$result['report']);
 			$this->set("result",$data);
+                        $this->set("result2",$data2);
 			$this->set("type",$result['type']);
-                        $this->set('query',$result);
+            $this->set('query',$result);
 }
 
 public function collectionDetails()
@@ -397,7 +455,7 @@ IF(cm.grn='Yes' AND (ti.approve_grn = '' OR ti.approve_grn IS NULL),'GRN Pending
 FROM tbl_invoice ti 
 INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
 INNER JOIN branch_master bm ON ti.branch_name = bm.branch_name and bm.active='1'
-WHERE `status`='0' and ti.bill_no!='' and ti.grnd!=0 and ti.grnd!=1 and ti.finance_year in ('2016-17','2017-18','2018-19','2019-20','2020-21')  $companyName4    $branchName3
+WHERE `status`='0' and ti.bill_no!='' and ti.grnd!=0 and ti.grnd!=1 and ti.finance_year in ('2016-17','2017-18','2018-19','2019-20','2020-21','2021-22')  $companyName4    $branchName3
   group by ti.id ";
             $data_invoice = $this->InitialInvoice->query($query_invoice);
             //print_r($data_invoice); exit;
@@ -2794,7 +2852,7 @@ pay_type_dates FROM `bill_pay_particulars` bpp  GROUP BY bpp.financial_year,bpp.
     {
         $this->layout='home';
         $branch_master = $this->Addbranch->find('list',array('fields' =>array('branch_name','branch_name'),'conditions'=>"active='1'",'order'=>array('branch_name'=>'asc')));
-        $finance_year = $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2019-20','2020-21'),'active'=>'1')));
+        $finance_year = $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2019-20','2020-21','2021-22'),'active'=>'1')));
         $branch_master = array('All'=>'All')+$branch_master;
         $this->set('branch_master',$branch_master);
         $this->set('finance_year',$finance_year);
@@ -3010,7 +3068,7 @@ pay_type_dates FROM `bill_pay_particulars` bpp  GROUP BY bpp.financial_year,bpp.
         $conditions = array('active'=>'1') ;
         $branch = $this->Addbranch->find('list',array('fields'=>array('branch_name','branch_name'),'conditions'=>$conditions));
         $this->set('branch_master',$branch);
-        $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2019-20','2020-21'),'active'=>'1'))));
+        $this->set('finance_yearNew', $this->BillMaster->find('list',array('fields'=>array('finance_year','finance_year'),'conditions'=>array('finance_year'=>array('2019-20','2020-21','2021-22'),'active'=>'1'))));
         
         if($this->request->is('POST'))
         {
