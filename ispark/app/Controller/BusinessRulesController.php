@@ -944,7 +944,8 @@ class BusinessRulesController extends AppController {
             $departmentNames = [];
             $ticketCounts = [];
 
-            foreach($tic_dep_arr as $ticket) {
+            foreach($tic_dep_arr as $ticket)
+            {
                 
                 $departmentNames[] = $ticket['business_tickets']['department'];
                 $ticketCounts[] = $ticket[0]['ticket_count'];
