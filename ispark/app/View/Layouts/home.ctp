@@ -271,6 +271,7 @@ $page_access=explode(',',$this->Session->read("page_access"));
                                     '183'=>'Employee Transition Manager',
 									 //'195'=>'2GTHR@MAS',
 									 '195'=>'2GTHR@MAS',
+									 '203'=>'Pli System',
                                 );
 
 								//print_r($parrent_level);die;

@@ -1,10 +1,10 @@
 <?php
 class PliSystemsController extends AppController {
-    public $uses = array('AccessPages','CostCenterMaster','Addbranch','BusinessTickets','User','DepartmentNameMaster','BusinessCommunity','BusinessGratitude','Masjclrentry','EmpOnService','OnboardLeaveAlert','PliRule','CustomerChat');
+    public $uses = array('AccessPages','CostCenterMaster','Addbranch','BusinessTickets','User','DepartmentNameMaster','PliWeitage','Masjclrentry','EmpOnService','OnboardLeaveAlert','PliRule','CustomerChat');
         
     public function beforeFilter(){
         parent::beforeFilter(); 
-        $this->Auth->allow('index','getempname','delete_rule','rule','create_weitage','apply_rule','update_rule','getcostcenter');
+        $this->Auth->allow('index','getempname','delete_rule','rule','create_weitage','create_achivement','apply_rule','update_rule','getcostcenter','get_weitage');
         if(!$this->Session->check("username")){
             return $this->redirect(array('controller'=>'users','action' => 'login'));
         }
@@ -143,7 +143,6 @@ class PliSystemsController extends AppController {
     public function create_weitage(){
         $this->layout='home';
         
-
         $userid = $this->Session->read("userid");
 
         $per_options = [];
@@ -156,51 +155,122 @@ class PliSystemsController extends AppController {
         $curYear = date('Y');
         $this->set('curYear',$curYear);
 
-        // $plirule_arr = $this->PliRule->find("all");
+        $users = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE STATUS='1'  ORDER BY EmpName ");
+        $this->set('users', $users);
 
-        // $this->set('plirule_arr',$plirule_arr);
-        print_r($this->request->data);die;
-        if($this->request->is('Post')){
+        if($this->request->is('post')){
             
             if(!empty($this->request->data))
             {  
                 
                 $data = $this->request->data;
-
-                $y   =   date('Y',strtotime($data['month']));
-                $m   =   date('m',strtotime($data['month']));
+                $obj = json_decode($data,true);
 
                 $dataArr = array();
-                foreach($data as $d=>$k)
+                foreach($obj as $key)
                 {
-                    $option[] = $d;
-                    $dataArr[$d] = addslashes($k);
+                    $exist_weitage = $this->PliWeitage->find('first',array('conditions'=>array('user_id'=>$key['user'],'year'=>date('Y', strtotime($key['month'])),'month'=>date('m', strtotime($key['month'])))));
+                    if($exist_weitage)
+                    {
+                        $data = array();
+
+                    }else{
+
+                        $data = array(
+                            'year' => date('Y', strtotime($key['month'])),
+                            'month' => date('m', strtotime($key['month'])),
+                            'account_approval'=> $key['account_approval'],
+                            'user_id' => $key['user'],
+                            'type' => $key['type'],
+                            'particular' => addslashes($key['particular']),
+                            'weitage' => $key['weitage'],
+                            'created_at' => date('Y-m-d H:i:s'),
+                        );
+
+                    }
+                    
+                    $dataArr[] = $data;
                 }
-                print_r($dataArr);die;
+                #print_r($dataArr);die;
 
-                $account_approval = $data['account_approval'];
-                $growth_date = $data['growth_date'];
-                $basic_date = $data['basic_date'];
-                $deduction = $data['deduction'];
-                
-                
-
-                $exist_rule = $this->PliRule->find('first',array('conditions'=>array('status'=>1)));
-                if($exist_rule)
+                $save = $this->PliWeitage->saveMany($dataArr);
+                if($save)
                 {
-                    $data['status'] = 0;
+                    echo "Weitage Add Succesfully";
+                }else{
+                    echo "Weitage Already Add this Month";
+                }die;
+                #$this->Session->setFlash('Weitage Added Successfully');
+            
+
+            }
+
+        }     
+    }
+
+
+    public function create_achivement(){
+        $this->layout='home';
+        
+        $userid = $this->Session->read("userid");
+
+        $per_options = [];
+        for ($i = 1; $i <= 100; $i++) {
+            $per_options[$i] = $i." %";
+        }
+
+        $this->set('per_options',$per_options);
+
+        $curYear = date('Y');
+        $this->set('curYear',$curYear);
+
+        $users = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE STATUS='1'  ORDER BY EmpName ");
+        $this->set('users', $users);
+
+        if($this->request->is('post')){
+            
+            if(!empty($this->request->data))
+            {  
+                
+                $data = $this->request->data;
+                $obj = json_decode($data,true);
+
+                $dataArr = array();
+                foreach($obj as $key)
+                {
+                    $exist_weitage = $this->PliWeitage->find('first',array('conditions'=>array('user_id'=>$key['user'],'year'=>date('Y', strtotime($key['month'])),'month'=>date('m', strtotime($key['month'])))));
+                    if($exist_weitage)
+                    {
+                        $data = array();
+
+                    }else{
+
+                        $data = array(
+                            'year' => date('Y', strtotime($key['month'])),
+                            'month' => date('m', strtotime($key['month'])),
+                            'account_approval'=> $key['account_approval'],
+                            'user_id' => $key['user'],
+                            'type' => $key['type'],
+                            'particular' => addslashes($key['particular']),
+                            'weitage' => $key['weitage'],
+                            'created_at' => date('Y-m-d H:i:s'),
+                        );
+
+                    }
+                    
+                    $dataArr[] = $data;
                 }
-                
-                $data['target_date'] = $target_date;
-                $data['growth_date'] = $growth_date;
-                $data['basic_date'] = $basic_date;
-                $data['deduction'] = $deduction;
-                $data['created_at'] = date('Y-m-d H:i:s');
-                #print_r($data);die;
-                $this->PliRule->save($data);
-                $this->Session->setFlash('Rule Added Successfully');
-                $this->redirect(array('controller'=>'PliSystems','action'=>'rule'));
-                
+                #print_r($dataArr);die;
+
+                $save = $this->PliWeitage->saveMany($dataArr);
+                if($save)
+                {
+                    echo "Weitage Add Succesfully";
+                }else{
+                    echo "Weitage Already Add this Month";
+                }die;
+                #$this->Session->setFlash('Weitage Added Successfully');
+            
 
             }
 
@@ -209,51 +279,68 @@ class PliSystemsController extends AppController {
 
 
 
-    public function getempname(){
-        if(isset($_REQUEST['BranchName']) && $_REQUEST['BranchName'] !=""){
-            
-            //$conditoin=array('Status'=>1);
-            $branch = '';
-            if($_REQUEST['BranchName'] !="ALL"){
-                $conditoin['BranchName']=$_REQUEST['BranchName'];
-                $branch = $_REQUEST['BranchName'];
-            }else{
-                unset($conditoin['BranchName']);
-            }
+    public function get_weitage(){
+        $this->layout='ajax';
+        if(isset($_REQUEST['EmpCode']) && trim($_REQUEST['EmpCode']) !=""){
+            $Month = $_REQUEST['Month'];
 
-            $department = $_REQUEST['department'];
+            $year = date('Y', strtotime($_REQUEST['Month']));
+            $month = date('m', strtotime($_REQUEST['Month']));
 
-            $conditoin['status'] = '1';
+            $EmpCode = $_REQUEST['EmpCode'];
             
-            $data = $this->Masjclrentry->find("list",array('fields'=>array('EmpCode','EmpName'),"conditions"=>$conditoin,'order'=>array('EmpName')));
-            #print_r($data);die;
-            
-            $RolArr=array();
-            $prArr = $this->BusinessRule->find('first',array('fields'=>array('emp_rights'),'conditions'=>array('branch'=>$branch,'department'=>$department)));
-            if(!empty($prArr)){
-                $RolArr= explode(',', $prArr['BusinessRule']['emp_rights']);
-            }
-            
+            $data = $this->PliWeitage->find('all',array('conditions'=>array('user_id'=>$EmpCode,'year'=>$year,'month'=>$month))); 
             if(!empty($data)){
-                foreach($data as $emp_code => $row){
+  
+            ?>
 
-                    if (in_array($emp_code, $RolArr)){
-                        echo "<input class='checkbox1' type='checkbox' value='$emp_code' name='Empname[]' checked > $row <br/>";
-                    }
-                    else{
-                         echo "<input class='checkbox1' type='checkbox' value='$emp_code' name='Empname[]' > $row <br/>";
-                    }
-                }
+
+            <div class="box">
+                <div class="box-content" style="background-color:#ffffff; border:1px solid #436e90;">
+                    <h4 class="page-header" style="border-bottom: 1px double #436e90;margin: 0 0 10px;">Achievment Entry</h4>
+                        <table class = "table table-striped table-bordered table-hover table-heading no-border-bottom" >
+                        <div id="errorDiv" style="color: red;"></div>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Type</th>
+                            <th>Particular</th>
+                            <th>Weitage(%)</th>
+                            <th>Achivement</th>
+                            <th>Score</th>
+                        </tr>
+                        <?php $i = 1; foreach($data as $key) { ?>
+                            <tr>
+                                <td><?php echo $i; ?></td>
+                                <td><?php echo $key['PliWeitage']['type']; ?></td>
+                                <td><?php echo $key['PliWeitage']['particular']; ?></td>
+                                <td><?php echo $key['PliWeitage']['weitage']; ?> %</td>
+                                <td><input type="text" name="achivement" id="achivement" class="form-control" placeholder="Achivement" onkeypress="return isNumberKey(event,this)" oninput="total_pli_score(this.value,'<?php echo $key['PliWeitage']['weitage']; ?>','<?php echo $i; ?>')" maxlength='3'></td>
+                                <td><span id="score<?php echo $i; ?>"></span></td>
+                            </tr>
+                        <?php $i++;} ?>
+                        
+                        </table>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"></label>
+                            <div class="col-sm-2">
+                                <input type="button" value="Save" name="Save" onclick="save_validate_data()" class="btn btn-primary pull-right" />
+                            </div>
+                        </div>
+                        
+                </div>
+            </div>
+            
+            <?php
+ 
             }
             else{
                 echo "";
-            }
-            
-            
-        }die;
-        
-        
+            }   
+        }
+        die;  
     }
+
+
 
     public function delete_rule()
     {
@@ -269,40 +356,6 @@ class PliSystemsController extends AppController {
 
     }
 
-
-
-    public function close_ticket(){
-        
-        if(isset($_REQUEST['close_id']) && $_REQUEST['close_id'])
-        {
-
-            $tic_id = $_REQUEST['close_id'];
-            $remarks = $_REQUEST['remarks'];
-
-            $User_Id        =   $this->Session->read('userid');
-
-            $dataArr=array(
-
-                'ticket_close_by'=>"'".$User_Id."'",
-                'ticket_close_at'=>"'".date('Y-m-d H:i:s')."'",
-                'ticket_status'=>"'0'",
-                'close_remarks'=>"'".$remarks."'"
-            );
-
-            #print_r($dataArr);die;
-
-            $save = $this->BusinessTickets->updateAll($dataArr,array('id'=>$tic_id));
-            if($save)
-            {
-                echo "1";
-            }else{
-                echo "0";
-            }die;
-
-            
-        }
-
-    }
 
     public function apply_rule(){
 
