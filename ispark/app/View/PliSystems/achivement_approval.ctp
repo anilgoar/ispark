@@ -8,7 +8,7 @@ echo $this->Html->script('jquery-ui');
     var user=$("#selected_user").val();
 
     
-    $.post("<?php echo $this->webroot;?>PliSystems/get_weitage_achievment",{'EmpCode':user,'Month':month,'Approval':'0'}, function(data) {
+    $.post("<?php echo $this->webroot;?>PliSystems/get_weitage_achievment",{'EmpCode':user,'Month':month,'Approval':'1'}, function(data) {
         if(data !=""){
             $("#weitage_table").show();
             $("#weitage_table").html(data);
@@ -57,14 +57,13 @@ function total_pli_score(achivement,weitage,div)
     const percentageText = calculatePercentage(achivement, weitage);
     $("#score"+div).val(percentageText);
 
-
-
     var totalScore = calculateTotalScore();
     const existingText = "Score:";
     const colorTotalWeitage = `<span style="color: green;">Total = ${totalScore}%</span>`;
     const totalText = `${existingText} ${colorTotalWeitage}`;
     $("#total_score").html(totalText);
 }
+
 
 function calculateTotalScore() {
     var totalScore = 0;
@@ -118,7 +117,7 @@ function findMaxScoreElement() {
         <div class="box">
             <div class="box-header">
                 <div class="box-name">
-                    <span>Achievement</span>
+                    <span>Achievement Approval</span>
 		        </div>
             <div class="box-icons">
                 <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -133,47 +132,47 @@ function findMaxScoreElement() {
                 
 
                 <div class="form-group">
-                    <div class="col-sm-3">
-                        <label>User</label>
-                        <select id="selected_user" name="selected_user" class="form-control">
-                            <option value='none'>Select</option>
-                        <?php 
-                            foreach($users as $key => $user){
-                                echo "<option value='".$user['masjclrentry']['EmpCode']."'>".$user['masjclrentry']['EmpName']."</option>";
-                            }
-                        ?>
+                  <div class="col-sm-3">
+                    <label>User</label>
+                    <select id="selected_user" name="selected_user" class="form-control">
+                        <option value='none'>Select</option>
+                    <?php 
+                        foreach($users as $key => $user){
+                            echo "<option value='".$user['masjclrentry']['EmpCode']."'>".$user['masjclrentry']['EmpName']."</option>";
+                        }
+                    ?>
 
+                    </select>
+                  </div>
+
+                  <div class="col-sm-3">
+                        <label>Month</label>
+                        <select name="month" id="month" class="form-control" required="" onchange="getWeitage(this.value);">
+                            <option value="">Month</option>
+                            <?php
+                                    $TcurMonth = date('M');
+                                    if($TcurMonth=='Jan')
+                                    {?>
+                                        <option value="Dec-<?php echo $curYear-1; ?>">Dec-<?php echo $curYear-1;?></option>
+                                    <?php }
+                            ?>
+                            <option value="Jan-<?php echo $curYear; ?>">Jan</option>
+                            <option value="Feb-<?php echo $curYear; ?>">Feb</option>
+                            <option value="Mar-<?php echo $curYear; ?>">Mar</option>
+                            <option value="Apr-<?php echo $curYear; ?>">Apr</option>
+                            <option value="May-<?php echo $curYear; ?>">May</option>
+                            <option value="Jun-<?php echo $curYear; ?>">Jun</option>
+                            <option value="Jul-<?php echo $curYear; ?>">Jul</option>
+                            <option value="Aug-<?php echo $curYear; ?>">Aug</option>
+                            <option value="Sep-<?php echo $curYear; ?>">Sep</option>
+                            <option value="Oct-<?php echo $curYear; ?>">Oct</option>
+                            <option value="Nov-<?php echo $curYear; ?>">Nov</option>
+                            <option value="Dec-<?php echo $curYear; ?>">Dec</option>
                         </select>
-                    </div>
-
-                    <div class="col-sm-3">
-                            <label>Month</label>
-                            <select name="month" id="month" class="form-control" required="" onchange="getWeitage(this.value);">
-                                <option value="">Month</option>
-                                <?php
-                                        $TcurMonth = date('M');
-                                        if($TcurMonth=='Jan')
-                                        {?>
-                                            <option value="Dec-<?php echo $curYear-1; ?>">Dec-<?php echo $curYear-1;?></option>
-                                        <?php }
-                                ?>
-                                <option value="Jan-<?php echo $curYear; ?>">Jan</option>
-                                <option value="Feb-<?php echo $curYear; ?>">Feb</option>
-                                <option value="Mar-<?php echo $curYear; ?>">Mar</option>
-                                <option value="Apr-<?php echo $curYear; ?>">Apr</option>
-                                <option value="May-<?php echo $curYear; ?>">May</option>
-                                <option value="Jun-<?php echo $curYear; ?>">Jun</option>
-                                <option value="Jul-<?php echo $curYear; ?>">Jul</option>
-                                <option value="Aug-<?php echo $curYear; ?>">Aug</option>
-                                <option value="Sep-<?php echo $curYear; ?>">Sep</option>
-                                <option value="Oct-<?php echo $curYear; ?>">Oct</option>
-                                <option value="Nov-<?php echo $curYear; ?>">Nov</option>
-                                <option value="Dec-<?php echo $curYear; ?>">Dec</option>
-                            </select>
-                    </div>
-                    <div class="col-sm-1" style="margin-top:10px;">
-                        <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
-                    </div>
+                  </div>
+                  <div class="col-sm-1" style="margin-top:10px;">
+                    <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
+                  </div>
        
                 </div>
             </div>
@@ -241,7 +240,7 @@ function findMaxScoreElement() {
         
 
       }
-      console.log(data);
+      //console.log(data);
 
       const jsonData = JSON.stringify(data);
       console.log(jsonData);
@@ -256,6 +255,32 @@ function findMaxScoreElement() {
       });
 
    }
+
+    function approve_data()
+    {
+        const table = document.getElementById('achivement_table');
+        const rowCount = table.rows.length;
+        const data = [];
+
+        for (let i = 1; i < rowCount; i++) 
+        { 
+            const approval_data = $(`input[name="approve_id${i}"]`).val();
+
+            data.push({ approval_data });
+        
+        }
+
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData);
+        $.post("achivement_approval",{
+                data: jsonData 
+        },
+        function(result)
+        {
+            alert(result);
+            location.reload();
+        });
+    }
 </script>
 
 

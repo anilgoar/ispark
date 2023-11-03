@@ -251,6 +251,7 @@ function showchat(id)
                             <th style="text-align: center;">Contact No</th>
                             <th style="text-align: center;">To</th>
                             <th style="text-align: center;">Cc</th>
+                            <th style="text-align: center;">Create Date</th>
                         
                             <th style="text-align: center;">Action</th>
                         </tr>
@@ -270,6 +271,7 @@ function showchat(id)
                             <td style="text-align: center;"><?php echo $val['BusinessTickets']['contact_no'];?></td>
                             <td style="text-align: center;"><?php echo $val['BusinessTickets']['to'];?></td>
                             <td style="text-align: center;"><?php echo $val['BusinessTickets']['cc'];?></td>
+                            <td><?php echo date_format(date_create($val['BusinessTickets']['created_at']),"d-M-Y");?></td>
                             <td style="text-align: center;" id="status_<?php echo $val['BusinessTickets']['id']; ?>">
                             <?php if($val['BusinessTickets']['ticket_status'] == '1'  && ($val['BusinessTickets']['case_status'] == 'open' || $val['BusinessTickets']['case_status'] == 're-open')){?>
                                

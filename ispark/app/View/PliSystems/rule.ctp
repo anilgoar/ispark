@@ -12,8 +12,10 @@ function SubmitForm()
     $("#msgerr").remove();
 
     var target_date       = $("#target_date").val();
-    var growth_date       = $("#growth_date").val();
-    var basic_date       = $("#basic_date").val();
+    var growth_close_date       = $("#growth_close_date").val();
+    var growth_approval_date       = $("#growth_approval_date").val();
+    var basic_close_date       = $("#basic_close_date").val();
+    var basic_approval_date       = $("#basic_approval_date").val();
     var deduction       = $("#deduction").val();
     
 
@@ -22,14 +24,24 @@ function SubmitForm()
         $("#target_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Target Date.</span>");
         return false;
     }
-    else if(growth_date ===""){
-        $("#growth_date").focus();
-        $("#growth_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Growth Date.</span>");
+    else if(growth_close_date ===""){
+        $("#growth_close_date").focus();
+        $("#growth_close_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Growth close Date.</span>");
         return false;
     }
-    else if(basic_date ===""){
-        $("#basic_date").focus();
-        $("#basic_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Basic Date.</span>");
+    else if(basic_close_date ===""){
+        $("#basic_close_date").focus();
+        $("#basic_close_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Basic close Date.</span>");
+        return false;
+    }
+    else if(growth_approval_date ===""){
+        $("#growth_approval_date").focus();
+        $("#growth_approval_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Growth approval Date.</span>");
+        return false;
+    }
+    else if(basic_approval_date ===""){
+        $("#basic_approval_date").focus();
+        $("#basic_approval_date").after("<span id='msgerr' style='color:red;font-size:11px;'>Please Select Basic approval Date.</span>");
         return false;
     }
     else if(deduction ===""){
@@ -109,24 +121,34 @@ function Ruleaction(Id,Action)
                     </div>
                    
 
-                    <label class="col-sm-1 control-label">Growth</label>
+                    <label class="col-sm-2 control-label">Growth Close Date</label>
                     <div class="col-sm-2">
-                        <?php echo $this->Form->input('growth_date',array('label' => false,'empty'=>'Select','options'=>$options,'class'=>'form-control','id'=>'growth_date','required'=>true)); ?>
+                        <?php echo $this->Form->input('growth_close_date',array('label' => false,'empty'=>'Select','options'=>$options,'class'=>'form-control','id'=>'growth_close_date','required'=>true)); ?>
                     </div>
 
-                    <label class="col-sm-1 control-label">Basic</label>
+                    <label class="col-sm-2 control-label">Growth Approval Date</label>
                     <div class="col-sm-2">
-                        <?php echo $this->Form->input('basic_date',array('label' => false,'empty'=>'Select','options'=>$options,'class'=>'form-control','id'=>'basic_date','required'=>true)); ?>
+                        <?php echo $this->Form->input('growth_approval_date',array('label' => false,'empty'=>'Select','options'=>$options,'class'=>'form-control','id'=>'growth_approval_date','required'=>true)); ?>
                     </div>
 
-                    <label class="col-sm-1 control-label">Deduction(%)</label>
+                </div> 
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Basic Close Date</label>
+                    <div class="col-sm-2">
+                        <?php echo $this->Form->input('basic_close_date',array('label' => false,'empty'=>'Select','options'=>$options,'class'=>'form-control','id'=>'basic_close_date','required'=>true)); ?>
+                    </div>
+                    <label class="col-sm-2 control-label">Basic Approval Date</label>
+                    <div class="col-sm-2">
+                        <?php echo $this->Form->input('basic_approval_date',array('label' => false,'empty'=>'Select','options'=>$options,'class'=>'form-control','id'=>'basic_approval_date','required'=>true)); ?>
+                    </div>
+                    <label class="col-sm-2 control-label">Deduction(%)</label>
                     <div class="col-sm-2">
                         <?php echo $this->Form->input('deduction',array('label' => false,'class'=>'form-control','empty'=>'Select Deduction','options'=>$per_options,'id'=>'deduction','required'=>true)); ?>
                         <p><strong>Note:</strong> If achievement are not close by the reporting head.</p>
                     </div>
-                    <h5 style="margin-left:28px;"><strong>Description:</strong> For instance, if you set the target date as November 23, it means you aim to accomplish the goal by October 23rd.</h5>
-
-                </div> 
+                    
+                </div>
+                <h5 style="margin-left:28px;"><strong>Description:</strong> For instance, if you set the target date as November 23, it means you aim to accomplish the goal by October 23rd.</h5>
                 <div class="form-group">
                     <div class="col-sm-1">
                         <input type="button" onclick="SubmitForm();" value="Submit" class="btn pull-right btn-primary btn-new" style="margin-left:5px;">
@@ -142,8 +164,10 @@ function Ruleaction(Id,Action)
                             <tr>
                                 <th>SNo</th>
                                 <th>Target Date</th>
-                                <th>Growth</th>
-                                <th>Basic</th>
+                                <th>Growth Close Date</th>
+                                <th>Growth Approval Date</th>
+                                <th>Basic Close Date</th>
+                                <th>Basic Approval Date</th>
                                 <th>Deduction</th>
                                 <!-- <th>Status</th> -->
                                 <th>Create Date</th>
@@ -156,11 +180,13 @@ function Ruleaction(Id,Action)
                             <tr>
                                 <td><?php echo $n++;?></td>
                                 <td><?php echo $data['PliRule']['target_date'];?></td>
-                                <td><?php echo $data['PliRule']['growth_date'];?></td>
-                                <td><?php echo $data['PliRule']['basic_date'];?></td>
+                                <td><?php echo $data['PliRule']['growth_close_date'];?></td>
+                                <td><?php echo $data['PliRule']['growth_approval_date'];?></td>
+                                <td><?php echo $data['PliRule']['basic_close_date'];?></td>
+                                <td><?php echo $data['PliRule']['basic_approval_date'];?></td>
                                 <td><?php echo $data['PliRule']['deduction'];?></td>
                                 <!-- <td><?php// if($data['PliRule']['status'] == '1'){ echo "Applied" ; }else { echo "Not Apply" ;} ?></td> -->
-                                <td><?php echo date_format(date_create($data['deduction']['created_at']),"d-M-Y");?></td>
+                                <td><?php echo date_format(date_create($data['PliRule']['created_at']),"d-M-Y");?></td>
                                 <td style="text-align: center;">
                                 <?php if($data['PliRule']['status'] == '1'){ ?>
                                     <!-- <i title="Delete" onclick="Ruleaction('<?php //echo $data['PliRule']['id'];?>');" style="font-size:20px;cursor: pointer;" class="material-icons">delete_forever</i> -->

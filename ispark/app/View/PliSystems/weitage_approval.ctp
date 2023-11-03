@@ -55,7 +55,7 @@ echo $this->Html->script('jquery-ui');
       var user=$("#selected_user").val();
 
       
-      $.post("<?php echo $this->webroot;?>PliSystems/view_weitage",{'EmpCode':user,'Month':month,'Approval':'0'}, function(data) {
+      $.post("<?php echo $this->webroot;?>PliSystems/view_weitage",{'EmpCode':user,'Month':month,'Approval':'1'}, function(data) {
           if(data !=""){
               $("#weitage_table").show();
               $("#weitage_table").html(data);
@@ -147,15 +147,7 @@ echo $this->Html->script('jquery-ui');
                               </select>
                         </div>
                               
-                        <div class="col-sm-4">      
-                          <label>Is Account Approval Require :</label><br>
-                          <label>Yes</label>
-                          <input type="radio" id="account_approval" name="account_approval"  value="Yes" required>
-                          <label>No</label>
-                          <input type="radio" id="account_approval" name="account_approval"  value="No" required>
-                        </div>
-                        <div class="col-sm-1">
-                          <label></label>
+                        <div class="col-sm-1" style="margin-top:10px;">
                           <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
                         </div>
                                 
@@ -164,64 +156,6 @@ echo $this->Html->script('jquery-ui');
         </div>
     </div>	
 </div>
-
-
-<div class="row">
-    <div class="col-xs-12 col-sm-12" id="entry_weitage">
-        <div class="box">
-            <div class="box-content" style="background-color:#ffffff; border:1px solid #436e90;">
-		        <h4 class="page-header" style="border-bottom: 1px double #436e90;margin: 0 0 10px;">Weitage Entry</h4>
-                    <table class = "table table-striped table-bordered table-hover table-heading no-border-bottom" id="newRow">
-                    <div id="errorDiv" style="color: red;"></div>
-                      <tr>
-                          <th>Sr. No.</th>
-                          <th>Type</th>
-                          <th>Particular</th>
-                          <th id="tot_weitage">Percentage(%)</th>
-                          <th>Action</th>
-                      </tr>
-                      <tr>
-                        <th>1</th>
-                        <th>
-                            <label>Basic</label>
-                            <input type="radio" id="type1" name="type1"  value="Basic">
-                            <label>Growth</label>
-                            <input type="radio" id="type1" name="type1"  value="Growth">
-                        </th>
-                        <th>
-                        <input type="text" name="particular1" class="form-control" id="particular1" placeholder="Particular 1" required>
-                        </th>
-                        <th>
-                          <?php //echo $this->Form->input('percentage1',array('label' => false,'empty'=>'Select','options'=>$per_options,'class'=>'form-control','id'=>'percentage','required'=>true)); ?>
-                          <select name="weitage1" class="form-control" id="weitage1" required="required" onchange="getWeitageTotal(this.value);">
-                            <option value="">Select</option>
-                            <?php foreach ($per_options as $key => $value) {?>
-                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                            <?php }?>
-
-                          </select>
-                        </th>
-                        
-                        <th>
-                          <!-- <button onclick="return add_cost_value_grn()"> ADD</button> -->
-                          <a href="javascript:void(0);" id="addRow" title="Add field" class="btn pull-left btn-light"> Add <i class="fa fa-plus"></i></a>
-                        </th>
-                      </tr>
-                      
-                    </table>
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label"></label>
-                        <div class="col-sm-2">
-                            <input type="button" value="Save" name="Save" onclick="save_validate_data()"  class="btn btn-primary pull-right"  />
-                        </div>
-                        
-                    </div>
-                    
-              </div>
-        </div>
-    </div>	
-</div>
-
 
 <div class="row">
     <div class="col-xs-12 col-sm-12" id="weitage_table">
@@ -264,7 +198,10 @@ echo $this->Html->script('jquery-ui');
       html += '<th><i title="Delete" id="removeRow" type="button"  style="font-size:22px;cursor: pointer;color:red;" class="material-icons">delete_forever</i></th>';
       html += '</tr>';
 
-      $('#newRow').append(html);
+      
+
+   
+       $('#newRow').append(html);
 
        
    });
@@ -274,93 +211,6 @@ echo $this->Html->script('jquery-ui');
        $(this).closest('#inputFormRow').remove();
    });
 
-
-   function save_validate_data()
-   {
-      const table = document.getElementById('newRow');
-      const rowCount = table.rows.length;
-      const data = [];
-
-      $("#msgerr").remove();
-
-      var user=$("#selected_user").val();
-      var month=$("#month").val();
-      var account_approval=$("#account_approval:checked").val();
-      
-      if(user == 'none'){
-     
-        $("#selected_user").focus();
-        $("#selected_user").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select user.</span>");
-        return false;
-      }
-      else if(month ===""){
-        $("#month").focus();
-        $("#month").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select month.</span>");
-        return false;
-      }else if(!account_approval)
-      {
-        $("#account_approval").focus();
-        $("#account_approval").after("<span id='msgerr' style='color:red;font-size:11px;'>Approval is rquire or not.</span>");
-        return false;
-      }
-      let totalWeitage = 0;
-
-      for (let i = 1; i < rowCount; i++) 
-      { 
-        const type = $(`input[name="type${i}"]:checked`).val();
-        const particular = $(`input[name="particular${i}"]`).val();
-        const weitage = $(`select[name="weitage${i}"]`).val();
-        const weitageValue = parseFloat(weitage);
-
-        totalWeitage += weitageValue;
-        if (!type){
-       
-          $("#type" + i).focus();
-          $("#type" + i).after("<span id='msgerr' style='color:red;font-size:11px;'>Please select type.</span>");
-
-          return false;
-
-        }else if(!particular){
-
-          $(`input[name="particular${i}"]`).focus();
-          $(`input[name="particular${i}"]`).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Particular.</span>");
-          return false;
-
-        }else if(weitage === '') {
-
-          $(`select[name="weitage${i}"]`).focus();
-          $(`select[name="weitage${i}"]`).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Weitage.</span>");
-          return false;
-        }
-        
-        else{
-
-          data.push({ user,month, account_approval,type, particular , weitage});
-        }
-
-      }
-      //console.log(totalWeitage);
-
-      if(totalWeitage !== 100) {
-        $("#msgerr").remove();
-        $("#weitage" + (rowCount - 1)).focus();
-        $("#weitage" + (rowCount - 1)).after("<span id='msgerr' style='color:red;font-size:11px;'>Total Weitage must be equal to 100.</span>");
-        return false;
-      }
-
-
-      const jsonData = JSON.stringify(data);
-      console.log(jsonData);
-      $.post("create_weitage",{
-              data: jsonData 
-      },
-      function(result)
-      {
-        alert(result);
-        location.reload();
-      });
-
-   }
 
    function update_validate_data()
    {
@@ -437,17 +287,44 @@ echo $this->Html->script('jquery-ui');
 
 
       const jsonData = JSON.stringify(data);
-      console.log(jsonData);
+      //console.log(jsonData);
       $.post("update_weitage",{
               data: jsonData 
       },
       function(result)
       {
         alert(result);
-        location.reload();
+        //location.reload();
+        getWeitage(month);
       });
 
    }
+
+    function approve_data()
+    {
+        const table = document.getElementById('newRow1');
+        const rowCount = table.rows.length;
+        const data = [];
+
+        for (let i = 1; i < rowCount; i++) 
+        { 
+            const approval_data = $(`input[name="approve_id${i}"]`).val();
+
+            data.push({ approval_data });
+        
+        }
+
+        const jsonData = JSON.stringify(data);
+        console.log(jsonData);
+        $.post("weitage_approval",{
+                data: jsonData 
+        },
+        function(result)
+        {
+            alert(result);
+            location.reload();
+        });
+    }
 </script>
 <script>
   function add_row()
@@ -493,7 +370,6 @@ echo $this->Html->script('jquery-ui');
                 if (response.success) {
                     // Remove the row from the table
                     $('#row_' + id).hide();
-
                 } else {
                     alert("Failed to delete the record.");
                 }
