@@ -129,7 +129,8 @@ public function view()
             $this->Session->write("childUser",$childUser);
             $this->Session->write("parentUser",$parentUser);
             $this->Session->write("Access_Branch",$rdata['Access_Branch']);
-            $this->Session->write("FinanceYearLogin",$FinanceYearLogin);            
+            $this->Session->write("FinanceYearLogin",$FinanceYearLogin);  
+            $this->Session->write("EmpCode",$rdata['emp_code']);           
 			
             $page=$this->Access->find('first',array('conditions'=>array('id'=>$rdata['id'])));  //find page access links for user in database
             //print_r($page); exit;

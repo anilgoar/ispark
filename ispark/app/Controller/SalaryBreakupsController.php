@@ -100,7 +100,7 @@ class SalaryBreakupsController extends AppController {
                 'CTC'=>"'".trim(addslashes($dataArr['CTC']))."'",
                 'lastUpdated'=>"'".date('Y-m-d H:i:s')."'",
                 );
-                
+                //echo "insert into his_masjsclrentry select * from masjclrentry where id='{$dataArr['id']}'";die;
                 $this->Masjclrentry->query("insert into his_masjsclrentry select * from masjclrentry where id='{$dataArr['id']}'");
                 if($this->Masjclrentry->updateAll($UpdArr,array('id'=>$dataArr['id']))){
                     echo "1";die;
