@@ -131,7 +131,7 @@
 								</a>
 								<ul class="dropdown-menu">
 
-                                                                    <li><?php echo $this->Html->link('<i class="fa fa-user"></i>'.'Setting',array('controller'=>'Users','action'=>'edit_user','full_base' => true),array('escape'=>false)); ?></li>
+                                    <li><?php echo $this->Html->link('<i class="fa fa-user"></i>'.'Setting',array('controller'=>'Users','action'=>'edit_user','full_base' => true),array('escape'=>false)); ?></li>
 
 									<li><?php echo $this->Html->link('<i class="fa fa-power-off"></i>'.'Logout',array('controller'=>'Users','action'=>'logout','full_base' => true),array('escape'=>false)); ?></li>
 								</ul>
@@ -271,7 +271,7 @@ $page_access=explode(',',$this->Session->read("page_access"));
                                     '183'=>'Employee Transition Manager',
 									 //'195'=>'2GTHR@MAS',
 									 '195'=>'2GTHR@MAS',
-									 '203'=>'Pli System',
+									 '203'=>'Performance-linked incentive System',
                                 );
 
 								//print_r($parrent_level);die;

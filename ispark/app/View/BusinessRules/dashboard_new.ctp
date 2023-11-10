@@ -11,8 +11,8 @@
    });
    });
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
@@ -34,7 +34,7 @@
       <div class="box">
         <div class="box-header" style="text-align: center;">
             <div class="box-name">
-               <span>Dashboard New</span>
+               <span>Dashboard</span>
             </div>
             <div class="box-icons">
                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -105,12 +105,11 @@
 
 
 <script>
- 
     var data = {
         labels: ['Mas Care', 'Gratitude', 'Community'],
         datasets: [{
-        data: [<?php echo $mas_care_count; ?>, <?php echo $gratitude_count; ?>, <?php echo $community_count; ?>],
-        backgroundColor: ['#33FF57','#cc33ff', '#3399ff'],
+            data: [<?php echo $mas_care_count; ?>, <?php echo $gratitude_count; ?>, <?php echo $community_count; ?>],
+            backgroundColor: ['#33FF57', '#cc33ff', '#3399ff'],
         }],
     };
 
@@ -121,19 +120,18 @@
         data: data,
         options: {
             plugins: {
-                title: {
+                datalabels: {
                     display: true,
-                    text: 'INTENTS BY CATEGORY',
-                    position: 'bottom',
+                    color: 'black',
                     font: {
-                        size: 12
-                    }
-                },
+                        size: 12,
+                    },
+                }
             }
         }
     });
-
 </script>
+
 
 <script>
 
@@ -196,7 +194,7 @@
             plugins: {
                 title: {
                     display: true,
-                    text: 'INTENTS BY MAS CARE TICKETS',
+                    text: 'TOTAL MAS CARE TICKETS',
                     position: 'bottom',
                     font: {
                         size: 12
@@ -233,7 +231,7 @@
         plugins: {
             title: {
                 display: true,
-                text: 'INTENTS BY CATEGORY',
+                text: 'TICKETS STATUS',
                 position: 'bottom',
                 font: {
                     size: 12

@@ -69,6 +69,23 @@ echo $this->Html->script('jquery-ui');
       });
   }
 
+  function reporting_name(EmpCode)
+  {
+    $("#reporting_name").hide();
+
+    $.post("<?php echo $this->webroot;?>PliSystems/get_reporting_name",{'EmpCode':EmpCode}, function(data) {
+          if(data !=""){
+              $("#reporting_name").show();
+              $("#reporting_name").html(data);
+          }
+          else{
+              $("#reporting_name").hide();
+              
+          }
+      });
+  }
+
+  
 
 
 
@@ -94,7 +111,7 @@ echo $this->Html->script('jquery-ui');
         <div class="box">
             <div class="box-header">
                 <div class="box-name">
-                    <span>Weitage</span>
+                    <span>Weightage</span>
 		            </div>
               <div class="box-icons">
                   <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -110,11 +127,12 @@ echo $this->Html->script('jquery-ui');
                 <div class="form-group">
                   <div class="col-sm-3">
                     <label>User</label>
-                    <select id="selected_user" name="selected_user" class="form-control">
+                    <select id="selected_user" name="selected_user" class="form-control" onchange="reporting_name(this.value);">
                         <option value='none'>Select</option>
                     <?php 
                         foreach($users as $key => $user){
-                            echo "<option value='".$user['masjclrentry']['EmpCode']."'>".$user['masjclrentry']['EmpName']."</option>";
+                          #print_r($user);
+                            echo "<option value='".$user['EmpCode']."'>".$user['EmpName']."</option>";
                         }
                     ?>
 
@@ -132,32 +150,35 @@ echo $this->Html->script('jquery-ui');
                                               <option value="Dec-<?php echo $curYear-1; ?>">Dec-<?php echo $curYear-1;?></option>
                                           <?php }
                                   ?>
-                                  <option value="Jan-<?php echo $curYear; ?>">Jan</option>
-                                  <option value="Feb-<?php echo $curYear; ?>">Feb</option>
-                                  <option value="Mar-<?php echo $curYear; ?>">Mar</option>
-                                  <option value="Apr-<?php echo $curYear; ?>">Apr</option>
-                                  <option value="May-<?php echo $curYear; ?>">May</option>
-                                  <option value="Jun-<?php echo $curYear; ?>">Jun</option>
-                                  <option value="Jul-<?php echo $curYear; ?>">Jul</option>
-                                  <option value="Aug-<?php echo $curYear; ?>">Aug</option>
-                                  <option value="Sep-<?php echo $curYear; ?>">Sep</option>
+                                  <!-- <option value="Jan-<?php //echo $curYear; ?>">Jan</option>
+                                  <option value="Feb-<?php //echo $curYear; ?>">Feb</option>
+                                  <option value="Mar-<?php //echo $curYear; ?>">Mar</option>
+                                  <option value="Apr-<?php //echo $curYear; ?>">Apr</option>
+                                  <option value="May-<?php //echo $curYear; ?>">May</option>
+                                  <option value="Jun-<?php //echo $curYear; ?>">Jun</option>
+                                  <option value="Jul-<?php //echo $curYear; ?>">Jul</option>
+                                  <option value="Aug-<?php //echo $curYear; ?>">Aug</option>
+                                  <option value="Sep-<?php //echo $curYear; ?>">Sep</option> -->
                                   <option value="Oct-<?php echo $curYear; ?>">Oct</option>
                                   <option value="Nov-<?php echo $curYear; ?>">Nov</option>
                                   <option value="Dec-<?php echo $curYear; ?>">Dec</option>
                               </select>
                         </div>
                               
-                        <div class="col-sm-4">      
-                          <label>Is Account Approval Require :</label><br>
+                        <div class="col-sm-3">      
+                          <label>Is Account Approval Required :</label><br>
                           <label>Yes</label>
                           <input type="radio" id="account_approval" name="account_approval"  value="Yes" required>
                           <label>No</label>
                           <input type="radio" id="account_approval" name="account_approval"  value="No" required>
                         </div>
+                        <div class="col-sm-2" id="reporting_name"></div>
                         <div class="col-sm-1">
                           <label></label>
-                          <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
+                          <!-- <input onclick='return window.location="<?php //echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" /> -->
+                          <input onclick='return window.location="<?php echo $this->webroot;?>Menus?AX=MjAz"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
                         </div>
+                        
                                 
                 </div>
             </div>
@@ -170,7 +191,7 @@ echo $this->Html->script('jquery-ui');
     <div class="col-xs-12 col-sm-12" id="entry_weitage">
         <div class="box">
             <div class="box-content" style="background-color:#ffffff; border:1px solid #436e90;">
-		        <h4 class="page-header" style="border-bottom: 1px double #436e90;margin: 0 0 10px;">Weitage Entry</h4>
+		        <h4 class="page-header" style="border-bottom: 1px double #436e90;margin: 0 0 10px;">Weightage Entry</h4>
                     <table class = "table table-striped table-bordered table-hover table-heading no-border-bottom" id="newRow">
                     <div id="errorDiv" style="color: red;"></div>
                       <tr>
@@ -290,17 +311,17 @@ echo $this->Html->script('jquery-ui');
       if(user == 'none'){
      
         $("#selected_user").focus();
-        $("#selected_user").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select user.</span>");
+        $("#selected_user").after("<span id='msgerr' style='color:red;font-size:16px;'>Please select user.</span>");
         return false;
       }
       else if(month ===""){
         $("#month").focus();
-        $("#month").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select month.</span>");
+        $("#month").after("<span id='msgerr' style='color:red;font-size:16px;'>Please select month.</span>");
         return false;
       }else if(!account_approval)
       {
         $("#account_approval").focus();
-        $("#account_approval").after("<span id='msgerr' style='color:red;font-size:11px;'>Approval is rquire or not.</span>");
+        $("#account_approval").after("<span id='msgerr' style='color:red;font-size:16px;'>Approval is rquired or not.</span>");
         return false;
       }
       let totalWeitage = 0;
@@ -316,20 +337,20 @@ echo $this->Html->script('jquery-ui');
         if (!type){
        
           $("#type" + i).focus();
-          $("#type" + i).after("<span id='msgerr' style='color:red;font-size:11px;'>Please select type.</span>");
+          $("#type" + i).after("<span id='msgerr' style='color:red;font-size:16px;'>Please select type.</span>");
 
           return false;
 
         }else if(!particular){
 
           $(`input[name="particular${i}"]`).focus();
-          $(`input[name="particular${i}"]`).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Particular.</span>");
+          $(`input[name="particular${i}"]`).after("<span id='msgerr' style='color:red;font-size:16px;'>Please Enter Particular.</span>");
           return false;
 
         }else if(weitage === '') {
 
           $(`select[name="weitage${i}"]`).focus();
-          $(`select[name="weitage${i}"]`).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Weitage.</span>");
+          $(`select[name="weitage${i}"]`).after("<span id='msgerr' style='color:red;font-size:16px;'>Please Enter Weightage.</span>");
           return false;
         }
         
@@ -344,7 +365,7 @@ echo $this->Html->script('jquery-ui');
       if(totalWeitage !== 100) {
         $("#msgerr").remove();
         $("#weitage" + (rowCount - 1)).focus();
-        $("#weitage" + (rowCount - 1)).after("<span id='msgerr' style='color:red;font-size:11px;'>Total Weitage must be equal to 100.</span>");
+        $("#weitage" + (rowCount - 1)).after("<span id='msgerr' style='color:red;font-size:16px;'>Total Weightage must be equal to 100.</span>");
         return false;
       }
 
@@ -377,17 +398,17 @@ echo $this->Html->script('jquery-ui');
       if(user == 'none'){
      
         $("#selected_user").focus();
-        $("#selected_user").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select user.</span>");
+        $("#selected_user").after("<span id='msgerr' style='color:red;font-size:16px;'>Please select user.</span>");
         return false;
       }
       else if(month ===""){
         $("#month").focus();
-        $("#month").after("<span id='msgerr' style='color:red;font-size:11px;'>Please select month.</span>");
+        $("#month").after("<span id='msgerr' style='color:red;font-size:16px;'>Please select month.</span>");
         return false;
       }else if(!account_approval)
       {
         $("#update_account_approval").focus();
-        $("#update_account_approval").after("<span id='msgerr' style='color:red;font-size:11px;'>Approval is rquire or not.</span>");
+        $("#update_account_approval").after("<span id='msgerr' style='color:red;font-size:16px;'>Approval is rquired or not.</span>");
         return false;
       }
       let totalWeitage = 0;
@@ -403,20 +424,20 @@ echo $this->Html->script('jquery-ui');
         if (!type){
        
           $("#type" + i).focus();
-          $("#type" + i).after("<span id='msgerr' style='color:red;font-size:11px;'>Please select type.</span>");
+          $("#type" + i).after("<span id='msgerr' style='color:red;font-size:16px;'>Please select type.</span>");
 
           return false;
 
         }else if(!particular){
 
           $(`input[name="update_particular${i}"]`).focus();
-          $(`input[name="update_particular${i}"]`).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Particular.</span>");
+          $(`input[name="update_particular${i}"]`).after("<span id='msgerr' style='color:red;font-size:16px;'>Please Enter Particular.</span>");
           return false;
 
         }else if(weitage === '') {
 
           $(`select[name="update_weitage${i}"]`).focus();
-          $(`select[name="update_weitage${i}"]`).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Weitage.</span>");
+          $(`select[name="update_weitage${i}"]`).after("<span id='msgerr' style='color:red;font-size:16px;'>Please Enter Weightage.</span>");
           return false;
         }
         
@@ -431,7 +452,7 @@ echo $this->Html->script('jquery-ui');
       if(totalWeitage !== 100) {
         $("#msgerr").remove();
         $("#weitage" + (rowCount - 1)).focus();
-        $("#weitage" + (rowCount - 1)).after("<span id='msgerr' style='color:red;font-size:11px;'>Total Weitage must be equal to 100.</span>");
+        $("#weitage" + (rowCount - 1)).after("<span id='msgerr' style='color:red;font-size:16px;'>Total Weightage must be equal to 100.</span>");
         return false;
       }
 

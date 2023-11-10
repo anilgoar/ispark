@@ -96,6 +96,22 @@ function findMaxScoreElement() {
 
     return maxN;
 }
+
+function reporting_name(EmpCode)
+  {
+    $("#reporting_name").hide();
+
+    $.post("<?php echo $this->webroot;?>PliSystems/get_reporting_name",{'EmpCode':EmpCode}, function(data) {
+          if(data !=""){
+              $("#reporting_name").show();
+              $("#reporting_name").html(data);
+          }
+          else{
+              $("#reporting_name").hide();
+              
+          }
+      });
+  }
 </script>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
@@ -135,11 +151,12 @@ function findMaxScoreElement() {
                 <div class="form-group">
                     <div class="col-sm-3">
                         <label>User</label>
-                        <select id="selected_user" name="selected_user" class="form-control">
+                        <select id="selected_user" name="selected_user" class="form-control" onchange="reporting_name(this.value);">
                             <option value='none'>Select</option>
                         <?php 
                             foreach($users as $key => $user){
-                                echo "<option value='".$user['masjclrentry']['EmpCode']."'>".$user['masjclrentry']['EmpName']."</option>";
+                                //print_r($user);
+                                echo "<option value='".$user['0']['EmpCode']."'>".$user['0']['EmpName']."</option>";
                             }
                         ?>
 
@@ -171,8 +188,10 @@ function findMaxScoreElement() {
                                 <option value="Dec-<?php echo $curYear; ?>">Dec</option>
                             </select>
                     </div>
+                    <div class="col-sm-2" id="reporting_name"></div>
                     <div class="col-sm-1" style="margin-top:10px;">
-                        <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
+                        <!-- <input onclick='return window.location="<?php //echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" /> -->
+                        <input onclick='return window.location="<?php echo $this->webroot;?>Menus?AX=MjAz"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
                     </div>
        
                 </div>

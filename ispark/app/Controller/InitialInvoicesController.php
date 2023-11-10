@@ -2981,8 +2981,7 @@ public function update_proforma()
                             $condition .=" and ti.branch_name =  '{$data['branch_name']}'";
                             if($data['bill_no'] !='')
                                 $condition .=" and ti.bill_no =  '{$data['bill_no']}'";
-                            
-                            $data = $this->InitialInvoice->query("SELECT ti.id,ti.branch_name,ti.bill_no,ti.total,ti.po_no,ti.grn,ti.invoiceDescription FROM tbl_invoice ti 
+                            $qry_search = "SELECT ti.id,ti.branch_name,ti.bill_no,ti.total,ti.po_no,ti.grn,ti.invoiceDescription FROM tbl_invoice ti 
                             INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
                             LEFT JOIN bill_pay_particulars bpp ON 
                             SUBSTRING_INDEX(ti.bill_no,'/','1') = bpp.bill_no
@@ -2990,7 +2989,8 @@ public function update_proforma()
                             AND ti.finance_year = bpp.financial_year
                             AND cm.company_name = bpp.company_name
                             
-                            WHERE bpp.bill_no IS  NULL and ti.bill_no!='' $condition ");
+                            WHERE bpp.bill_no IS  NULL and ti.bill_no!='' $condition "; 
+                            $data = $this->InitialInvoice->query($qry_search);
                             $this->set('tbl_invoice',$data);
                             //print_r($data); die;
                         }    

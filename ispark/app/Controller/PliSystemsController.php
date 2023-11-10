@@ -26,7 +26,7 @@ class PliSystemsController extends AppController {
             $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='1'  GROUP BY user_id");
         }else{
             
-            $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='1'  and user_id='$EmpCode' GROUP BY user_id");
+            $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='1'  GROUP BY user_id");
         }
         
 
@@ -146,6 +146,7 @@ class PliSystemsController extends AppController {
             
             $qry = "select EmpCode,EmpName from masjclrentry where pli_status=1 and EmpName='$username' union select EmpCode,EmpName from masjclrentry where pli_status=1 and Reporting_Manager_Name='$username'";
         }
+        #echo $qry;die;
 
         $users = $this->User->query($qry);
 
@@ -301,14 +302,19 @@ class PliSystemsController extends AppController {
         $pli_users = $this->User->query("SELECT user_id,account_approval FROM pli_weitage WHERE weitage_approved_status='0'  GROUP BY user_id");
         foreach($pli_users as $use)
         {
-            
+           
             $emp_code = $use['pli_weitage']['user_id'];
             $account_approval = $use['pli_weitage']['account_approval'];
-            if($account_approval== 'Yes')
+
+            if($email=='nixon.sethi@teammas.in' || $email=='naresh.chauhan@teammas.in')
             {
-                if($email=='nixon.sethi@teammas.in' || $email=='naresh.chauhan@teammas.in')
+                if($account_approval== 'Yes')
                 {
+                    
                     $userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code' ");
+
+                }else{
+                    $userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code' and Reporting_Manager_Name='$username' ");
                 }
                 
             }else{
@@ -319,7 +325,7 @@ class PliSystemsController extends AppController {
             {
                 $users[] = $userInfo[0];
             }
-            
+            #print_r($users);
         }
         $this->set('users', $users);
 
@@ -429,6 +435,7 @@ class PliSystemsController extends AppController {
         
         $userid = $this->Session->read("userid");
         $username = $this->Session->read('username');
+        $email = $this->Session->read('email');
 
         $per_options = [];
         for ($i = 1; $i <= 100; $i++) {
@@ -441,12 +448,27 @@ class PliSystemsController extends AppController {
         $this->set('curYear',$curYear);
         $users = array();
 
-        $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='0' and achivement is not null  GROUP BY user_id");
+        $pli_users = $this->User->query("SELECT user_id,account_approval FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='0' and achivement is not null  GROUP BY user_id");
         foreach($pli_users as $use)
         {
             
             $emp_code = $use['pli_weitage']['user_id'];
-            $userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code' and Reporting_Manager_Name='$username'");
+            $account_approval = $use['pli_weitage']['account_approval'];
+
+            if($email=='nixon.sethi@teammas.in' || $email=='naresh.chauhan@teammas.in')
+            {
+                if($account_approval== 'Yes')
+                {
+                    
+                    $userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code' ");
+
+                }else{
+                    $userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code' and Reporting_Manager_Name='$username' ");
+                }
+            }else{
+                $userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code' and Reporting_Manager_Name='$username'");
+            }   
+            
             if(!empty($userInfo))
             {
                 $users[] = $userInfo[0];
@@ -610,23 +632,14 @@ class PliSystemsController extends AppController {
                                 <input type="button" value="Update" name="Update" onclick="update_validate_data()"  class="btn btn-primary"  />
                             </div>
                             <?php if($Approval==1)
-                            {
-                                if($approval_radio != "checked"){?>
+                            {?>
+                                
                                 <div class="col-sm-2">
                                     <input type="button" value="Approve" name="Approve" onclick="approve_data()"  class="btn btn-success"  />
                                 </div>
-                            <?php }else{ if($email=='nixon.sethi@teammas.in' || $email=='naresh.chauhan@teammas.in'){?>
-
-                                <div class="col-sm-2">
-                                    <input type="button" value="Approve" name="Approve" onclick="approve_data()"  class="btn btn-success"  />
-                                </div>
-                                <?php
-                                 }
-                                 else{?>
-                                <div class="col-sm-2">
-                                    <h5 style="color:green;">Only the accountant will approve</h5>
-                                </div>
-                           <?php } } } ?>
+                            
+                                 
+                            <?php   } ?>
                             <div class="col-sm-4"></div>
                             
                         </div>
@@ -651,6 +664,7 @@ class PliSystemsController extends AppController {
     public function get_weitage_achievment(){
         $this->layout='ajax';
         if(isset($_REQUEST['EmpCode']) && trim($_REQUEST['EmpCode']) !=""){
+            $email = $this->Session->read('email');
             $Month = $_REQUEST['Month'];
 
             $year = date('Y', strtotime($_REQUEST['Month']));
@@ -663,8 +677,13 @@ class PliSystemsController extends AppController {
             if(!empty($data)){
 
                 $total_score = 0;
+                $approval_radio = "";
                 foreach($data as $key) {
                     $total_score += $key['PliWeitage']['score'];
+                    if($key['PliWeitage']['account_approval'] == 'Yes')
+                    {
+                        $approval_radio = "checked";
+                    }
                     if($key['PliWeitage']['achivement_approved_status']=='1')
                     { 
                         ?>
@@ -712,11 +731,23 @@ class PliSystemsController extends AppController {
                                 <input type="button" value="Save" name="Save" onclick="save_validate_data()"  class="btn btn-primary"  />
                             </div>
                             <?php if($Approval==1)
-                            {?>
+                            { if($approval_radio != "checked"){?>
                                 <div class="col-sm-2">
                                     <input type="button" value="Approve" name="Approve" onclick="approve_data()"  class="btn btn-success"  />
                                 </div>
-                            <?php } ?>
+                            <?php }else{
+                                if($email=='nixon.sethi@teammas.in' || $email=='naresh.chauhan@teammas.in')
+                                { ?>
+                                    <div class="col-sm-2">
+                                        <input type="button" value="Approve" name="Approve" onclick="approve_data()"  class="btn btn-success"  />
+                                    </div>
+                                <?php }else{ ?>
+                                    <div class="col-sm-2">
+                                        <h5 style="color:green;">Only the accountant will approved</h5>
+                                    </div>
+                                <?php }
+                            }
+                        } ?>
                             <div class="col-sm-4"></div>
                             
                         </div>

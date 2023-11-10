@@ -68,7 +68,7 @@ echo $this->Html->script('jquery-ui');
         <div class="box">
             <div class="box-header">
                 <div class="box-name">
-                    <span>View Approved Pli</span>
+                    <span>View Approved Performance-linked incentive</span>
 		        </div>
             <div class="box-icons">
                 <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -100,6 +100,7 @@ echo $this->Html->script('jquery-ui');
                         <label>Month</label>
                         <select name="month" id="month" class="form-control" required="">
                             <option value="">Month</option>
+                            <option value="All">All</option>
                             <?php
                                 $TcurMonth = date('M');
                                 if($TcurMonth=='Jan')
@@ -122,7 +123,8 @@ echo $this->Html->script('jquery-ui');
                         </select>
                     </div>
                     <div class="col-sm-2" style="margin-top: 15px;">
-                        <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
+                        <!-- <input onclick='return window.location="<?php //echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" /> -->
+                        <input onclick='return window.location="<?php echo $this->webroot;?>Menus?AX=MjAz"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
                         <input type="button" onclick="getWeitage('Export');" value="Export" class="btn pull-right btn-primary btn-new" style="margin-left:5px;" >
                         <input type="button" onclick="getWeitage('Show');" value="Show" class="btn pull-right btn-primary btn-new">
                     </div>

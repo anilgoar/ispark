@@ -69,6 +69,22 @@ echo $this->Html->script('jquery-ui');
       });
   }
 
+  function reporting_name(EmpCode)
+  {
+    $("#reporting_name").hide();
+
+    $.post("<?php echo $this->webroot;?>PliSystems/get_reporting_name",{'EmpCode':EmpCode}, function(data) {
+          if(data !=""){
+              $("#reporting_name").show();
+              $("#reporting_name").html(data);
+          }
+          else{
+              $("#reporting_name").hide();
+              
+          }
+      });
+  }
+
 
 
 
@@ -94,7 +110,7 @@ echo $this->Html->script('jquery-ui');
         <div class="box">
             <div class="box-header">
                 <div class="box-name">
-                    <span>Weitage</span>
+                    <span>Weightage</span>
 		            </div>
               <div class="box-icons">
                   <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -110,7 +126,7 @@ echo $this->Html->script('jquery-ui');
                 <div class="form-group">
                   <div class="col-sm-3">
                     <label>User</label>
-                    <select id="selected_user" name="selected_user" class="form-control">
+                    <select id="selected_user" name="selected_user" class="form-control" onchange="reporting_name(this.value);">
                         <option value='none'>Select</option>
                     <?php 
                         foreach($users as $key => $user){
@@ -146,9 +162,11 @@ echo $this->Html->script('jquery-ui');
                                   <option value="Dec-<?php echo $curYear; ?>">Dec</option>
                               </select>
                         </div>
+                        <div class="col-sm-2" id="reporting_name"></div>
                               
                         <div class="col-sm-1" style="margin-top:10px;">
-                          <input onclick='return window.location="<?php echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
+                          <!-- <input onclick='return window.location="<?php //echo $_SERVER['HTTP_REFERER'];?>"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" /> -->
+                          <input onclick='return window.location="<?php echo $this->webroot;?>Menus?AX=MjAz"' type="button" value="Back" class="btn btn-primary btn-new pull-right" style="margin-left: 5px;" />
                         </div>
                                 
                 </div>
