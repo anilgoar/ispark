@@ -53,7 +53,7 @@
                             <?php echo $this->Form->input('branch',array('label' => false,'options'=>$branchName,'class'=>'form-control','id'=>'branch','onchange'=>"this.form.submit()")); ?>
                         </div>
                         <div class="col-sm-2"></div>
-                        <div class="col-sm-3">                            
+                        <div class="col-sm-3">
                             <label>Department</label>
                             <?php echo $this->Form->input('department',array('label' => false,'options'=>$department,'class'=>'form-control','id'=>'department','onchange'=>"this.form.submit()")); ?>
                            
@@ -105,8 +105,10 @@
 
 
 <script>
+
+    var label1 = ['Mas Care', 'Gratitude', 'Community'];
     var data = {
-        labels: ['Mas Care', 'Gratitude', 'Community'],
+        labels: label1,
         datasets: [{
             data: [<?php echo $mas_care_count; ?>, <?php echo $gratitude_count; ?>, <?php echo $community_count; ?>],
             backgroundColor: ['#33FF57', '#cc33ff', '#3399ff'],
@@ -121,14 +123,37 @@
         options: {
             plugins: {
                 datalabels: {
-                    display: true,
-                    color: 'black',
-                    font: {
-                        size: 12,
-                    },
+                        display: true,
+                        color: '#ffffff', 
+                        font: {
+                            size: 14, 
+                            weight: 'bold' 
+                        },
+                        formatter: function (value, context) {
+                            var label = label1[context.dataIndex]; 
+                            return value > 0 ? label + ': ' + value : ''; 
+                        },
+                        filter: {
+                            enabled: true, 
+                            function: function(value, index, values) {
+                                return value > 0; 
+                            }
+                        }
+                    }
+            },
+            datalabels: {
+                color: '#ffffff', 
+                font: {
+                    size: 14, 
+                    weight: 'bold' 
+                },
+                formatter: function(value, context) {
+                    return value + ' Tickets'; 
                 }
             }
-        }
+          
+        },
+        plugins:[ChartDataLabels]
     });
 </script>
 
@@ -160,12 +185,48 @@
                         text: 'INTENTS BY COMMUNITY',
                         position: 'bottom',
                         font: {
-                            size: 12
+                            size: 14
                         }
                     },
+                   
+                    datalabels: {
+                        display: true,
+                        color: '#ffffff', // Set the color of the data labels
+                        font: {
+                            size: 12, // Set the font size of the data labels
+                            weight: 'bold' // Set the font weight of the data labels
+                        },
+                        formatter: function (value, context) {
+                            var label = departmentLabels[context.dataIndex];
+                            return value > 0 ? label + ': ' + value : ''; 
+                        },
+                        filter: {
+                            enabled: true, // Enable the filter
+                            function: function(value, index, values) {
+                                return value > 0; 
+                            }
+                        }
+                    }
                     
+                },
+                datalabels: {
+                    color: '#ffffff', // Set the color of the data labels
+                    font: {
+                        size: 12, // Set the font size of the data labels
+                        weight: 'bold' // Set the font weight of the data labels
+                    },
+                    formatter: function (value, context) {
+                        return value > 0 ? value + ' Tickets' : ''; // Display label only if value is greater than 0
+                    },
+                    filter: {
+                        enabled: true, // Enable the filter
+                        function: function(value, index, values) {
+                            return value > 0; // Display label only if value is greater than 0
+                        }
+                    }
                 }
-            }
+            },
+            plugins:[ChartDataLabels]
     });
     
 
@@ -200,8 +261,27 @@
                         size: 12
                     }
                 },
+                datalabels: {
+                        display: true,
+                        color: '#ffffff', 
+                        font: {
+                            size: 12, 
+                            weight: 'bold' 
+                        },
+                        formatter: function (value, context) {
+                            var label = MascareLabels[context.dataIndex]; 
+                            return value > 0 ? label + ': ' + value : ''; 
+                        },
+                        filter: {
+                            enabled: true, 
+                            function: function(value, index, values) {
+                                return value > 0; 
+                            }
+                        }
+                    }
             }
-        }
+        },
+        plugins:[ChartDataLabels]
     });
     
 
@@ -237,8 +317,27 @@
                     size: 12
                 }
             },
+            datalabels: {
+                display: true,
+                color: '#ffffff', 
+                font: {
+                    size: 12, 
+                    weight: 'bold' 
+                },
+                formatter: function (value, context) {
+                    var label = TicketLabels[context.dataIndex]; 
+                    return value > 0 ? label + ': ' + value : ''; 
+                },
+                filter: {
+                    enabled: true, 
+                    function: function(value, index, values) {
+                        return value > 0; 
+                    }
+                }
+            }
         }
-    }
+    },
+    plugins:[ChartDataLabels]
   });
 
 </script>
@@ -272,8 +371,27 @@
                         size: 12
                     }
                 },
+                datalabels: {
+                    display: true,
+                    color: '#000000', 
+                    font: {
+                        size: 12, 
+                        weight: 'bold' 
+                    },
+                    formatter: function (value, context) {
+                        var label = departmentNames[context.dataIndex]; 
+                        return value > 0 ? label + ': ' + value : ''; 
+                    },
+                    filter: {
+                        enabled: true, 
+                        function: function(value, index, values) {
+                            return value > 0; 
+                        }
+                    }
+                }
             }
-        }
+        },
+        plugins:[ChartDataLabels]
     });
 </script>
 
@@ -304,8 +422,27 @@
                         size: 12
                     }
                 },
+                datalabels: {
+                    display: true,
+                    color: '#000000', 
+                    font: {
+                        size: 12, 
+                        weight: 'bold' 
+                    },
+                    formatter: function (value, context) {
+                        var label = cdepartmentNames[context.dataIndex]; 
+                        return value > 0 ? label + ': ' + value : ''; 
+                    },
+                    filter: {
+                        enabled: true, 
+                        function: function(value, index, values) {
+                            return value > 0; 
+                        }
+                    }
+                }
             }
-        }
+        },
+        plugins:[ChartDataLabels]
     });
 </script>
 
@@ -336,8 +473,27 @@
                         size: 12
                     }
                 },
+                datalabels: {
+                    display: true,
+                    color: '#000000', 
+                    font: {
+                        size: 12, 
+                        weight: 'bold' 
+                    },
+                    formatter: function (value, context) {
+                        var label = odepartmentNames[context.dataIndex]; 
+                        return value > 0 ? label + ': ' + value : ''; 
+                    },
+                    filter: {
+                        enabled: true, 
+                        function: function(value, index, values) {
+                            return value > 0; 
+                        }
+                    }
+                }
             }
-        }
+        },
+        plugins:[ChartDataLabels]
     });
 </script>
 
