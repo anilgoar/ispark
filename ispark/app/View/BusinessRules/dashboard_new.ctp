@@ -124,14 +124,14 @@
             plugins: {
                 datalabels: {
                         display: true,
-                        color: '#ffffff', 
+                        color: '#000000', 
                         font: {
                             size: 14, 
                             weight: 'bold' 
                         },
                         formatter: function (value, context) {
                             var label = label1[context.dataIndex]; 
-                            return value > 0 ? label + ': ' + value : ''; 
+                            //return value > 0 ? label + ': ' + value : ''; 
                         },
                         filter: {
                             enabled: true, 
@@ -191,14 +191,14 @@
                    
                     datalabels: {
                         display: true,
-                        color: '#ffffff', // Set the color of the data labels
+                        color: '#000000', // Set the color of the data labels
                         font: {
                             size: 12, // Set the font size of the data labels
                             weight: 'bold' // Set the font weight of the data labels
                         },
                         formatter: function (value, context) {
-                            var label = departmentLabels[context.dataIndex];
-                            return value > 0 ? label + ': ' + value : ''; 
+                            //var label = departmentLabels[context.dataIndex];
+                            return value > 0 ?  value : ''; 
                         },
                         filter: {
                             enabled: true, // Enable the filter
@@ -263,14 +263,14 @@
                 },
                 datalabels: {
                         display: true,
-                        color: '#ffffff', 
+                        color: '#000000', 
                         font: {
                             size: 12, 
                             weight: 'bold' 
                         },
                         formatter: function (value, context) {
                             var label = MascareLabels[context.dataIndex]; 
-                            return value > 0 ? label + ': ' + value : ''; 
+                            //return value > 0 ? label + ': ' + value : ''; 
                         },
                         filter: {
                             enabled: true, 
@@ -319,14 +319,14 @@
             },
             datalabels: {
                 display: true,
-                color: '#ffffff', 
+                color: '#000000', 
                 font: {
                     size: 12, 
                     weight: 'bold' 
                 },
                 formatter: function (value, context) {
                     var label = TicketLabels[context.dataIndex]; 
-                    return value > 0 ? label + ': ' + value : ''; 
+                    //return value > 0 ? label + ': ' + value : ''; 
                 },
                 filter: {
                     enabled: true, 
@@ -380,7 +380,7 @@
                     },
                     formatter: function (value, context) {
                         var label = departmentNames[context.dataIndex]; 
-                        return value > 0 ? label + ': ' + value : ''; 
+                        //return value > 0 ? label + ': ' + value : ''; 
                     },
                     filter: {
                         enabled: true, 
@@ -431,7 +431,7 @@
                     },
                     formatter: function (value, context) {
                         var label = cdepartmentNames[context.dataIndex]; 
-                        return value > 0 ? label + ': ' + value : ''; 
+                        //return value > 0 ? label + ': ' + value : ''; 
                     },
                     filter: {
                         enabled: true, 
