@@ -52,6 +52,7 @@ class AccesIsparkController extends AppController {
         
         $role = $this->Session->read('user-type');
         $email = $this->Session->read('email');
+        $userid = $this->Session->read('userid');
         
         $menu = array(
             'menus' => array(),
@@ -71,7 +72,7 @@ class AccesIsparkController extends AppController {
         }
         else
         {
-            $sel = "SELECT id,username FROM tbl_user where process_head='$email' and  UserActive='1' AND username is not null  group by username order by username ";
+            $sel = "SELECT id,username FROM tbl_user where (process_head='$email' or createdby='$userid') and  UserActive='1' AND username is not null   group by username order by username ";
             $new_list = array();
             
             $menu_list_arr =  $this->PageMaster->query("SELECT * FROM pages_ride_ispark where user_name ='$email'");

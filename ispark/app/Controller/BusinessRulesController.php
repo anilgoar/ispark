@@ -883,6 +883,7 @@ class BusinessRulesController extends AppController {
 
                 }
             }
+            #print_r(json_encode(array_values($departmentCounts)));die;
 
             $this->set('intent_community_dep_label',json_encode(array_keys($departmentCounts)));
             $this->set('intent_community_dep_count',json_encode(array_values($departmentCounts)));

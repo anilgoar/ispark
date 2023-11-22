@@ -453,7 +453,7 @@ public  function create_User(){
         {
             $data = $this->request->data;
             
-            $data['User']['createdby'] = $this->Session->read('user_id');
+            $data['User']['createdby'] = $this->Session->read('userid');
             $data['User']['email'] = $data['User']['username'];
             $data['User']['created'] = date('Y-m-d H:i:s');
             $data['User']['pass_change_date'] = date('Y-m-d H:i:s');
