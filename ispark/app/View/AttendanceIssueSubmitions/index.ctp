@@ -149,6 +149,13 @@ function validateAttendIssue(){
                             <option value="Power Failure">Power Failure</option>
                             <option value="Skin Problem">Skin Problem</option>
                             <option value="Work From Home">Work From Home</option>
+                            <!-- new add reasons -->
+                            <option value="PQ Training">PQ Training</option>
+                            <option value="Training/Feedback">Training/Feedback</option>
+                            <option value="Night Shift Issue">Night Shift Issue</option>
+                            <option value="Present as per APR">Present as per APR</option>
+                            <option value="Short Login Hour">Short Login Hour</option>
+                            <option value="Present on 7:50 Hrs">Present on 7:50 Hrs</option>
                         </select>
                     </div>
                     <div id="othres"></div>
