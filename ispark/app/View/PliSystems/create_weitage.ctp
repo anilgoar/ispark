@@ -377,6 +377,7 @@ echo $this->Html->script('jquery-ui');
       },
       function(result)
       {
+        //console.log(result);
         alert(result);
         location.reload();
       });

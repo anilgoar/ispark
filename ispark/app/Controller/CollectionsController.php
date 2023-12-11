@@ -67,9 +67,9 @@
 
                             //echo ; exit;
 
+                            
 
-
-                            $data = $this->InitialInvoice->query("SELECT IF(bpp.status IS NULL,ti.grnd,IF(bpp.status='paid',0,ti.grnd-bpp.net_amount-bpp.tds_ded)) status FROM tbl_invoice ti INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
+                            $data = $this->InitialInvoice->query("SELECT IF(bpp.status IS NULL,ti.grnd,ROUND(IF(bpp.status='paid',0,ti.grnd-bpp.net_amount-bpp.tds_ded),3))  status FROM tbl_invoice ti INNER JOIN cost_master cm ON ti.cost_center = cm.cost_center
                             LEFT JOIN (SELECT bill_no,company_name,branch_name,financial_year,pay_type,pay_no,bank_name,pay_dates,pay_amount,bill_amount,tds_ded,bill_passed,net_amount,deduction,
     IF(bill_amount=net_amount,'paid',IF(`status` LIKE '%paid%','paid','part payment'))`status`,remarks, pay_type_dates FROM 
     (SELECT bill_no,company_name,branch_name,financial_year,GROUP_CONCAT(bpp.pay_type  ORDER BY id SEPARATOR '#') pay_type,
@@ -559,6 +559,7 @@
 			$this->OtherTMPDeduction->updateAll(array('createdate' => 'now()'),array('id'=>$id));			
 			$this->set('result',$this->OtherTMPDeduction->find('all',array('conditions'=>array('username'=>$username,'status'=>'0'))));
 		}
+                
 		public function other_bill_deduction()
 		{
 			$this->layout='ajax';
@@ -589,6 +590,7 @@
 			$this->OtherTMPDeduction->updateAll(array('status' => '1'),array('id'=>$id));
 			$this->set('result',$id = $this->params->query);
 		}
+                
                 public function delete_bill_other_deduction()
 		{
 			$this->layout='ajax';
@@ -642,6 +644,7 @@
 
                     exit;
                 }
+                
                 public function delete_upd_other_deduction()
                 {
                     $this->layout='ajax';
@@ -657,6 +660,7 @@
 
                     exit;
                 }
+                
                 public function Other_Deduction_Upd()
                 {
                         $this->layout='ajax';

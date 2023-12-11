@@ -29,8 +29,6 @@ class PliSystemsController extends AppController {
             $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='1'  GROUP BY user_id");
         }
         
-
-        
         foreach($pli_users as $use)
         {
             
@@ -162,7 +160,6 @@ class PliSystemsController extends AppController {
             
         }
 
-        #print_r($flatUsers);die;
 
         $this->set('users', $flatUsers);
 
@@ -184,6 +181,14 @@ class PliSystemsController extends AppController {
 
                     }else{
 
+                        $dataArr1=$this->Masjclrentry->find('first',array('conditions'=>array('EmpCode'=>$key['user'])));
+                        $reporting_name = $dataArr1['Masjclrentry']['Reporting_Manager_Name'];
+                        #echo $reporting_name;die;
+                        $dataArr2 = $this->Masjclrentry->find('first',array('conditions'=>array('EmpName'=>$reporting_name,'pli_status'=>1)));
+                        $reporting_email = $dataArr2['Masjclrentry']['EmailId'];
+                        #$reporting_email;die;
+
+
                         $data = array(
                             'year' => date('Y', strtotime($key['month'])),
                             'month' => date('m', strtotime($key['month'])),
@@ -194,6 +199,7 @@ class PliSystemsController extends AppController {
                             'weitage' => $key['weitage'],
                             'weitage_created_at' => date('Y-m-d H:i:s'),
                             'weitage_created_by' => $userid,
+                            'reporting_head' => $reporting_email,
                         );
 
                     }
@@ -201,11 +207,14 @@ class PliSystemsController extends AppController {
                     $dataArr[] = $data;
                 }
                 #print_r($dataArr);die;
-
+                
+                // $msg = "this is testing";
                 $save = $this->PliWeitage->saveMany($dataArr);
                 if($save)
                 {
+                    #print_r($dataArr);
                     echo "Weitage Add Succesfully";
+
                 }else{
                     echo "Weitage Already Add this Month";
                 }die;
@@ -377,20 +386,19 @@ class PliSystemsController extends AppController {
         $this->set('curYear',$curYear);
         $users = array();
 
-        $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='0'  GROUP BY user_id");
-        //$users = $this->User->query("select EmpCode,EmpName from masjclrentry where pli_status=1 and EmpName='$username' union select EmpCode,EmpName from masjclrentry where pli_status=1 and Reporting_Manager_Name='$username'");
-        foreach($pli_users as $use)
+        $userInfo = $this->User->query("select EmpCode,EmpName from masjclrentry where pli_status=1 and EmpName='$username' union select EmpCode,EmpName from masjclrentry where pli_status=1 and Reporting_Manager_Name='$username'");
+
+        foreach($userInfo as $user)
         {
-            
-            $emp_code = $use['pli_weitage']['user_id'];
-            //$userInfo = $this->User->query("SELECT EmpCode,EmpName FROM masjclrentry WHERE EmpCode='$emp_code'");
-            $userInfo = $this->User->query("select EmpCode,EmpName from masjclrentry where EmpCode='$emp_code' and pli_status=1 and EmpName='$username' union select EmpCode,EmpName from masjclrentry where pli_status=1 and Reporting_Manager_Name='$username'");
-            if(!empty($userInfo))
+            $user_id = $user[0]['EmpCode'];
+
+            $pli_users = $this->User->query("SELECT user_id FROM pli_weitage WHERE weitage_approved_status='1' and achivement_approved_status='0' and user_id='$user_id'");
+            if(!empty($pli_users))
             {
-                $users[] = $userInfo[0];
+                $users[] = $user;
             }
-            
         }
+
         $this->set('users', $users);
 
         if($this->request->is('post')){
@@ -410,9 +418,10 @@ class PliSystemsController extends AppController {
                         $id = $key['id'];
                         $achievement = $key['achivement'];
                         $score = $key['score'];
+                        $remarks = $key['remarks'];
             
-                        $updArr=array('achivement_created_by'=>"'".$userid."'",'achivement_created_at'=>"'".date('Y-m-d H:i:s')."'",'achivement'=>"'".$achievement."'",'score'=>"'".$score."'");	
-                        $save = $this->PliWeitage->updateAll($updArr,array('id'=>$id)); 
+                        $updArr=array('achivement_created_by'=>"'".$userid."'",'achivement_created_at'=>"'".date('Y-m-d H:i:s')."'",'achivement'=>"'".$achievement."'",'score'=>"'".$score."'",'remarks'=>"'".$remarks."'",'mail_status'=>"'2'");
+                        $save = $this->PliWeitage->updateAll($updArr,array('id'=>$id));
         
                     }
                     if($save)
@@ -672,8 +681,10 @@ class PliSystemsController extends AppController {
 
             $EmpCode = $_REQUEST['EmpCode'];
             $Approval = $_REQUEST['Approval'];
+            #echo $Approval;die;
             
             $data = $this->PliWeitage->find('all',array('conditions'=>array('user_id'=>$EmpCode,'year'=>$year,'month'=>$month,'weitage_approved_status'=>1))); 
+            #print_r($data);die;
             if(!empty($data)){
 
                 $total_score = 0;
@@ -709,6 +720,7 @@ class PliSystemsController extends AppController {
                             <th>Weitage(%)</th>
                             <th>Achievement</th>
                             <th id="total_score">Score  <?php if($total_score!=0){ ?><span style="color: green;">Total = <?php echo $total_score; ?>%</span><?php } ?></th>
+                            <th>Remarks</th>
                         </tr>
                         <?php $i = 1; foreach($data as $key) { ?>
                             <tr>
@@ -721,6 +733,7 @@ class PliSystemsController extends AppController {
                                     <input type="text" name="score<?php echo $i; ?>" id="score<?php echo $i; ?>" value="<?php echo $key['PliWeitage']['score']; ?>" class="form-control" readonly>
                                     <input type="hidden" name="approve_id<?php echo $i; ?>" value="<?php echo $key['PliWeitage']['id']; ?>">
                                 </td>
+                                <td><input type="text" name="remarks<?php echo $i; ?>" id="remarks<?php echo $i; ?>" placeholder="Remarks" value="<?php echo $key['PliWeitage']['remarks']; ?>" class="form-control"></td>
                             </tr>
                         <?php $i++;} ?>
                         
@@ -926,7 +939,7 @@ class PliSystemsController extends AppController {
 
             <div class="box">
                 <div class="box-content" style="background-color:#ffffff; border:1px solid #436e90;">
-                    <h4 class="page-header" style="border-bottom: 1px double #436e90;margin: 0 0 10px;">View Approved Performance-linked incentive</h4>
+                    <h4 class="page-header" style="border-bottom: 1px double #436e90;margin: 0 0 10px;">View Approved Performance-linked Incentive</h4>
                     <table class="table table-striped table-bordered table-hover table-heading no-border-bottom" id="achivement_table">
                         <div id="errorDiv" style="color: red;"></div>
                         <tr>
@@ -939,6 +952,7 @@ class PliSystemsController extends AppController {
                             <th>Weitage(%)</th>
                             <th>Achivement</th>
                             <th>Score</th>
+                            <th>Remarks</th>
                         </tr>
                         <?php
                         $i = 1;
@@ -978,6 +992,7 @@ class PliSystemsController extends AppController {
                                 <td><?php echo $key['PliWeitage']['weitage']; ?> %</td>
                                 <td><?php echo $key['PliWeitage']['achivement']; ?></td>
                                 <td><?php echo $key['PliWeitage']['score']; ?> %</td>
+                                <td><?php echo $key['PliWeitage']['remarks']; ?> </td>
                             </tr>
                         <?php
                             $i++;
@@ -1068,17 +1083,19 @@ class PliSystemsController extends AppController {
                             <th>Weitage(%)</th>
                             <th>Achivement</th>
                             <th>Score</th>
+                            <th>Remarks</th>
                         </tr>
                         <?php
                         $i = 1;
                         $total_weitage = 0;
                         $total_achivement = 0;
                         $total_score = 0;
-                        $current_month = null; // Initialize the current month
+                        $current_month = null; 
                         foreach ($DataArr as $key) {
                             if ($current_month !== $key['PliWeitage']['month']) {
-                                // Month changed, display the total row
-                                if ($current_month !== null) { // Skip on the first iteration
+                               
+                                if ($current_month !== null) 
+                                { 
                                     echo '<tr>';
                                     echo '<th colspan="6" style="text-align:center;">Total</th>';
                                     echo '<th>' . $total_weitage . ' %</th>';
@@ -1086,7 +1103,7 @@ class PliSystemsController extends AppController {
                                     echo '<th>' . number_format($total_score, 2) . ' %</th>';
                                     echo '</tr>';
                                 }
-                                // Reset totals for the new month
+                                
                                 $total_weitage = 0;
                                 $total_achivement = 0;
                                 $total_score = 0;
@@ -1107,6 +1124,7 @@ class PliSystemsController extends AppController {
                                 <td><?php echo $key['PliWeitage']['weitage']; ?> %</td>
                                 <td><?php echo $key['PliWeitage']['achivement']; ?></td>
                                 <td><?php echo $key['PliWeitage']['score']; ?> %</td>
+                                <td><?php echo $key['PliWeitage']['remarks']; ?> </td>
                             </tr>
                         <?php
                             $i++;

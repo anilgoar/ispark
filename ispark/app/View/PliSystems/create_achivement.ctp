@@ -237,12 +237,14 @@ function reporting_name(EmpCode)
         return false;
       }
       let totalWeitage = 0;
-      console.log(rowCount);
+      //console.log(rowCount);
       for (let i = 1; i < rowCount; i++) { // Start from 1 to skip the header row
         var achievementField = $(`input[name="achivement${i}"]`);
         const achivement = $(`input[name="achivement${i}"]`).val();
         const score = $(`input[name="score${i}"]`).val();
-        console.log(score);
+        const remarks = $(`input[name="remarks${i}"]`).val();
+
+        console.log(remarks);
         var id = achievementField.attr('id').split('_')[1];
         
         if(!achivement)
@@ -251,16 +253,22 @@ function reporting_name(EmpCode)
           $("#achivement_" + id).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Achivement.</span>");
           return false;
 
+        }else if(!remarks)
+        {
+            console.log("remarks blank");
+            $("#remarks" + i).focus();
+            $("#remarks" + i).after("<span id='msgerr' style='color:red;font-size:11px;'>Please Enter Remarks.</span>");
+            return false;
         }
         else{
-          data.push({ id,score,achivement });
+          data.push({ id,score,achivement,remarks });
         }
 
         
         
 
       }
-      console.log(data);
+      //console.log(data);
 
       const jsonData = JSON.stringify(data);
       console.log(jsonData);
